@@ -1,0 +1,529 @@
+==24595== Memcheck, a memory error detector
+==24595== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==24595== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==24595== Command: ./bin/rescue
+==24595== Parent PID: 24355
+==24595== 
+==24595== 
+==24595== Process terminating with default action of signal 6 (SIGABRT)
+==24595==    at 0x6DA3438: raise (raise.c:54)
+==24595==    by 0x6DA5039: abort (abort.c:89)
+==24595==    by 0x6D9BBE6: __assert_fail_base (assert.c:92)
+==24595==    by 0x6D9BC91: __assert_fail (assert.c:101)
+==24595==    by 0x40F2A6: _device_set_sector_size (linux.c:198)
+==24595==    by 0x40F68D: _device_probe_geometry (linux.c:280)
+==24595==    by 0x410030: linux_new (linux.c:532)
+==24595==    by 0x40CA07: find_all_disks (device.c:128)
+==24595==    by 0x40CEEC: init_device (device.c:189)
+==24595==    by 0x408B5D: main (main.c:107)
+==24595== 
+==24595== FILE DESCRIPTORS: 16 open at exit.
+==24595== Open file descriptor 15: /sys/dev/block/8:1/../dev
+==24595==    at 0x6E65100: __open_nocancel (syscall-template.S:84)
+==24595==    by 0x6DE7ADD: _IO_file_open (fileops.c:221)
+==24595==    by 0x6DE7D44: _IO_file_fopen@@GLIBC_2.2.5 (fileops.c:328)
+==24595==    by 0x6DDBD43: __fopen_internal (iofopen.c:86)
+==24595==    by 0x40C526: partition_parent (device.c:26)
+==24595==    by 0x40C688: device_contains (device.c:68)
+==24595==    by 0x40C8A9: find_all_disks (device.c:108)
+==24595==    by 0x40CEEC: init_device (device.c:189)
+==24595==    by 0x408B5D: main (main.c:107)
+==24595== 
+==24595== Open file descriptor 14: /sys/block
+==24595==    at 0x6E361E0: opendir (opendir.c:200)
+==24595==    by 0x40C76D: find_all_disks (device.c:93)
+==24595==    by 0x40CEEC: init_device (device.c:189)
+==24595==    by 0x408B5D: main (main.c:107)
+==24595== 
+==24595== Open AF_UNIX socket 13: <unknown>
+==24595==    at 0x6E7669A: socketpair (syscall-template.S:84)
+==24595==    by 0x408971: init_pipe (main.c:67)
+==24595==    by 0x408B49: main (main.c:105)
+==24595== 
+==24595== Open AF_UNIX socket 12: <unknown>
+==24595==    at 0x6E7669A: socketpair (syscall-template.S:84)
+==24595==    by 0x408971: init_pipe (main.c:67)
+==24595==    by 0x408B49: main (main.c:105)
+==24595== 
+==24595== Open AF_UNIX socket 11: <unknown>
+==24595==    at 0x6E7669A: socketpair (syscall-template.S:84)
+==24595==    by 0x4088C8: init_pipe (main.c:57)
+==24595==    by 0x408B49: main (main.c:105)
+==24595== 
+==24595== Open AF_UNIX socket 10: <unknown>
+==24595==    at 0x6E7669A: socketpair (syscall-template.S:84)
+==24595==    by 0x4088C8: init_pipe (main.c:57)
+==24595==    by 0x408B49: main (main.c:105)
+==24595== 
+==24595== Open AF_UNIX socket 9: <unknown>
+==24595==    at 0x6E7669A: socketpair (syscall-template.S:84)
+==24595==    by 0x40881F: init_pipe (main.c:47)
+==24595==    by 0x408B49: main (main.c:105)
+==24595== 
+==24595== Open AF_UNIX socket 8: <unknown>
+==24595==    at 0x6E7669A: socketpair (syscall-template.S:84)
+==24595==    by 0x40881F: init_pipe (main.c:47)
+==24595==    by 0x408B49: main (main.c:105)
+==24595== 
+==24595== Open AF_UNIX socket 7: <unknown>
+==24595==    at 0x6E7669A: socketpair (syscall-template.S:84)
+==24595==    by 0x408776: init_pipe (main.c:37)
+==24595==    by 0x408B49: main (main.c:105)
+==24595== 
+==24595== Open AF_UNIX socket 6: <unknown>
+==24595==    at 0x6E7669A: socketpair (syscall-template.S:84)
+==24595==    by 0x408776: init_pipe (main.c:37)
+==24595==    by 0x408B49: main (main.c:105)
+==24595== 
+==24595== Open file descriptor 5: ./log/virt-p2v_err.log
+==24595==    at 0x6E65100: __open_nocancel (syscall-template.S:84)
+==24595==    by 0x6DE7ADD: _IO_file_open (fileops.c:221)
+==24595==    by 0x6DE7D44: _IO_file_fopen@@GLIBC_2.2.5 (fileops.c:328)
+==24595==    by 0x6DDBD43: __fopen_internal (iofopen.c:86)
+==24595==    by 0x40B405: init_logs (log.c:60)
+==24595==    by 0x408B3F: main (main.c:104)
+==24595== 
+==24595== Open file descriptor 4: ./log/rescue-20200722.log
+==24595==    at 0x6E65100: __open_nocancel (syscall-template.S:84)
+==24595==    by 0x6DE7ADD: _IO_file_open (fileops.c:221)
+==24595==    by 0x6DE7D44: _IO_file_fopen@@GLIBC_2.2.5 (fileops.c:328)
+==24595==    by 0x6DDBD43: __fopen_internal (iofopen.c:86)
+==24595==    by 0x40B39E: init_logs (log.c:47)
+==24595==    by 0x408B3F: main (main.c:104)
+==24595== 
+==24595== Open file descriptor 3: /home/ysr/project/rescue_1/vallog.txt
+==24595==    <inherited from parent>
+==24595== 
+==24595== Open file descriptor 2: /dev/pts/19
+==24595==    <inherited from parent>
+==24595== 
+==24595== Open file descriptor 1: /dev/pts/19
+==24595==    <inherited from parent>
+==24595== 
+==24595== Open file descriptor 0: /dev/pts/19
+==24595==    <inherited from parent>
+==24595== 
+==24595== 
+==24595== HEAP SUMMARY:
+==24595==     in use at exit: 130,224 bytes in 42 blocks
+==24595==   total heap usage: 87 allocs, 45 frees, 173,839 bytes allocated
+==24595== 
+==24595== 4 bytes in 1 blocks are still reachable in loss record 1 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x57101D2: ??? (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x5710714: g_private_get (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x56E899C: g_slice_alloc (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x56BA74D: g_hash_table_new_full (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x56DB94A: ??? (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 8 bytes in 1 blocks are still reachable in loss record 2 of 42
+==24595==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x86C1E02: resource_file_handler() (qresource.cpp:1453)
+==24595==    by 0x8629E68: qt_force_resource_init (qresource.cpp:1455)
+==24595==    by 0x8629E68: __static_initialization_and_destruction_0 (qresource.cpp:1457)
+==24595==    by 0x8629E68: _GLOBAL__sub_I_qresource.cpp (qresource.cpp:1458)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 8 bytes in 1 blocks are still reachable in loss record 3 of 42
+==24595==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x869C3B2: fileEngineHandlerMutex() (qabstractfileengine.cpp:101)
+==24595==    by 0x869D079: QAbstractFileEngineHandler::QAbstractFileEngineHandler() (qabstractfileengine.cpp:125)
+==24595==    by 0x86C1E0D: QResourceFileEngineHandler (qresource.cpp:1135)
+==24595==    by 0x86C1E0D: resource_file_handler() (qresource.cpp:1453)
+==24595==    by 0x8629E68: qt_force_resource_init (qresource.cpp:1455)
+==24595==    by 0x8629E68: __static_initialization_and_destruction_0 (qresource.cpp:1457)
+==24595==    by 0x8629E68: _GLOBAL__sub_I_qresource.cpp (qresource.cpp:1458)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 8 bytes in 1 blocks are still reachable in loss record 4 of 42
+==24595==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x869C682: fileEngineHandlers() (qabstractfileengine.cpp:112)
+==24595==    by 0x869D096: QAbstractFileEngineHandler::QAbstractFileEngineHandler() (qabstractfileengine.cpp:126)
+==24595==    by 0x86C1E0D: QResourceFileEngineHandler (qresource.cpp:1135)
+==24595==    by 0x86C1E0D: resource_file_handler() (qresource.cpp:1453)
+==24595==    by 0x8629E68: qt_force_resource_init (qresource.cpp:1455)
+==24595==    by 0x8629E68: __static_initialization_and_destruction_0 (qresource.cpp:1457)
+==24595==    by 0x8629E68: _GLOBAL__sub_I_qresource.cpp (qresource.cpp:1458)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 8 bytes in 1 blocks are still reachable in loss record 5 of 42
+==24595==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x86C1AF2: resourceMutex() (qresource.cpp:106)
+==24595==    by 0x86C45DB: qRegisterResourceData(int, unsigned char const*, unsigned char const*, unsigned char const*) (qresource.cpp:784)
+==24595==    by 0x7CCAF32: qInitResources_qprintdialog (qrc_qprintdialog.cpp:2443)
+==24595==    by 0x7CCAF32: __static_initialization_and_destruction_0 (qrc_qprintdialog.cpp:2447)
+==24595==    by 0x7CCAF32: _GLOBAL__sub_I_qprintdialog_unix.cpp (qrc_qprintdialog.cpp:2456)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 8 bytes in 1 blocks are still reachable in loss record 6 of 42
+==24595==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x86C22A2: resourceList() (qresource.cpp:109)
+==24595==    by 0x86C4644: qRegisterResourceData(int, unsigned char const*, unsigned char const*, unsigned char const*) (qresource.cpp:785)
+==24595==    by 0x7CCAF32: qInitResources_qprintdialog (qrc_qprintdialog.cpp:2443)
+==24595==    by 0x7CCAF32: __static_initialization_and_destruction_0 (qrc_qprintdialog.cpp:2447)
+==24595==    by 0x7CCAF32: _GLOBAL__sub_I_qprintdialog_unix.cpp (qrc_qprintdialog.cpp:2456)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 9 bytes in 1 blocks are still reachable in loss record 7 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x6DF9509: strdup (strdup.c:42)
+==24595==    by 0x40FFC9: linux_new (linux.c:507)
+==24595==    by 0x40CA07: find_all_disks (device.c:128)
+==24595==    by 0x40CEEC: init_device (device.c:189)
+==24595==    by 0x408B5D: main (main.c:107)
+==24595== 
+==24595== 9 bytes in 1 blocks are definitely lost in loss record 8 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x6DE47E7: vasprintf (vasprintf.c:73)
+==24595==    by 0x6DC3A66: asprintf (asprintf.c:35)
+==24595==    by 0x40C619: device_contains (device.c:57)
+==24595==    by 0x40C8A9: find_all_disks (device.c:108)
+==24595==    by 0x40CEEC: init_device (device.c:189)
+==24595==    by 0x408B5D: main (main.c:107)
+==24595== 
+==24595== 26 bytes in 1 blocks are definitely lost in loss record 9 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x6DE47E7: vasprintf (vasprintf.c:73)
+==24595==    by 0x6DC3A66: asprintf (asprintf.c:35)
+==24595==    by 0x40C4F3: partition_parent (device.c:21)
+==24595==    by 0x40C688: device_contains (device.c:68)
+==24595==    by 0x40C8A9: find_all_disks (device.c:108)
+==24595==    by 0x40CEEC: init_device (device.c:189)
+==24595==    by 0x408B5D: main (main.c:107)
+==24595== 
+==24595== 32 bytes in 1 blocks are still reachable in loss record 10 of 42
+==24595==    at 0x4C2FB55: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x56D1810: g_malloc0 (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x56BA7B4: g_hash_table_new_full (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x56DB94A: ??? (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 34 bytes in 1 blocks are still reachable in loss record 11 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x863874A: QByteArray::QByteArray(char const*) (qbytearray.cpp:1235)
+==24595==    by 0x7CCACC3: __static_initialization_and_destruction_0 (qapplication_qws.cpp:143)
+==24595==    by 0x7CCACC3: _GLOBAL__sub_I_qapplication_qws.cpp (qapplication_qws.cpp:3746)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 40 bytes in 1 blocks are still reachable in loss record 12 of 42
+==24595==    at 0x4C2FD5F: realloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x865810C: QListData::realloc(int) (qlistdata.cpp:111)
+==24595==    by 0x8658366: QListData::prepend() (qlistdata.cpp:156)
+==24595==    by 0x869D0B3: prepend (qlist.h:441)
+==24595==    by 0x869D0B3: QAbstractFileEngineHandler::QAbstractFileEngineHandler() (qabstractfileengine.cpp:126)
+==24595==    by 0x86C1E0D: QResourceFileEngineHandler (qresource.cpp:1135)
+==24595==    by 0x86C1E0D: resource_file_handler() (qresource.cpp:1453)
+==24595==    by 0x8629E68: qt_force_resource_init (qresource.cpp:1455)
+==24595==    by 0x8629E68: __static_initialization_and_destruction_0 (qresource.cpp:1457)
+==24595==    by 0x8629E68: _GLOBAL__sub_I_qresource.cpp (qresource.cpp:1458)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 40 bytes in 1 blocks are still reachable in loss record 13 of 42
+==24595==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x86C46B9: qRegisterResourceData(int, unsigned char const*, unsigned char const*, unsigned char const*) (qresource.cpp:795)
+==24595==    by 0x7CCAF32: qInitResources_qprintdialog (qrc_qprintdialog.cpp:2443)
+==24595==    by 0x7CCAF32: __static_initialization_and_destruction_0 (qrc_qprintdialog.cpp:2447)
+==24595==    by 0x7CCAF32: _GLOBAL__sub_I_qprintdialog_unix.cpp (qrc_qprintdialog.cpp:2456)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 40 bytes in 1 blocks are still reachable in loss record 14 of 42
+==24595==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x86C46B9: qRegisterResourceData(int, unsigned char const*, unsigned char const*, unsigned char const*) (qresource.cpp:795)
+==24595==    by 0x7CCAFA2: qInitResources_qstyle (qrc_qstyle.cpp:21586)
+==24595==    by 0x7CCAFA2: __static_initialization_and_destruction_0 (qrc_qstyle.cpp:21590)
+==24595==    by 0x7CCAFA2: _GLOBAL__sub_I_qrc_qstyle.cpp (qrc_qstyle.cpp:21599)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 40 bytes in 1 blocks are still reachable in loss record 15 of 42
+==24595==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x86C46B9: qRegisterResourceData(int, unsigned char const*, unsigned char const*, unsigned char const*) (qresource.cpp:795)
+==24595==    by 0x7CCAFF2: qInitResources_qmessagebox (qrc_qmessagebox.cpp:258)
+==24595==    by 0x7CCAFF2: __static_initialization_and_destruction_0 (qrc_qmessagebox.cpp:262)
+==24595==    by 0x7CCAFF2: _GLOBAL__sub_I_qrc_qmessagebox.cpp (qrc_qmessagebox.cpp:271)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 40 bytes in 1 blocks are still reachable in loss record 16 of 42
+==24595==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x86C46B9: qRegisterResourceData(int, unsigned char const*, unsigned char const*, unsigned char const*) (qresource.cpp:795)
+==24595==    by 0x6297A92: qInitResources_images() (in /home/ysr/project/rescue_1/lib/libqt.so.1.0.0)
+==24595==    by 0x6272998: _GLOBAL__sub_I_qrc_images.cpp (in /home/ysr/project/rescue_1/lib/libqt.so.1.0.0)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 56 bytes in 1 blocks are still reachable in loss record 17 of 42
+==24595==    at 0x4C2FD5F: realloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x865810C: QListData::realloc(int) (qlistdata.cpp:111)
+==24595==    by 0x86581B9: QListData::append() (qlistdata.cpp:131)
+==24595==    by 0x86C61C6: QList<QResourceRoot*>::append(QResourceRoot* const&) (qlist.h:429)
+==24595==    by 0x86C46F4: qRegisterResourceData(int, unsigned char const*, unsigned char const*, unsigned char const*) (qresource.cpp:797)
+==24595==    by 0x7CCAFF2: qInitResources_qmessagebox (qrc_qmessagebox.cpp:258)
+==24595==    by 0x7CCAFF2: __static_initialization_and_destruction_0 (qrc_qmessagebox.cpp:262)
+==24595==    by 0x7CCAFF2: _GLOBAL__sub_I_qrc_qmessagebox.cpp (qrc_qmessagebox.cpp:271)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 64 bytes in 1 blocks are still reachable in loss record 18 of 42
+==24595==    at 0x4C2FB55: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x56D1810: g_malloc0 (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x56BA79F: g_hash_table_new_full (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x56DB94A: ??? (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 88 bytes in 1 blocks are still reachable in loss record 19 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x56D17B8: g_malloc (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x56E89C2: g_slice_alloc (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x56BA74D: g_hash_table_new_full (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x56DB94A: ??? (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 89 bytes in 1 blocks are still reachable in loss record 20 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x541D641: pcre_compile2 (in /lib/x86_64-linux-gnu/libpcre.so.3.13.2)
+==24595==    by 0x431706: compile_regexps (ssh.c:164)
+==24595==    by 0x435A1C: __libc_csu_init (in /home/ysr/project/rescue_1/bin/rescue)
+==24595==    by 0x6D8E7CE: (below main) (libc-start.c:247)
+==24595== 
+==24595== 97 bytes in 1 blocks are still reachable in loss record 21 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x541D641: pcre_compile2 (in /lib/x86_64-linux-gnu/libpcre.so.3.13.2)
+==24595==    by 0x4317C4: compile_regexps (ssh.c:168)
+==24595==    by 0x435A1C: __libc_csu_init (in /home/ysr/project/rescue_1/bin/rescue)
+==24595==    by 0x6D8E7CE: (below main) (libc-start.c:247)
+==24595== 
+==24595== 99 bytes in 1 blocks are still reachable in loss record 22 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x541D641: pcre_compile2 (in /lib/x86_64-linux-gnu/libpcre.so.3.13.2)
+==24595==    by 0x431B7A: compile_regexps (ssh.c:182)
+==24595==    by 0x435A1C: __libc_csu_init (in /home/ysr/project/rescue_1/bin/rescue)
+==24595==    by 0x6D8E7CE: (below main) (libc-start.c:247)
+==24595== 
+==24595== 107 bytes in 1 blocks are still reachable in loss record 23 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x541D641: pcre_compile2 (in /lib/x86_64-linux-gnu/libpcre.so.3.13.2)
+==24595==    by 0x431ABC: compile_regexps (ssh.c:181)
+==24595==    by 0x435A1C: __libc_csu_init (in /home/ysr/project/rescue_1/bin/rescue)
+==24595==    by 0x6D8E7CE: (below main) (libc-start.c:247)
+==24595== 
+==24595== 120 bytes in 1 blocks are still reachable in loss record 24 of 42
+==24595==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x8633033: QMutex::QMutex(QMutex::RecursionMode) (qmutex.cpp:125)
+==24595==    by 0x869C3C2: fileEngineHandlerMutex() (qabstractfileengine.cpp:101)
+==24595==    by 0x869D079: QAbstractFileEngineHandler::QAbstractFileEngineHandler() (qabstractfileengine.cpp:125)
+==24595==    by 0x86C1E0D: QResourceFileEngineHandler (qresource.cpp:1135)
+==24595==    by 0x86C1E0D: resource_file_handler() (qresource.cpp:1453)
+==24595==    by 0x8629E68: qt_force_resource_init (qresource.cpp:1455)
+==24595==    by 0x8629E68: __static_initialization_and_destruction_0 (qresource.cpp:1457)
+==24595==    by 0x8629E68: _GLOBAL__sub_I_qresource.cpp (qresource.cpp:1458)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 120 bytes in 1 blocks are still reachable in loss record 25 of 42
+==24595==    at 0x4C2E0EF: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x8633033: QMutex::QMutex(QMutex::RecursionMode) (qmutex.cpp:125)
+==24595==    by 0x86C1B02: resourceMutex() (qresource.cpp:106)
+==24595==    by 0x86C45DB: qRegisterResourceData(int, unsigned char const*, unsigned char const*, unsigned char const*) (qresource.cpp:784)
+==24595==    by 0x7CCAF32: qInitResources_qprintdialog (qrc_qprintdialog.cpp:2443)
+==24595==    by 0x7CCAF32: __static_initialization_and_destruction_0 (qrc_qprintdialog.cpp:2447)
+==24595==    by 0x7CCAF32: _GLOBAL__sub_I_qprintdialog_unix.cpp (qrc_qprintdialog.cpp:2456)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 120 bytes in 1 blocks are definitely lost in loss record 26 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x6DDC9F7: getdelim (iogetdelim.c:62)
+==24595==    by 0x40C54F: partition_parent (device.c:30)
+==24595==    by 0x40C688: device_contains (device.c:68)
+==24595==    by 0x40C8A9: find_all_disks (device.c:108)
+==24595==    by 0x40CEEC: init_device (device.c:189)
+==24595==    by 0x408B5D: main (main.c:107)
+==24595== 
+==24595== 127 bytes in 1 blocks are still reachable in loss record 27 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x541D641: pcre_compile2 (in /lib/x86_64-linux-gnu/libpcre.so.3.13.2)
+==24595==    by 0x431882: compile_regexps (ssh.c:169)
+==24595==    by 0x435A1C: __libc_csu_init (in /home/ysr/project/rescue_1/bin/rescue)
+==24595==    by 0x6D8E7CE: (below main) (libc-start.c:247)
+==24595== 
+==24595== 130 bytes in 1 blocks are still reachable in loss record 28 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x541D641: pcre_compile2 (in /lib/x86_64-linux-gnu/libpcre.so.3.13.2)
+==24595==    by 0x431C38: compile_regexps (ssh.c:186)
+==24595==    by 0x435A1C: __libc_csu_init (in /home/ysr/project/rescue_1/bin/rescue)
+==24595==    by 0x6D8E7CE: (below main) (libc-start.c:247)
+==24595== 
+==24595== 132 bytes in 1 blocks are still reachable in loss record 29 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x541D641: pcre_compile2 (in /lib/x86_64-linux-gnu/libpcre.so.3.13.2)
+==24595==    by 0x431CF6: compile_regexps (ssh.c:187)
+==24595==    by 0x435A1C: __libc_csu_init (in /home/ysr/project/rescue_1/bin/rescue)
+==24595==    by 0x6D8E7CE: (below main) (libc-start.c:247)
+==24595== 
+==24595== 138 bytes in 1 blocks are still reachable in loss record 30 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x541D641: pcre_compile2 (in /lib/x86_64-linux-gnu/libpcre.so.3.13.2)
+==24595==    by 0x4319FE: compile_regexps (ssh.c:178)
+==24595==    by 0x435A1C: __libc_csu_init (in /home/ysr/project/rescue_1/bin/rescue)
+==24595==    by 0x6D8E7CE: (below main) (libc-start.c:247)
+==24595== 
+==24595== 152 bytes in 1 blocks are still reachable in loss record 31 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x40FFAE: linux_new (linux.c:504)
+==24595==    by 0x40CA07: find_all_disks (device.c:128)
+==24595==    by 0x40CEEC: init_device (device.c:189)
+==24595==    by 0x408B5D: main (main.c:107)
+==24595== 
+==24595== 154 bytes in 1 blocks are still reachable in loss record 32 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x541D641: pcre_compile2 (in /lib/x86_64-linux-gnu/libpcre.so.3.13.2)
+==24595==    by 0x431DB4: compile_regexps (ssh.c:188)
+==24595==    by 0x435A1C: __libc_csu_init (in /home/ysr/project/rescue_1/bin/rescue)
+==24595==    by 0x6D8E7CE: (below main) (libc-start.c:247)
+==24595== 
+==24595== 405 bytes in 1 blocks are still reachable in loss record 33 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x541D641: pcre_compile2 (in /lib/x86_64-linux-gnu/libpcre.so.3.13.2)
+==24595==    by 0x431940: compile_regexps (ssh.c:173)
+==24595==    by 0x435A1C: __libc_csu_init (in /home/ysr/project/rescue_1/bin/rescue)
+==24595==    by 0x6D8E7CE: (below main) (libc-start.c:247)
+==24595== 
+==24595== 552 bytes in 1 blocks are still reachable in loss record 34 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x6DDBCEC: __fopen_internal (iofopen.c:69)
+==24595==    by 0x40B39E: init_logs (log.c:47)
+==24595==    by 0x408B3F: main (main.c:104)
+==24595== 
+==24595== 552 bytes in 1 blocks are still reachable in loss record 35 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x6DDBCEC: __fopen_internal (iofopen.c:69)
+==24595==    by 0x40B405: init_logs (log.c:60)
+==24595==    by 0x408B3F: main (main.c:104)
+==24595== 
+==24595== 552 bytes in 1 blocks are still reachable in loss record 36 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x6DDBCEC: __fopen_internal (iofopen.c:69)
+==24595==    by 0x40C526: partition_parent (device.c:26)
+==24595==    by 0x40C688: device_contains (device.c:68)
+==24595==    by 0x40C8A9: find_all_disks (device.c:108)
+==24595==    by 0x40CEEC: init_device (device.c:189)
+==24595==    by 0x408B5D: main (main.c:107)
+==24595== 
+==24595== 1,040 bytes in 1 blocks are still reachable in loss record 37 of 42
+==24595==    at 0x4C2FB55: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x6DA81FF: __new_exitfn (cxa_atexit.c:101)
+==24595==    by 0x6DA82A8: __internal_atexit (cxa_atexit.c:35)
+==24595==    by 0x6DA82A8: __cxa_atexit (cxa_atexit.c:58)
+==24595==    by 0x5D2D8E5: _GLOBAL__sub_I_client.cpp (in /home/ysr/project/rescue_1/lib/libtorrent.so)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 1,040 bytes in 1 blocks are still reachable in loss record 38 of 42
+==24595==    at 0x4C2FB55: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x6DA81FF: __new_exitfn (cxa_atexit.c:101)
+==24595==    by 0x6DA82A8: __internal_atexit (cxa_atexit.c:35)
+==24595==    by 0x6DA82A8: __cxa_atexit (cxa_atexit.c:58)
+==24595==    by 0x5D337EA: _GLOBAL__sub_I_disk_io_thread.cpp (in /home/ysr/project/rescue_1/lib/libtorrent.so)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 2,032 bytes in 1 blocks are still reachable in loss record 39 of 42
+==24595==    at 0x4C2FB55: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x56D1810: g_malloc0 (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x56E8C2B: g_slice_alloc (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x56BA74D: g_hash_table_new_full (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x56DB94A: ??? (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 16,384 bytes in 1 blocks are still reachable in loss record 40 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x56D17B8: g_malloc (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x56DB95B: ??? (in /lib/x86_64-linux-gnu/libglib-2.0.so.0.4800.2)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== 32,816 bytes in 1 blocks are still reachable in loss record 41 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x6E36239: __alloc_dir (opendir.c:247)
+==24595==    by 0x6E36239: opendir_tail (opendir.c:145)
+==24595==    by 0x6E36239: opendir (opendir.c:200)
+==24595==    by 0x40C76D: find_all_disks (device.c:93)
+==24595==    by 0x40CEEC: init_device (device.c:189)
+==24595==    by 0x408B5D: main (main.c:107)
+==24595== 
+==24595== 72,704 bytes in 1 blocks are still reachable in loss record 42 of 42
+==24595==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==24595==    by 0x6556EFF: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==24595==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==24595==    by 0x401080A: call_init (dl-init.c:30)
+==24595==    by 0x401080A: _dl_init (dl-init.c:120)
+==24595==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==24595== 
+==24595== LEAK SUMMARY:
+==24595==    definitely lost: 155 bytes in 3 blocks
+==24595==    indirectly lost: 0 bytes in 0 blocks
+==24595==      possibly lost: 0 bytes in 0 blocks
+==24595==    still reachable: 130,069 bytes in 39 blocks
+==24595==         suppressed: 0 bytes in 0 blocks
+==24595== 
+==24595== For counts of detected and suppressed errors, rerun with: -v
+==24595== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)

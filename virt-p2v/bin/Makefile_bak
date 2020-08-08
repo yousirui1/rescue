@@ -1,0 +1,79 @@
+VERSION = 1.1
+
+# arm -> linux arm rk3188 
+# x86 -> window x86 mingw32 dll
+# x64 -> linux x64
+
+TARGET_ARCH = x64
+CROSS_COMPILE = #arm-
+DEBUG = -g #-O2
+
+TOP_DIR := $(shell pwd)
+OBJ_DIR := $(TOP_DIR)/obj
+outdir := $(TOP_DIR)/bin
+QT_DIR := $(TOP_DIR)/qt_pro
+
+SDL_DIR := ./SDL/$(TARGET_ARCH)
+FFMPEG_DIR := ./ffmpeg/$(TARGET_ARCH)
+
+AS = $(CROSS_COMPILE)as
+CC = $(CROSS_COMPILE)gcc
+CXX = $(CROSS_COMPILE)g++
+LD = $(CROSS_COMPILE)ld
+AR = $(CROSS_COMPILE)ar
+STRIP = $(CROSS_COMPILE)strip
+OBJCOPY = $(CROSS_COMPILE)objcopy
+QMAKE= qmake
+CP = cp
+
+CONFIG_COMPILER = gnu
+
+outdir = ./bin
+
+exeobj = virt-p2v
+
+dllobj =
+
+libobj = 
+
+mainobj = p2v.o config.o conversion.o cpuid.o inhibit.o kernel-cmdline.o kernel-config.o kernel.o \
+		  nbd.o physical-xml.o rtc.o ssh.o utils.o guestfs-utils.o miniexpect.o cleanups.o libxml2-cleanups.o
+cppobj = 
+
+DISPLAY := QT
+
+DEFINES := -D QT
+
+CFLAGS := -I. -I./qt_pro -I./include/  -I/usr/include/gtk-2.0/ -I/usr/include/glib-2.0/ -I/usr/lib/glib-2.0/include \
+		  -I/usr/include/cairo -I./include/gnulib -I/usr/include/pango-1.0 -I/usr/include/libxml2 \
+		-I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/atk-1.0
+
+ifeq ($(TARGET_ARCH), arm)
+CFLAGS += 
+else ifeq ($(TARGET_ARCH), x86)
+CFLAGS += -lmingw32 -lm -lws2_32 -lpthreadGC2 -lgdi32 
+else ifeq ($(TARGET_ARCH), x64)
+CFLAGS += -lpcre -lglib-2.0  -lpthread -lxml2  -latk-1.0 -lcairo 
+endif
+
+all: $(exeobj)
+
+CXXFLAGS = $(CFLAGS)
+
+VPATH = .:./include:./lib:./src:./libguestfs:./miniexpect:
+
+$(mainobj):%.o:%.c 
+	$(CC) -Wall $(DEBUG) $(CFLAGS) $(DEFINES) -c $< -o $@ 
+    
+$(cppobj):%.o:%.cpp
+	$(CXX) -Wall $(DEBUG) $(CXXFLAGS) $(DEFINES) -c $< -o $@
+
+$(exeobj):$(mainobj) $(cppobj) 
+	$(CXX) $(DEBUG)  -o $(outdir)/$(exeobj) $(mainobj) $(cppobj)  $(CXXFLAGS) 
+	rm -f *.o
+	@echo "Version $(VERSION)"
+	@echo "Build  $(TARGET_ARCH) program $(exeobj) OK"
+
+clean:
+	rm -f *.o $(outdir)/$(exeobj) $(outdir)/*.dll $(outdir)/*.a
+

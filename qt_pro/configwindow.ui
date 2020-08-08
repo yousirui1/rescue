@@ -1,0 +1,1052 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ConfigWindow</class>
+ <widget class="QWidget" name="ConfigWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1600</width>
+    <height>900</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1920</width>
+    <height>1080</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="backgroudWidget">
+     <property name="minimumSize">
+      <size>
+       <width>800</width>
+       <height>600</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>1920</width>
+       <height>1080</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget#backgroudWidget{border-image: url(:/images/backgroud.png);}</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,2,1">
+      <item>
+       <spacer name="hrightSpace">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="detailWidget">
+        <property name="minimumSize">
+         <size>
+          <width>576</width>
+          <height>549</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>576</width>
+          <height>549</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget#detailWidget{
+border-image:url(:/images/nice_light.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;}
+</string>
+        </property>
+        <widget class="QWidget" name="deskconfig_widget" native="true">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>576</width>
+           <height>549</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>576</width>
+           <height>549</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>576</width>
+           <height>549</height>
+          </size>
+         </property>
+         <widget class="QLabel" name="label_67">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>170</y>
+            <width>131</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+          </property>
+          <property name="text">
+           <string>自动进入默认桌面</string>
+          </property>
+         </widget>
+         <widget class="QWidget" name="num_widget" native="true">
+          <property name="geometry">
+           <rect>
+            <x>120</x>
+            <y>50</y>
+            <width>411</width>
+            <height>45</height>
+           </rect>
+          </property>
+          <widget class="QLabel" name="num_label">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>10</y>
+             <width>71</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;序号:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="num_edit">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>5</y>
+             <width>201</width>
+             <height>33</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
+color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="num_result_label">
+           <property name="geometry">
+            <rect>
+             <x>320</x>
+             <y>10</y>
+             <width>71</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #ff3636;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;输入错误&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QPushButton" name="laststepButton">
+          <property name="geometry">
+           <rect>
+            <x>140</x>
+            <y>500</y>
+            <width>91</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-image: url(:/images/bluebutton.png);
+color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+          </property>
+          <property name="text">
+           <string>上一步</string>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="auto_in_cloud_radio">
+          <property name="geometry">
+           <rect>
+            <x>230</x>
+            <y>170</y>
+            <width>101</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="whatsThis">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;color: #FFFFFF;&lt;/p&gt;&lt;p&gt;font: 14pt &amp;quot;黑体&amp;quot;;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 12pt &quot;黑体&quot;;</string>
+          </property>
+          <property name="text">
+           <string>启动</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+         <widget class="QLabel" name="linue1_label_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>480</y>
+            <width>576</width>
+            <height>1</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-image: url(:/images/line.png);</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="formatButton">
+          <property name="geometry">
+           <rect>
+            <x>340</x>
+            <y>500</y>
+            <width>101</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-image: url(:/images/bluebutton.png);
+color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+          </property>
+          <property name="text">
+           <string>开始安装</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_66">
+          <property name="geometry">
+           <rect>
+            <x>30</x>
+            <y>20</y>
+            <width>81</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;参数配置&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+         <widget class="QWidget" name="hostname_widget" native="true">
+          <property name="geometry">
+           <rect>
+            <x>120</x>
+            <y>110</y>
+            <width>411</width>
+            <height>45</height>
+           </rect>
+          </property>
+          <widget class="QLabel" name="hostname_label">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>10</y>
+             <width>71</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;终端名称：&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="prefix_edit">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>3</y>
+             <width>81</width>
+             <height>33</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
+color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>YZY</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="hostname_edit">
+           <property name="geometry">
+            <rect>
+             <x>210</x>
+             <y>3</y>
+             <width>101</width>
+             <height>33</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
+color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="linue1_label_3">
+           <property name="geometry">
+            <rect>
+             <x>185</x>
+             <y>20</y>
+             <width>20</width>
+             <height>1</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-image: url(:/images/line.png);</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+          <widget class="QLabel" name="hostname_result_label">
+           <property name="geometry">
+            <rect>
+             <x>320</x>
+             <y>10</y>
+             <width>71</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #ff3636;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;输入错误&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="netconfig_widget" native="true">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>576</width>
+           <height>549</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>576</width>
+           <height>549</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>576</width>
+           <height>549</height>
+          </size>
+         </property>
+         <widget class="QRadioButton" name="dhcp_radio">
+          <property name="geometry">
+           <rect>
+            <x>120</x>
+            <y>40</y>
+            <width>161</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 12pt &quot;黑体&quot;;</string>
+          </property>
+          <property name="text">
+           <string>自动获取IP地址</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+         <widget class="QWidget" name="dns_widget" native="true">
+          <property name="geometry">
+           <rect>
+            <x>120</x>
+            <y>260</y>
+            <width>411</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <widget class="QLabel" name="dns_label">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>111</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;首选DNS服务器:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="dns_result_label">
+           <property name="geometry">
+            <rect>
+             <x>340</x>
+             <y>10</y>
+             <width>71</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #ff3636;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;输入错误&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="dns_edit">
+           <property name="geometry">
+            <rect>
+             <x>130</x>
+             <y>5</y>
+             <width>201</width>
+             <height>33</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
+color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="gateway_widget" native="true">
+          <property name="geometry">
+           <rect>
+            <x>150</x>
+            <y>210</y>
+            <width>381</width>
+            <height>45</height>
+           </rect>
+          </property>
+          <widget class="QLabel" name="gateway_label">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>10</y>
+             <width>71</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;默认网关:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="gateway_result_label">
+           <property name="geometry">
+            <rect>
+             <x>310</x>
+             <y>10</y>
+             <width>71</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #ff3636;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;输入错误&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="gateway_edit">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>5</y>
+             <width>201</width>
+             <height>33</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
+color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QLabel" name="label_26">
+          <property name="geometry">
+           <rect>
+            <x>30</x>
+            <y>20</y>
+            <width>81</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 12pt &quot;黑体&quot;;</string>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; color:#ffffff;&quot;&gt;网络配置&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="static_radio">
+          <property name="geometry">
+           <rect>
+            <x>120</x>
+            <y>80</y>
+            <width>161</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 12pt &quot;黑体&quot;;</string>
+          </property>
+          <property name="text">
+           <string>使用下方IP地址</string>
+          </property>
+         </widget>
+         <widget class="QWidget" name="dns2_widget" native="true">
+          <property name="geometry">
+           <rect>
+            <x>120</x>
+            <y>310</y>
+            <width>411</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <widget class="QLabel" name="dns2_label">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>111</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;备选DNS服务器:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="dns2_result_label">
+           <property name="geometry">
+            <rect>
+             <x>340</x>
+             <y>10</y>
+             <width>71</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #ff3636;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;输入错误&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="dns2_edit">
+           <property name="geometry">
+            <rect>
+             <x>130</x>
+             <y>5</y>
+             <width>201</width>
+             <height>33</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
+color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="netmask_widget" native="true">
+          <property name="geometry">
+           <rect>
+            <x>150</x>
+            <y>160</y>
+            <width>381</width>
+            <height>45</height>
+           </rect>
+          </property>
+          <widget class="QLabel" name="netmask_label">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>10</y>
+             <width>71</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;子网掩码:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="netmask_result_label">
+           <property name="geometry">
+            <rect>
+             <x>310</x>
+             <y>10</y>
+             <width>71</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #ff3636;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;输入错误&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="netmask_edit">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>5</y>
+             <width>201</width>
+             <height>33</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
+color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QLabel" name="lineLabel">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>480</y>
+            <width>576</width>
+            <height>1</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border-image: url(:/images/line.png);</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+         <widget class="QWidget" name="ip_widget" native="true">
+          <property name="geometry">
+           <rect>
+            <x>180</x>
+            <y>110</y>
+            <width>351</width>
+            <height>45</height>
+           </rect>
+          </property>
+          <widget class="QLabel" name="ip_label">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>15</y>
+             <width>71</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;IP地址:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="ip_result_label">
+           <property name="geometry">
+            <rect>
+             <x>280</x>
+             <y>15</y>
+             <width>81</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #ff3636;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;输入错误&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="ip_edit">
+           <property name="geometry">
+            <rect>
+             <x>70</x>
+             <y>7</y>
+             <width>201</width>
+             <height>33</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
+color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QLabel" name="label_100">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>390</y>
+            <width>141</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 14pt &quot;黑体&quot;;</string>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; color:#ffffff;&quot;&gt;服务器连接配置&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+         <widget class="QWidget" name="server_ip_widget" native="true">
+          <property name="geometry">
+           <rect>
+            <x>150</x>
+            <y>420</y>
+            <width>381</width>
+            <height>45</height>
+           </rect>
+          </property>
+          <widget class="QLabel" name="server_ip_label">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>10</y>
+             <width>71</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;服务器IP：&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="server_ip_result_label">
+           <property name="geometry">
+            <rect>
+             <x>310</x>
+             <y>10</y>
+             <width>71</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #ff3636;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;输入错误&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="server_ip_edit">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>5</y>
+             <width>201</width>
+             <height>33</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
+color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QPushButton" name="nextButton">
+          <property name="geometry">
+           <rect>
+            <x>250</x>
+            <y>500</y>
+            <width>91</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">image: url(:/images/bluebutton.png);
+border-image: url(:/images/bluebutton.png);
+color: #FFFFFF;
+font: 12pt &quot;黑体&quot;;</string>
+          </property>
+          <property name="text">
+           <string>下一步</string>
+          </property>
+         </widget>
+         <zorder>server_ip_widget</zorder>
+         <zorder>dns2_widget</zorder>
+         <zorder>dns_widget</zorder>
+         <zorder>gateway_widget</zorder>
+         <zorder>netmask_widget</zorder>
+         <zorder>ip_widget</zorder>
+         <zorder>dhcp_radio</zorder>
+         <zorder>label_26</zorder>
+         <zorder>static_radio</zorder>
+         <zorder>lineLabel</zorder>
+         <zorder>label_100</zorder>
+         <zorder>nextButton</zorder>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="lineLabel_2">
+     <property name="minimumSize">
+      <size>
+       <width>9999</width>
+       <height>1</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>1</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+background-image: url(:/images/line.png);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="bottomWidget">
+     <property name="minimumSize">
+      <size>
+       <width>800</width>
+       <height>60</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>1920</width>
+       <height>60</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget#bottomWidget{border-image: url(:/images/backgroud.png);}</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>10</number>
+      </property>
+      <property name="leftMargin">
+       <number>20</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>10</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="f2Label">
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;黑体&quot;;
+color: #FFFFFF;</string>
+        </property>
+        <property name="text">
+         <string>[F10]重启</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="arrowLabel">
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;黑体&quot;;
+color: #FFFFFF;</string>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;[↑]/[↓]/[←]/[→]选择&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="enterLabel">
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;黑体&quot;;
+color: #FFFFFF;</string>
+        </property>
+        <property name="text">
+         <string>[Entern]选择确认</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="hcenSpace">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="dataLabel">
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;黑体&quot;;
+color: #FFFFFF;</string>
+        </property>
+        <property name="text">
+         <string>  00:00
+2000/01/01</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

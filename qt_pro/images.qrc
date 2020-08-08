@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/backgroud.png</file>
+        <file>images/bluebutton.png</file>
+        <file>images/line.png</file>
+        <file>images/logo.png</file>
+        <file>images/nice_black.png</file>
+        <file>images/nice_light.png</file>
+        <file>images/off-online.png</file>
+        <file>images/online.png</file>
+        <file>images/reconnect.png</file>
+        <file>images/textEdit.png</file>
+        <file>images/network.png</file>
+        <file>images/net_down.png</file>
+        <file>images/net_exception.png</file>
+        <file>images/offline-point.png</file>
+        <file>images/online-point.png</file>
+        <file>images/rircle.png</file>
+    </qresource>
+</RCC>

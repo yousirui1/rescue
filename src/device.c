@@ -321,7 +321,7 @@ int format_disk(const char *path)
     exec_cmd("mdev -s", result); 
     //sleep(1);
 
-    sprintf(cmd, "mkfs.fat %s1", path);
+    sprintf(cmd, "mkfs.vfat %s1", path);
     DEBUG("cmd: %s", cmd);
     exec_cmd(cmd, result); 
 	DEBUG("result %s", result);
@@ -362,7 +362,7 @@ int install_programe()
 
     sprintf(cmd, install_sh, dev_info.mini_disk->name, dev_info.usb_disk->name);
     exec_cmd(cmd, result);
-
+	//DEBUG("result %s", result);
 	if(strstr(result, "successd"))
 	{
 		DEBUG("install programe ok");

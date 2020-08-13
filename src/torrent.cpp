@@ -78,8 +78,6 @@ std::string add_suffix_float(double val, char const* suffix)
     return ret;
 }
 
-#define PROGRESS_PIPE 8
-
 // return the name of a torrent status enum
 bool handle_alter(lt::session& ses, lt::alert* a, lt::torrent_handle &th)
 {
@@ -138,10 +136,10 @@ try
 
     int nTimedOut = 2000; //设置下载超时时间
     //std::string save_path("/dev/vdc/");//保存文件路径
-    //int torrent_upload_limit = 100000 * 1000; //上传速度限制
+    int torrent_upload_limit = 1024 * 1024  * 5; //上传速度限制
     //int torrent_download_limit = 100000*1000; //下载速度限制 单位是字节
 
-    int torrent_upload_limit = 0;  //上传速度限制
+    //int torrent_upload_limit = 0;  //上传速度限制
     int torrent_download_limit = 0; //下载速度限制 单位是字节
     //BT下载客户端代码
     lt::settings_pack pack;

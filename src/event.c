@@ -104,6 +104,7 @@ static void process_qt_msg(char *buf, int len)
 		case INIT_PIPE:
 		{
 			init_qcow2(dev_info.mini_disk->dev, 0);
+			client_disconnect();
 			remove("/boot/conf/config.ini");
 			sync();
 			reboot(RB_AUTOBOOT);				
@@ -129,6 +130,7 @@ static void process_qt_msg(char *buf, int len)
 		case REBOOT_PIPE:
 		{
 			DEBUG("qt send pipe reboot msg");
+			client_disconnect();
 			sync();
 			reboot(RB_AUTOBOOT);				
 		}

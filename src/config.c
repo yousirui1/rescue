@@ -35,7 +35,7 @@ void init_config()
     }
 	terminal->desktop_type = read_profile_int(TERMINAL_SECTION, TM_DESKTOP_TYPE_KEY, 0, config_file);
 	terminal->auto_desktop = read_profile_int(TERMINAL_SECTION, TM_AUTO_DESKTOP_KEY, 0, config_file);
-    conf.config_ver = read_profile_int(TERMINAL_SECTION, TM_CONFIG_VER_KEY, 0, config_file);
+    conf.config_ver = read_profile_int(TERMINAL_SECTION, TM_CONFIG_VER_KEY, -1, config_file);
 
     /* network */
     net->is_dhcp = read_profile_int(NET_SECTION, NET_DHCP_KEY, 0, config_file);
@@ -88,10 +88,12 @@ int update_config(char *buf, int len)
     char result[MAX_BUFLEN] = {0};
     char cmd[MAX_BUFLEN] = {0};
     netcard_param *net = &(c->netcard);
-    if(!net->is_dhcp && strlen(net->ip) != 0 && strlen(net->netmask) != 0)
+    if(strlen(net->ip) != 0 && strlen(net->netmask) != 0 && net->is_dhcp == 0)
     {   
+		DEBUG("set static ip");
         sprintf(cmd, "ifconfig eth0 %s netmask %s", net->ip, net->netmask);
         exec_cmd(cmd, result);
+		find_all_netcards();
     }   
 	else
 	{

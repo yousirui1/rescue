@@ -55,7 +55,7 @@
 #include "p2v.h"
 
 #define HEAD_LEN 8
-#define P2V_OS_PROGRESS_PIPE 8
+#define P2V_OS_PROGRESS_PIPE 9
 
 #define DEBUG(format,...) \
         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \

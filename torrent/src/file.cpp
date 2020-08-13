@@ -591,7 +591,6 @@ static_assert(!(open_mode::sparse & open_mode::attribute_mask), "internal flags 
 		
 		if(file_path.find("/dev") != std::string::npos)
 		{
-			printf("------ physical write disk ----------------- \n");
 			is_physical_drive = true;
 		}
 

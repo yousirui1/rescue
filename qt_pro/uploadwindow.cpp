@@ -68,7 +68,7 @@ Uploadwindow::Uploadwindow(QWidget *parent) :
     ui->i_cpu_label->setWordWrap(true);
     ui->i_cpu_label->setAlignment(Qt::AlignTop);
     ui->i_cpu_label->setText(global->conf.terminal.cpu);
-    ui->i_num_label->setText("YZY-" + QString::number(global->conf.terminal.id));
+    ui->i_num_label->setText(QString::number(global->conf.terminal.id));
     ui->i_memory_label->setText(QString::number(global->conf.terminal.memory / 1024) + "MB");
     ui->i_ip_label->setText(global->conf.netcard.ip);
     ui->i_mac_label->setText(global->conf.netcard.mac);
@@ -156,8 +156,13 @@ void Uploadwindow::keyPressEvent(QKeyEvent *event)
     {
         qApp->exit();
     }
-
-
+	
+	if (event->key() == Qt::Key_F5)
+    {
+        char head[HEAD_LEN] = {0};
+        Global *global = Global::getGlobal();
+        global->pipe->send_pipe(head, INIT_PIPE, 0);
+    }
 }
 
 void Uploadwindow::showErrorDialog(char *err_msg)
@@ -194,7 +199,7 @@ QString add_suffix_float(double val, char const* suffix)
 
 void Uploadwindow::upConfig(struct config *conf)
 {
-    ui->i_num_label->setText(QString("YZY-%1%2").arg(conf->terminal.id).arg((char *)conf->terminal.name));
+    ui->i_num_label->setText(QString("%1").arg(conf->terminal.id));
     ui->i_ip_label->setText(conf->netcard.ip);
 }
 

@@ -10,7 +10,8 @@ DEBUG = -O2 #-g #-O2
 
 TOP_DIR := $(shell pwd)
 OBJ_DIR := $(TOP_DIR)/obj
-outdir := $(TOP_DIR)/bin
+#outdir := $(TOP_DIR)/bin
+outdir := $(TOP_DIR)/../lib
 
 AS = $(CROSS_COMPILE)as
 CC = $(CROSS_COMPILE)gcc
@@ -25,7 +26,7 @@ MAKE = make
 
 CONFIG_COMPILER = gnu
 
-outdir = ./bin
+#outdir = ./bin
 
 exeobj = torrent
 
@@ -90,7 +91,8 @@ CXXFLAGS = $(CFLAGS) -std=c++11  -lboost_system
 VPATH = .:./include:./lib:./src:./libtorrent:./kademlia:./ed25519:./bak
 
 
-all:  $(exeobj)  
+#all:  $(exeobj)  
+all:  $(libobj)
 
 $(mainobj):%.o:%.c 
 	$(CC) -Wall $(DEBUG) $(CFLAGS) $(DEFINES) -c $< -o  $@

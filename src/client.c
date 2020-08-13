@@ -392,8 +392,13 @@ static int recv_down_torrent(struct client *cli)
 			}
 			else
 			{
+				DEBUG("add_qcow2 fail torrent->file_size %lld torrent->real_size %lld", torrent->file_size,torrent->real_size);
 				return send_down_torrent(cli, ERROR);
 			}	
+		}
+		else
+		{
+			DEBUG("ret %d != torrent->data_len %d", ret, torrent->data_len);
 		}
     }  
 	return ERROR;
@@ -556,7 +561,6 @@ static int recv_update_config(struct client *cli)
 	int ret;
     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 
-	DEBUG("update_config: %s", buf);
     cJSON *root = cJSON_Parse((char*)(buf));
     if(root)
     {
@@ -629,7 +633,6 @@ static int recv_update_ip(struct client *cli)
     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 
     cJSON *root = cJSON_Parse((char*)(buf));
-	DEBUG("update_ip: %s", buf);
     if(root)
     {
     	cJSON* batch_no = cJSON_GetObjectItem(root, "batch_no");
@@ -702,7 +705,6 @@ static int recv_update_name(struct client *cli)
 	int ret;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
-	DEBUG("update_name: %s", buf);
 	if(root)
 	{
 		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
@@ -779,7 +781,7 @@ static int recv_reboot(struct client *cli, int flag)
 static int recv_get_diff_torrent(struct client *cli)
 {
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
-	DEBUG("%s", buf);
+	//DEBUG("%s", buf);
 	return SUCCESS;
 }
 
@@ -936,7 +938,6 @@ static int recv_get_config(struct client *cli)
 {
 	int ret;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
-	DEBUG("recv_config_version buf %s", buf);
 	cJSON *root = cJSON_Parse((char*)(buf));
 	if(root)
 	{
@@ -1046,7 +1047,6 @@ static int recv_set_update_config(struct client *cli)
 {
     int ret;
     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
-    DEBUG("recv_config_version buf %s", buf);
 
     cJSON *root = cJSON_Parse((char*)(buf));
     if(root)
@@ -1073,7 +1073,10 @@ static int send_set_update_config(struct client *cli)
 	{
         cJSON_AddNumberToObject(root, "terminal_id", conf.terminal.id);
         cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
-        cJSON_AddStringToObject(root, "name", conf.terminal.name);
+		if(strlen(conf.terminal.name) == 0)
+        	cJSON_AddStringToObject(root, "name", "default");
+		else
+        	cJSON_AddStringToObject(root, "name", conf.terminal.name);
         cJSON_AddStringToObject(root, "ip", conf.netcard.ip);
         cJSON_AddNumberToObject(root, "is_dhcp", conf.netcard.is_dhcp);
         cJSON_AddStringToObject(root, "mask", "255.255.255.0");
@@ -1136,12 +1139,12 @@ static int recv_config_version(struct client *cli)
 			cJSON* data = cJSON_GetObjectItem(root, "data");
 			cJSON *config_ver  = cJSON_GetObjectItem(data, "conf_version");
 		
-			if(config_ver->valueint == -1 || config_ver->valueint < conf.config_ver) //没有配置上传配置 
+			if(config_ver->valueint == -1 || config_ver->valueint <= conf.config_ver || conf.config_ver == -1) //没有配置上传配置 
 			{
 				DEBUG("upload config data");
 				return send_set_update_config(cli);
 			}
-			else if(config_ver->valueint >= conf.config_ver)	//更新本地配置
+			else if(config_ver->valueint > conf.config_ver)	//更新本地配置
 			{
 				DEBUG("updata load config data");
 				return send_get_config(cli);

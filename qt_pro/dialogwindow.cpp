@@ -249,12 +249,14 @@ void DialogWindow::on_confirm_btn_clicked()
     struct config *conf = &(global->conf);
 
     conf->netcard.is_dhcp = dhcp_flag;
+	memset(&conf->netcard, 0, sizeof(conf->netcard));
     memcpy(conf->netcard.ip, ba_ip.data(), ba_ip.length());
     memcpy(conf->netcard.gateway, ba_gateway.data(), ba_gateway.length());
     //memcpy(conf->netcard.boardcast_addr, ui->->text().data(), ui->ip_edit->text().length());
     memcpy(conf->netcard.netmask, ba_netmask.data(), ba_netmask.length());
     memcpy(conf->netcard.dns1, ba_nds1.data(), ba_nds1.length());
     memcpy(conf->netcard.dns2, ba_nds2.data(), ba_nds2.length());
+	memset(conf->server.ip, 0, sizeof(conf->server.ip));
 
     memcpy(conf->server.ip, ba_server_ip.data(), ba_server_ip.length());
 
@@ -293,7 +295,11 @@ void DialogWindow::slots_dhcpable()
               ui->dns2_edit->setEnabled(false);
               ui->netmask_edit->setEnabled(false);
               ui->gateway_edit->setEnabled(false);
-              //ui->server_ip_edit->setEnabled(false);
+              ui->ip_edit->setText("");
+        	  ui->dns_edit->setText("");
+        	  ui->dns2_edit->setText("");
+        	  ui->netmask_edit->setText("");
+        	  ui->gateway_edit->setText("");
               dhcp_flag = 1;
               break;
            case 1:          //static
@@ -309,13 +315,7 @@ void DialogWindow::slots_dhcpable()
         default:
                 return;
         }
-        ui->ip_edit->setText("");
-        ui->ip_edit->setText("");
-        ui->dns_edit->setText("");
-        ui->dns2_edit->setText("");
-        ui->netmask_edit->setText("");
-        ui->gateway_edit->setText("");
-        //ui->server_ip_edit->setText("");
+       //ui->server_ip_edit->setText("");
 }
 
 void DialogWindow::on_error_confirm_btn_clicked()

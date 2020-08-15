@@ -20,7 +20,6 @@ void *thread_qt(void *param)
     ret = pthread_attr_setschedparam(&st_attr, &sched);
 
    	set_pipe(pipe_qt);
-
 	set_config(&conf);
 	DEBUG("%s", conf.netcard.ip);
     create_window(0);

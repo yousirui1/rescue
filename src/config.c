@@ -35,10 +35,10 @@ void init_config()
     }
 	terminal->desktop_type = read_profile_int(TERMINAL_SECTION, TM_DESKTOP_TYPE_KEY, 0, config_file);
 	terminal->auto_desktop = read_profile_int(TERMINAL_SECTION, TM_AUTO_DESKTOP_KEY, 0, config_file);
-    conf.config_ver = read_profile_int(TERMINAL_SECTION, TM_CONFIG_VER_KEY, -1, config_file);
+    conf.config_ver = read_profile_int(TERMINAL_SECTION, TM_CONFIG_VER_KEY, -2, config_file);
 
     /* network */
-    net->is_dhcp = read_profile_int(NET_SECTION, NET_DHCP_KEY, 0, config_file);
+    net->is_dhcp = read_profile_int(NET_SECTION, NET_DHCP_KEY, 1, config_file);
     if(read_profile_string(NET_SECTION, NET_IP_KEY, buf, sizeof(buf), net->ip, config_file))
     {
         memcpy(net->ip, buf, strlen(buf));
@@ -88,20 +88,28 @@ int update_config(char *buf, int len)
     char result[MAX_BUFLEN] = {0};
     char cmd[MAX_BUFLEN] = {0};
     netcard_param *net = &(c->netcard);
-    if(strlen(net->ip) != 0 && strlen(net->netmask) != 0 && net->is_dhcp == 0)
+	terminal_info *termainl = &(c->terminal);
+    if(net->is_dhcp)
     {   
-		DEBUG("set static ip");
-        sprintf(cmd, "ifconfig eth0 %s netmask %s", net->ip, net->netmask);
-        exec_cmd(cmd, result);
-		find_all_netcards();
-    }   
-	else
-	{
 		strcpy(cmd, "udhcpc");
         exec_cmd(cmd, result);
 		find_all_netcards();
 		send_config_pipe();
+    }   
+	else
+	{
+		if(strlen(net->ip) != 0 && strlen(net->netmask) != 0 )
+		{
+        	sprintf(cmd, "ifconfig eth0 %s netmask %s", net->ip, net->netmask);
+        	exec_cmd(cmd, result);
+        	sprintf(cmd, "route add default gw %s", net->gateway);
+        	exec_cmd(cmd, result);
+		}
 	}
+	DEBUG("dhcp %d set static ip: %s netmask: %s gw: %s mac: %s", net->is_dhcp, net->ip, net->netmask, net->gateway, net->mac);
+	DEBUG("termainl->id %d", termainl->id);
+	DEBUG("termainl->name %s", termainl->name);
+	//DEBGU("");
     return save_config();
 }
 
@@ -132,9 +140,6 @@ int save_config()
     sprintf(buf, "%d", conf.config_ver);
     write_profile_string(TERMINAL_SECTION, TM_CONFIG_VER_KEY, buf, config_file);
 
-	DEBUG("!!!!!!!! terminal->desktop_type %d", terminal->desktop_type);
-
-	DEBUG("!!!!!!!! net->is_dhcp %d", net->is_dhcp);
     /* network */
     sprintf(buf, "%d", net->is_dhcp);
     write_profile_string(NET_SECTION, NET_DHCP_KEY, buf, config_file);

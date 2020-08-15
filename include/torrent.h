@@ -8,6 +8,7 @@ extern "C"
 
 void *thread_torrent(void *param);
 int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t physical_offset);
+void stop_torrent();
 
 
 struct torrent_task{

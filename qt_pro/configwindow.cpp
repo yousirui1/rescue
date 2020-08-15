@@ -105,7 +105,6 @@ ConfigWindow::ConfigWindow(QWidget *parent) :
     connect(dialog_ui->install_cacel_btn, SIGNAL(clicked()), this, SLOT(install_cacenl_clicked()));
     connect(dialog_ui->install_confirm_btn, SIGNAL(clicked()), this, SLOT(install_confirm_btn()));
 
-
     ui->ip_edit->setText(global->conf.netcard.ip);
     ui->netmask_edit->setText(global->conf.netcard.netmask);
     ui->gateway_edit->setText(global->conf.netcard.gateway);
@@ -130,14 +129,13 @@ ConfigWindow::ConfigWindow(QWidget *parent) :
 
     if(global->conf.netcard.is_dhcp)
     {
-           ui->dhcp_radio->setChecked(true);
+          ui->dhcp_radio->setChecked(true);
           //ui->static_radio->setChecked(false);
           ui->ip_edit->setEnabled(false);
           ui->dns_edit->setEnabled(false);
           ui->dns2_edit->setEnabled(false);
           ui->netmask_edit->setEnabled(false);
           ui->gateway_edit->setEnabled(false);
-          dhcp_flag = 1;
     }
     else
     {
@@ -149,7 +147,6 @@ ConfigWindow::ConfigWindow(QWidget *parent) :
          ui->dns2_edit->setEnabled(true);
          ui->netmask_edit->setEnabled(true);
          ui->gateway_edit->setEnabled(true);
-         dhcp_flag = 0;
     }
 
     DEBUG("global->conf.netcard.is_dhcp %d", global->conf.netcard.is_dhcp);
@@ -177,7 +174,7 @@ void ConfigWindow::install_confirm_btn()
 
 void ConfigWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_F10)
+    if (event->key() == Qt::Key_F8)
     {
         char head[HEAD_LEN] = {0};
         Global *global = Global::getGlobal();
@@ -218,7 +215,6 @@ void ConfigWindow::showEvent(QShowEvent *e)
           ui->dns2_edit->setEnabled(false);
           ui->netmask_edit->setEnabled(false);
           ui->gateway_edit->setEnabled(false);
-          dhcp_flag = 1;
     }
     else
     {
@@ -230,7 +226,6 @@ void ConfigWindow::showEvent(QShowEvent *e)
          ui->dns2_edit->setEnabled(true);
          ui->netmask_edit->setEnabled(true);
          ui->gateway_edit->setEnabled(true);
-         dhcp_flag = 0;
     }
 }
 
@@ -248,7 +243,6 @@ void ConfigWindow::on_laststepButton_clicked()
           ui->dns2_edit->setEnabled(false);
           ui->netmask_edit->setEnabled(false);
           ui->gateway_edit->setEnabled(false);
-          dhcp_flag = 1;
     }
     else
     {
@@ -260,7 +254,6 @@ void ConfigWindow::on_laststepButton_clicked()
          ui->dns2_edit->setEnabled(true);
          ui->netmask_edit->setEnabled(true);
          ui->gateway_edit->setEnabled(true);
-         dhcp_flag = 0;
     }
 
 }
@@ -268,6 +261,7 @@ void ConfigWindow::on_laststepButton_clicked()
 void ConfigWindow::on_nextButton_clicked()
 {
     int ret = 0;
+    Global *global = Global::getGlobal();
     if(!isIPvalidate(ui->ip_edit->text()))
     {
         ui->ip_result_label->show();
@@ -308,7 +302,7 @@ void ConfigWindow::on_nextButton_clicked()
     else
         ui->gateway_result_label->hide();
 
-    if(dhcp_flag)
+    if(global->conf.netcard.is_dhcp)
     {
         ui->ip_result_label->hide();
         ui->gateway_result_label->hide();
@@ -326,12 +320,12 @@ void ConfigWindow::on_nextButton_clicked()
         ui->server_ip_result_label->hide();
 
 
-    if(!ret || dhcp_flag)
+
+    if(!ret || global->conf.netcard.is_dhcp)
     {
         ui->netconfig_widget->hide();
         ui->deskconfig_widget->show();
         ui->num_edit->setFocus();
-        Global *global = Global::getGlobal();
         if(global->conf.terminal.auto_desktop)
         {
              ui->auto_in_cloud_radio->setChecked(true);
@@ -380,22 +374,38 @@ void ConfigWindow::on_formatButton_clicked()
     //
     struct config *conf = &(global->conf);
 
-    conf->netcard.is_dhcp = dhcp_flag;
-	memset(&conf->netcard, 0, sizeof(conf->netcard));
+
+    memset(conf->netcard.ip, 0, sizeof(conf->netcard.ip));
     memcpy(conf->netcard.ip, ba_ip.data(), ba_ip.length());
+
+    memset(conf->netcard.gateway, 0, sizeof(conf->netcard.gateway));
     memcpy(conf->netcard.gateway, ba_gateway.data(), ba_gateway.length());
-    //memcpy(conf->netcard.boardcast_addr, ui->->text().data(), ui->ip_edit->text().length());
+
+    memset(conf->netcard.netmask, 0, sizeof(conf->netcard.netmask));
     memcpy(conf->netcard.netmask, ba_netmask.data(), ba_netmask.length());
+
+    memset(conf->netcard.dns1, 0, sizeof(conf->netcard.dns1));
     memcpy(conf->netcard.dns1, ba_nds1.data(), ba_nds1.length());
+
+    memset(conf->netcard.dns2, 0, sizeof(conf->netcard.dns2));
     memcpy(conf->netcard.dns2, ba_nds2.data(), ba_nds2.length());
 
 	memset(conf->server.ip, 0, sizeof(conf->server.ip));
     memcpy(conf->server.ip, ba_server_ip.data(), ba_server_ip.length());
+
 	memset(conf->terminal.name, 0, sizeof(conf->terminal.name));
     memcpy(conf->terminal.name, ba_terminal_name.data(), ba_terminal_name.length());
-    //memcpy(conf->terminal.id, ba_terminal_name.data(), ba_terminal_name.length());
 
-    DEBUG("----------dhcp_flag %d---------", dhcp_flag);
+    global->conf.terminal.id = ui->num_edit->text().toInt();
+
+    DEBUG("----------dhcp_flag %d---------", global->conf.netcard.is_dhcp);
+    DEBUG("conf->netcard.ip %s", conf->netcard.ip);
+    DEBUG("conf->netcard.gateway %s", conf->netcard.ip);
+    DEBUG("conf->netcard.netmask %s", conf->netcard.ip);
+    DEBUG("conf->netcard.dns1 %s", conf->netcard.ip);
+    DEBUG("conf->netcard.dns2 %s", conf->netcard.ip);
+    DEBUG("conf->server.ip %s", conf->netcard.ip);
+    DEBUG("global->conf.terminal.id %d", global->conf.terminal.id);
     char *buf = (char *)malloc(sizeof(struct config) + HEAD_LEN +1);
 
     if(!buf)
@@ -407,11 +417,12 @@ void ConfigWindow::on_formatButton_clicked()
     free(buf);
     dialog_ui->setType(DIALOG_INSTALL);
     dialog_ui->show();
-    //global->m_ip = ui->ip_edit->text();
+
 }
 
 void ConfigWindow::slots_dhcpable()
 {
+    Global *global = Global::getGlobal();
         switch(group_btn->checkedId())
         {
            case 0:          //dhcp
@@ -427,7 +438,8 @@ void ConfigWindow::slots_dhcpable()
         	  ui->dns2_edit->setText("");
         	  ui->netmask_edit->setText("");
         	  ui->gateway_edit->setText("");
-              dhcp_flag = 1;
+
+              global->conf.netcard.is_dhcp = 1;
               break;
            case 1:          //static
               DEBUG("set network static ip model");
@@ -437,7 +449,8 @@ void ConfigWindow::slots_dhcpable()
               ui->netmask_edit->setEnabled(true);
               ui->gateway_edit->setEnabled(true);
               //ui->server_ip_edit->setEnabled(true);
-              dhcp_flag = 0;
+
+              global->conf.netcard.is_dhcp = 0;
               break;
            case 2:
                 auto_cloud_flag = !auto_cloud_flag;

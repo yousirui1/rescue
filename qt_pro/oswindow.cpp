@@ -65,7 +65,7 @@ OSWindow::~OSWindow()
 
 void OSWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_F10)
+    if (event->key() == Qt::Key_F8)
     {
         char head[HEAD_LEN] = {0};
         Global *global = Global::getGlobal();
@@ -113,7 +113,6 @@ void OSWindow::on_pushButton_12_clicked()
 
     DEBUG("%s", info.template_name);
     DEBUG("%s", info.template_desc);
-
 
     char *buf = (char *)malloc(sizeof(struct template_info) + HEAD_LEN +1);
     if(!buf)

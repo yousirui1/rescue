@@ -78,5 +78,6 @@ int set_config(struct config *conf)
     Global *global = Global::getGlobal();
     global->setConfig(conf);
 	global->setInstallFlag(conf->install_flag);
+    DEBUG("global->ip %s", global->conf.netcard.ip);
 }
 

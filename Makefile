@@ -12,6 +12,7 @@ TOP_DIR := $(shell pwd)
 OBJ_DIR := $(TOP_DIR)/obj
 outdir := $(TOP_DIR)/bin
 QT_DIR := $(TOP_DIR)/qt_pro
+libdir := $(TOP_DIR)/lib
 
 P2V_DIR := $(TOP_DIR)/virt-p2v
 BT_DIR := $(TOP_DIR)/torrent
@@ -28,7 +29,6 @@ CP = cp
 
 CONFIG_COMPILER = gnu
 
-outdir = ./bin
 
 exeobj = rescue
 
@@ -93,6 +93,13 @@ $(exeobj):$(mainobj) $(cppobj) $(p2vobj) #$(btobj)
 	@echo "Build  $(TARGET_ARCH) program $(exeobj) OK"
 	$(CP) $(outdir)/$(exeobj) /home/ysr/ftp/
 
+pack:
+	sudo $(CP) $(outdir)/$(exeobj) /mnt/initrd/root
+	sudo $(CP) $(libdir)/libqt.so.1 /mnt/initrd/root/lib
+	sudo $(CP) $(libdir)/libtorrent.so /mnt/initrd/root/lib
+	
+
 clean:
-	rm -f *.o $(outdir)/$(exeobj) $(outdir)/*.dll $(outdir)/*.a $(OBJ_DIR)/*.o
+	rm -f *.o $(outdir)/$(exeobj) $(outdir)/*.dll $(outdir)/*.a $(OBJ_DIR)/*.o 
+	$(MAKE) -C $(QT_DIR) clean
 

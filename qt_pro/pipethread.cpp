@@ -115,7 +115,6 @@ void PipeThread::process_pipe(unsigned char *msg, int len)
         }
         case ERROR_MSG_PIPE:
         {
-
             Global *global = Global::getGlobal();
             global->setErrorMsg(err_msg_desc[*(int*)&tmp[0]]);
             break;

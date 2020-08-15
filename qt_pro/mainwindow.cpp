@@ -88,6 +88,7 @@ MainWindow::MainWindow(QWidget *parent) :
     dialog_ui->hide();
     global->startTimeOut();
     global->pipe->start();
+	DEBUG("global->ip %s", global->conf.netcard.ip);
 
     if(global->install_flag)
     {
@@ -126,7 +127,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         qApp->exit();
     }
 
-    if (event->key() == Qt::Key_F10)
+    if (event->key() == Qt::Key_F8)
     {
         char head[HEAD_LEN] = {0};
     	Global *global = Global::getGlobal();

@@ -94,6 +94,7 @@ typedef enum yzy_cmd
     SEND_DOWN_TORRENT = 1015,
 	UPLOAD_DESKTOP,
 	SEND_DESKTOP,
+	CANCEL_SEND_DESKTOP = 1025,
 
     //SHUT  
 

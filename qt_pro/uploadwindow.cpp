@@ -125,7 +125,7 @@ void Uploadwindow::showEvent(QShowEvent *e)
     }
 
     ui->i_progress_label->setText("0%");
-    ui->i_num_label->setText("YZY-" + QString::number(global->conf.terminal.id));
+    ui->i_num_label->setText(QString::number(global->conf.terminal.id));
     ui->i_ip_label->setText(global->conf.netcard.ip);
     ui->i_mac_label->setText(global->conf.netcard.mac);
 }
@@ -138,7 +138,7 @@ void Uploadwindow::keyPressEvent(QKeyEvent *event)
        dialog_ui->show();
     }
 
-    if (event->key() == Qt::Key_F10)
+    if (event->key() == Qt::Key_F8)
     {
         char head[HEAD_LEN] = {0};
         Global *global = Global::getGlobal();

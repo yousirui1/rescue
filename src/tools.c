@@ -773,4 +773,9 @@ char *unicode_to_utf8(unsigned int *unic, char *pOutput)
     return pOutput;
 }
 
-
+char *strupr(char *str){
+    char *orign=str;
+    for (; *str!='\0'; str++)
+        *str = toupper(*str);
+    return orign;
+}

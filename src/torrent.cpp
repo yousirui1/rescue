@@ -13,6 +13,7 @@ using namespace std;
 using namespace chrono;
 static int count;
 int64_t downloadsize = 0;
+int complete = 0;
 
 char const* state(lt::torrent_status::state_t s)
 {   
@@ -128,6 +129,12 @@ bool handle_alter(lt::session& ses, lt::alert* a, lt::torrent_handle &th)
 }
 
 
+void stop_torrent()
+{
+	cout<<"stop_torrent"<<endl;
+	complete = 1;
+}
+
 
 int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t physical_offset)
 try
@@ -136,19 +143,65 @@ try
 
     int nTimedOut = 2000; //设置下载超时时间
     //std::string save_path("/dev/vdc/");//保存文件路径
-    int torrent_upload_limit = 1024 * 1024  * 5; //上传速度限制
+    //int torrent_upload_limit = 1024 * 1024  * 5; //上传速度限制
     //int torrent_download_limit = 100000*1000; //下载速度限制 单位是字节
 
-    //int torrent_upload_limit = 0;  //上传速度限制
+    int torrent_upload_limit = 0;  //上传速度限制
     int torrent_download_limit = 0; //下载速度限制 单位是字节
     //BT下载客户端代码
-    lt::settings_pack pack;
+
+	lt::settings_pack pack;
+	pack.set_int(lt::settings_pack::choking_algorithm, lt::settings_pack::rate_based_choker);	
     pack.set_int(lt::settings_pack::alert_mask
-        , lt::alert::error_notification
-        | lt::alert::storage_notification
-        | lt::alert::status_notification);
-    pack.set_str(lt::settings_pack::user_agent, "ltclient/""test");
-	//pack.set_int();
+        , lt::alert_category::error
+        | lt::alert_category::peer
+        | lt::alert_category::port_mapping
+        | lt::alert_category::storage
+        | lt::alert_category::tracker
+        | lt::alert_category::connect
+        | lt::alert_category::status
+        | lt::alert_category::ip_block
+        | lt::alert_category::performance_warning
+        | lt::alert_category::dht
+        | lt::alert_category::incoming_request
+        | lt::alert_category::dht_operation
+        | lt::alert_category::port_mapping_log
+        | lt::alert_category::file_progress);
+	pack.set_str(lt::settings_pack::user_agent, "ltclient/""test");
+
+    pack.set_int(lt::settings_pack::active_dht_limit, 600);
+    pack.set_int(lt::settings_pack::active_tracker_limit, 4000);
+    pack.set_bool(lt::settings_pack::allow_multiple_connections_per_ip, 1); 
+    pack.set_int(lt::settings_pack::allowed_fast_set_size, 0); 
+    pack.set_int(lt::settings_pack::cache_buffer_chunk_size, 128);
+    pack.set_int(lt::settings_pack::cache_expiry, 30);
+    pack.set_int(lt::settings_pack::cache_size, 65536);
+    pack.set_int(lt::settings_pack::checking_mem_usage, 320);
+    pack.set_int(lt::settings_pack::connection_speed, 500);
+    pack.set_int(lt::settings_pack::connections_limit, 8000);
+    pack.set_int(lt::settings_pack::dht_upload_rate_limit, 20000);
+    pack.set_int(lt::settings_pack::file_pool_size, 500);
+    pack.set_int(lt::settings_pack::inactivity_timeout, 20);
+    pack.set_int(lt::settings_pack::listen_queue_size, 3000);
+    pack.set_bool(lt::settings_pack::low_prio_disk, 0); 
+    pack.set_int(lt::settings_pack::max_allowed_in_request_queue, 2000);
+    pack.set_int(lt::settings_pack::max_failcount, 1); 
+    pack.set_int(lt::settings_pack::max_http_recv_buffer_size, 6291456);
+    pack.set_int(lt::settings_pack::max_out_request_queue, 1500);
+    pack.set_int(lt::settings_pack::max_queued_disk_bytes, 7340032);
+    pack.set_int(lt::settings_pack::max_rejects, 10);
+    pack.set_int(lt::settings_pack::mixed_mode_algorithm, 10);
+    pack.set_int(lt::settings_pack::peer_timeout, 20);
+    pack.set_int(lt::settings_pack::recv_socket_buffer_size, 1048576);
+    pack.set_int(lt::settings_pack::request_timeout, 10);
+    pack.set_int(lt::settings_pack::send_buffer_low_watermark, 1048576);
+    pack.set_int(lt::settings_pack::send_buffer_watermark, 3145728);
+    pack.set_int(lt::settings_pack::send_buffer_watermark_factor, 150);
+    pack.set_int(lt::settings_pack::send_socket_buffer_size, 1048576);
+    pack.set_int(lt::settings_pack::suggest_mode, 1); 
+    pack.set_bool(lt::settings_pack::use_disk_cache_pool, 1); 
+    pack.set_int(lt::settings_pack::write_cache_line_size, 256);
+
 
 	if(file_name)
 		strcpy(info.file_name, file_name);
@@ -169,7 +222,8 @@ try
     static auto end = system_clock::now();
     static auto duration = duration_cast<microseconds>(end - start);;
     params.ti->set_physicaldrive_offset(physical_offset);
-    while (true)
+	complete = 0;
+    while (!complete)
     {
         downloadsize = params.ti->files().file_size(0); //下载文件的总大小
 		info.file_size = downloadsize;
@@ -183,11 +237,10 @@ try
             //}
             ::handle_alter(ses, a, th);
         }
-
         std::vector<std::int64_t> file_progress;
         th.file_progress(file_progress); // 获取文件下载进度
         int const idx = static_cast<int>(0);
-        bool const complete = file_progress[idx] == downloadsize; //判断文件是否下载完成
+        complete = file_progress[idx] == downloadsize; //判断文件是否下载完成
         if (complete)
         {
             ses.post_torrent_updates();

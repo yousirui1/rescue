@@ -182,14 +182,20 @@ void find_all_netcards()
     {   
         DEBUG("dev_info.net[%d].name %s",i, dev_info.net[i].name);
         DEBUG("dev_info.net[%d].ip %s", i, dev_info.net[i].ip);
-        DEBUG("dev_info.net[%d].mac %s", i ,dev_info.net[i].mac);
+        //DEBUG("dev_info.net[%d].mac %s", i ,dev_info.net[i].mac);
         DEBUG("dev_info.net[%d].netmask %s", i, dev_info.net[i].netmask);
-
+		
         if(STRPREFIX(dev_info.net[i].name, "eth0"))
         {   
             memcpy(net->ip, dev_info.net[i].ip, 32);
             memcpy(net->netmask, dev_info.net[i].netmask, 32);
-            memcpy(net->mac, dev_info.net[i].mac, 32);
+
+			//char *mac = dev_info.net[i].mac;
+			//mac = strupr(mac);
+			strupr(dev_info.net[i].mac);	
+            //memcpy(net->mac, mac, 32);
+			DEBUG("mac %s", dev_info.net[i].mac);
+			memcpy(net->mac, dev_info.net[i].mac, 32);
 			
     		exec_cmd("cat /sys/class/net/eth0/carrier ", result);
 			if(result[0] == '0')

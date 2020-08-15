@@ -249,16 +249,27 @@ void DialogWindow::on_confirm_btn_clicked()
     struct config *conf = &(global->conf);
 
     conf->netcard.is_dhcp = dhcp_flag;
-	memset(&conf->netcard, 0, sizeof(conf->netcard));
-    memcpy(conf->netcard.ip, ba_ip.data(), ba_ip.length());
-    memcpy(conf->netcard.gateway, ba_gateway.data(), ba_gateway.length());
-    //memcpy(conf->netcard.boardcast_addr, ui->->text().data(), ui->ip_edit->text().length());
-    memcpy(conf->netcard.netmask, ba_netmask.data(), ba_netmask.length());
-    memcpy(conf->netcard.dns1, ba_nds1.data(), ba_nds1.length());
-    memcpy(conf->netcard.dns2, ba_nds2.data(), ba_nds2.length());
-	memset(conf->server.ip, 0, sizeof(conf->server.ip));
 
+    memset(conf->netcard.ip, 0, sizeof(conf->netcard.ip));
+    memcpy(conf->netcard.ip, ba_ip.data(), ba_ip.length());
+
+    memset(conf->netcard.gateway, 0, sizeof(conf->netcard.gateway));
+    memcpy(conf->netcard.gateway, ba_gateway.data(), ba_gateway.length());
+
+    memset(conf->netcard.netmask, 0, sizeof(conf->netcard.netmask));
+    memcpy(conf->netcard.netmask, ba_netmask.data(), ba_netmask.length());
+
+    memset(conf->netcard.dns1, 0, sizeof(conf->netcard.dns1));
+    memcpy(conf->netcard.dns1, ba_nds1.data(), ba_nds1.length());
+
+    memset(conf->netcard.dns2, 0, sizeof(conf->netcard.dns2));
+    memcpy(conf->netcard.dns2, ba_nds2.data(), ba_nds2.length());
+
+    memset(conf->server.ip, 0, sizeof(conf->server.ip));
     memcpy(conf->server.ip, ba_server_ip.data(), ba_server_ip.length());
+
+    memset(conf->terminal.name, 0, sizeof(conf->terminal.name));
+
 
     char *buf = (char *)malloc(sizeof(struct config) + HEAD_LEN +1);
 

@@ -35,7 +35,7 @@ private slots:
 private:
     Ui::ConfigWindow *ui;
     QButtonGroup *group_btn;
-    int dhcp_flag;
+    //int dhcp_flag;
     bool auto_cloud_flag;
 public:
     QLabel *date_label;

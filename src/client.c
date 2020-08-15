@@ -102,6 +102,112 @@ int send_heartbeat(struct client *cli)
 	return ret;	
 }
 
+
+
+static int send_delete(struct client *cli, int batch_no)
+{
+	int ret;
+	if(cli->data_buf)
+		free(cli->data_buf);
+	
+	cJSON *root = cJSON_CreateObject();
+	cJSON *data = cJSON_CreateObject();
+	
+	if(root && data)
+	{
+		cJSON_AddNumberToObject(root, "code", 0);
+		cJSON_AddStringToObject(root, "msg", "Success");
+
+		cJSON_AddItemToObject(root, "data", data);
+		
+		cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
+		cJSON_AddNumberToObject(data, "batch_no", batch_no);
+	
+		cli->data_buf = cJSON_Print(root);
+		cli->data_size = strlen(cli->data_buf);
+		set_packet_head(cli->packet, SHUTDONW, cli->data_size, JSON_TYPE, 1);
+		ret = send_packet(cli);
+		client_disconnect();		
+		client_connect();
+	}	
+	else
+	{
+		if(data)
+			cJSON_Delete(data);
+		ret = ERROR;
+	}	
+	if(root)
+		cJSON_Delete(root);
+
+	return ret;
+}
+
+static int recv_delete(struct client *cli)
+{
+	int ret;
+	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+	cJSON *root = cJSON_Parse((char*)(buf));
+	if(root)
+	{
+		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
+		return send_delete(cli, batch_no->valueint);
+	}
+	return ERROR;
+}
+
+static int send_cancel_send_desktop(struct client *cli, int batch_no)
+{
+	int ret;
+	if(cli->data_buf)
+		free(cli->data_buf);
+	
+	cJSON *root = cJSON_CreateObject();
+	cJSON *data = cJSON_CreateObject();
+	
+	if(root && data)
+	{
+		cJSON_AddNumberToObject(root, "code", 0);
+		cJSON_AddStringToObject(root, "msg", "Success");
+
+		cJSON_AddItemToObject(root, "data", data);
+		
+		cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
+		cJSON_AddNumberToObject(data, "batch_no", batch_no);
+	
+		cli->data_buf = cJSON_Print(root);
+		cli->data_size = strlen(cli->data_buf);
+		set_packet_head(cli->packet, SHUTDONW, cli->data_size, JSON_TYPE, 1);
+		ret = send_packet(cli);
+		stop_torrent();
+	}	
+	else
+	{
+		if(data)
+			cJSON_Delete(data);
+		ret = ERROR;
+	}	
+	if(root)
+		cJSON_Delete(root);
+
+	return ret;
+}
+
+static int recv_cancel_send_desktop(struct client *cli)
+{
+	int ret;
+	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+	cJSON *root = cJSON_Parse((char*)(buf));
+	DEBUG("recv_cancel_download_desktop buf %s", buf);
+	if(root)
+	{
+		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
+		return send_cancel_send_desktop(cli, batch_no->valueint);
+	}
+	return ERROR;
+}
+
+
+
 static int recv_p2v_progress(struct client *cli)
 {
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
@@ -1288,6 +1394,12 @@ static int process_msg(struct client *cli)
             break;
 		case DIFF_DOWN_TORRENT:
 			ret = recv_get_diff_torrent(cli);
+			break;
+		case CANCEL_SEND_DESKTOP:
+			ret = recv_cancel_send_desktop(cli);
+			break;
+		case DELETE:
+			ret = recv_delete(cli);
 			break;
 		default:
 			ret = SUCCESS;

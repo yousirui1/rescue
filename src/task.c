@@ -50,7 +50,6 @@ void task_loop()
 							dev_info.mini_disk->dev->path);
                             //dev_info.boot_disk->dev->path);
 	
-				
             }   
 			//else
 			{

@@ -13,6 +13,7 @@ void init_config()
     char buf[128] = {0};
 
     char result[MAX_BUFLEN] = {0};
+    char cmd[MAX_BUFLEN] = {0};
 
     terminal_info *terminal = &(conf.terminal);
     netcard_param *net = &(conf.netcard);
@@ -27,10 +28,12 @@ void init_config()
 
     if(read_profile_string(TERMINAL_SECTION, TM_NAME_KEY, buf, sizeof(buf), terminal->name, config_file))
     {
+		memset(terminal->name, 0, sizeof(terminal->name));
         memcpy(terminal->name, buf, strlen(buf));
     }
     if(read_profile_string(TERMINAL_SECTION, TM_PLATFORM_KEY, buf, sizeof(buf), terminal->platform, config_file))
     {
+		memset(terminal->platform, 0, sizeof(terminal->platform));
         memcpy(terminal->platform, buf, strlen(buf));
     }
 	terminal->desktop_type = read_profile_int(TERMINAL_SECTION, TM_DESKTOP_TYPE_KEY, 0, config_file);
@@ -41,32 +44,42 @@ void init_config()
     net->is_dhcp = read_profile_int(NET_SECTION, NET_DHCP_KEY, 1, config_file);
     if(read_profile_string(NET_SECTION, NET_IP_KEY, buf, sizeof(buf), net->ip, config_file))
     {
+		DEBUG("buf %s", buf);
+		DEBUG("sizeof %d", sizeof(net->ip));
+		memset(net->ip, 0, sizeof(net->ip));
         memcpy(net->ip, buf, strlen(buf));
     }
     if(read_profile_string(NET_SECTION, NET_NETMASK_KEY, buf, sizeof(buf), net->netmask, config_file))
     {
+		memset(net->netmask, 0, sizeof(net->netmask));
         memcpy(net->netmask, buf, strlen(buf));
     }
     if(read_profile_string(NET_SECTION, NET_GATEWAY_KEY, buf, sizeof(buf), net->gateway, config_file))
     {
+		memset(net->gateway, 0, sizeof(net->gateway));
         memcpy(net->gateway, buf, strlen(buf));
     }
     if(read_profile_string(NET_SECTION, NET_DNS1_KEY, buf, sizeof(buf), net->dns1, config_file))
     {
+		memset(net->dns1, 0, sizeof(net->dns1));
         memcpy(net->dns1, buf, strlen(buf));
     }
     if(read_profile_string(NET_SECTION, NET_DNS2_KEY, buf, sizeof(buf), net->dns2, config_file))
     {
+		memset(net->dns2, 0, sizeof(net->dns2));
         memcpy(net->dns2, buf, strlen(buf));
     }
     if(read_profile_string(NET_SECTION, NET_MAC_KEY, buf, sizeof(buf), net->mac, config_file))
     {
+		memset(net->mac, 0, sizeof(net->mac));
         memcpy(net->mac, buf, strlen(buf));
+		strupr(net->mac);
     }
 
     /* server info */
     if(read_profile_string(SERVER_SECTION, SERVER_IP_KEY, buf, sizeof(buf),  server->ip, config_file))
     {
+		memset(server->ip, 0, sizeof(server->ip));
         memcpy(server->ip, buf, strlen(buf));
     }
 
@@ -75,8 +88,20 @@ void init_config()
     /* version */
     conf.major_ver = read_profile_int(VERSION_SECTION, VER_MAJOR_KEY, 0, config_file);
     conf.minor_ver = read_profile_int(VERSION_SECTION, VER_MINOR_KEY, 0, config_file);
-	
-	//print_config(&conf);
+
+    if(!net->is_dhcp)
+    {   
+		DEBUG("net->is_dhcp %d net->ip %s net->netmask %s", net->is_dhcp, net->ip, net->netmask);
+		if(strlen(net->ip) != 0 && strlen(net->netmask) != 0 )
+		{
+        	sprintf(cmd, "ifconfig eth0 %s netmask %s", net->ip, net->netmask);
+			DEBUG("ifconfig");
+        	exec_cmd(cmd, result);
+        	sprintf(cmd, "route add default gw %s", net->gateway);
+        	exec_cmd(cmd, result);
+		}
+    }   
+	DEBUG("dhcp %d set static ip: %s netmask: %s gw: %s mac: %s", net->is_dhcp, net->ip, net->netmask, net->gateway, net->mac);
 }
 
 int update_config(char *buf, int len)

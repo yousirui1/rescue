@@ -344,6 +344,43 @@ int format_disk(const char *path)
     }  
 }
 
+
+int upgrad_programe(char *file)
+{
+    char result[MAX_BUFLEN] = {0};
+    char cmd[MAX_BUFLEN] = {0};
+	struct server_info *server = &(conf.server);
+	
+	if(!dev_info.mini_disk)
+	{
+		DEBUG("no found ready disk");	
+		return ERROR;
+	}
+
+	if(!conf.install_flag)
+	{
+		DEBUG("no install program disable upgrad");	
+		return ERROR;
+	}
+    sprintf(cmd, upgrad_sh, file, server->ip);
+	DEBUG("%s", cmd);
+    exec_cmd(cmd, result);
+
+    exec_cmd(upgrad_sh, result);
+	DEBUG("result %s", result);
+	if(strstr(result, "successd"))
+	{
+		DEBUG("upgrad programe ok");
+		umount_boot();
+		return SUCCESS;
+	}
+	else
+	{
+		DEBUG("upgrad programe error");
+		return ERROR;
+	}	
+}
+
 int install_programe()
 {
     char result[MAX_BUFLEN] = {0};

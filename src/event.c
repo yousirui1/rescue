@@ -71,6 +71,7 @@ static void process_event_msg(char *buf, int len)
 		case REBOOT_PIPE:
 		{
 			DEBUG("server send msg reboot");
+			client_disconnect();
 			sync();
 			reboot(RB_AUTOBOOT);				
 			break;
@@ -78,6 +79,7 @@ static void process_event_msg(char *buf, int len)
 		case SHUTDOWN_PIPE:
 		{
 			DEBUG("server send msg shutdown");
+			client_disconnect();
 			sync();
 			reboot(RB_POWER_OFF);				
 			break;

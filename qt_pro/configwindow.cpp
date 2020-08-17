@@ -108,6 +108,9 @@ ConfigWindow::ConfigWindow(QWidget *parent) :
     ui->ip_edit->setText(global->conf.netcard.ip);
     ui->netmask_edit->setText(global->conf.netcard.netmask);
     ui->gateway_edit->setText(global->conf.netcard.gateway);
+	ui->dns_edit->setText(global->conf.netcard.dns1);
+	ui->dns2_edit->setText(global->conf.netcard.dns2);
+
 
     ui->server_ip_edit->setText(global->conf.server.ip);
 

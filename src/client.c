@@ -103,6 +103,32 @@ int send_heartbeat(struct client *cli)
 }
 
 
+static int send_upgrad(struct client *cli)
+{
+
+}
+
+
+static int recv_upgrad(struct client *cli)
+{
+	int ret;
+	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+	cJSON *root = cJSON_Parse((char*)(buf));
+	DEBUG("%s", buf);
+	if(root)
+	{
+		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
+		ret = upgrad_programe("voi.zip");	
+		if(ret == SUCCESS)
+		{
+			char head[HEAD_LEN] = {0};
+			ret = send_pipe(head, REBOOT_PIPE , 0, PIPE_EVENT);
+		}
+		//return send_delete(cli, batch_no->valueint);
+	}
+	return ret;
+}
+
 
 static int send_delete(struct client *cli, int batch_no)
 {
@@ -358,7 +384,7 @@ static int send_desktop(struct client *cli, int batch_no, int flag)
     cJSON *root = cJSON_CreateObject();
     cJSON *data = cJSON_CreateObject();
     
-	DEBUG("batch_no: %d", batch_no);
+	DEBUG("batch_no: %d ret: %d", batch_no, flag);
 	
     if(root && data)
     {   
@@ -441,26 +467,63 @@ static int recv_desktop(struct client *cli)
 	return ERROR;
 }
 
-static int send_down_torrent(struct client *cli, int ret)
+static int send_down_torrent(struct client *cli, char *task_uuid,  int flag)
 {
-	if(ret == SUCCESS)		//alloc ok
-	{
-					
-	}
-	else
-	{
-		send_error_msg(BT_DISK_FULL_ERR);
-	}
+	int ret;
+
+    if(cli->data_buf)
+        free(cli->data_buf);
+	
+	DEBUG("task_uuid %s flag %d", task_uuid, flag);
+    
+    cJSON *root = cJSON_CreateObject();
+    cJSON *data = cJSON_CreateObject();
+    
+    if(root && data)
+    {   
+		if(flag)
+		{
+        	cJSON_AddNumberToObject(root, "code", 10002); 
+        	cJSON_AddStringToObject(root, "msg", "bt torrent file error");
+		}
+		else
+		{
+        	cJSON_AddNumberToObject(root, "code", 0); 
+        	cJSON_AddStringToObject(root, "msg", "Success");
+		}
+
+        cJSON_AddItemToObject(root, "data", data);
+    
+        cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
+        cJSON_AddStringToObject(data, "batch_no", task_uuid);
+    
+        cli->data_buf = cJSON_Print(root);
+		DEBUG("%s", cli->data_buf);
+        cli->data_size = strlen(cli->data_buf);
+        set_packet_head(cli->packet, SEND_DOWN_TORRENT, cli->data_size, JSON_TYPE, 1); 
+        ret = send_packet(cli);
+    }   
+    else
+    {   
+        if(data)
+            cJSON_Delete(data);
+        return ERROR;
+    }
+
+    if(root)
+       cJSON_Delete(root);
 	return ret;
 }
 
 static int recv_down_torrent(struct client *cli)
 {
 	int ret;
-    char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	char torrent_file[128] = {0};
+	char task_uuid[36] = {0};
 
-	yzy_torrent *torrent = (yzy_torrent *)&cli->data_buf[read_packet_token(cli->packet)];
+	yzy_torrent *torrent = (yzy_torrent *)
+						&cli->data_buf[read_packet_supplementary(cli->packet) +  
+						read_packet_token(cli->packet)];
 	DEBUG("torrent->uuid %s", torrent->uuid);
     DEBUG("torrent->type %d", torrent->type);
     DEBUG("torrent->sys_type %d", torrent->sys_type);
@@ -470,7 +533,14 @@ static int recv_down_torrent(struct client *cli)
     DEBUG("torrent->file_size %lld", torrent->file_size);
     DEBUG("torrent->data_len %lld", torrent->data_len);
 
-	char *data = &cli->data_buf[read_packet_token(cli->packet) + sizeof(yzy_torrent)];
+	//memcpy(task_uuid, torrent->task_uuid, 36);
+	//strcpy(task_uuid, torrent->task_uuid);
+	//DEBUG("torrent->task_uuid %s:", torrent->task_uuid);
+    //memcpy(task_uuid, torrent->task_uuid, strlen(torrent->task_uuid));
+
+	char *data = &cli->data_buf[ read_packet_supplementary(cli->packet) +
+						read_packet_token(cli->packet) + sizeof(yzy_torrent)];
+
     sprintf(torrent_file, "/root/voi_%d_%s.torrent", torrent->dif_level, torrent->uuid);
     FILE *fp = fopen(torrent_file, "wb");
     if(fp)
@@ -494,12 +564,12 @@ static int recv_down_torrent(struct client *cli)
 				task.disk_type = torrent->type;
             	task.offset = offset;
             	en_queue(&task_queue, (char *)&task, sizeof(struct torrent_task) , 0x0);
-				return send_down_torrent(cli, SUCCESS);
+				return send_down_torrent(cli, task_uuid, SUCCESS);
 			}
 			else
 			{
 				DEBUG("add_qcow2 fail torrent->file_size %lld torrent->real_size %lld", torrent->file_size,torrent->real_size);
-				return send_down_torrent(cli, ERROR);
+				return send_down_torrent(cli, task_uuid, ERROR);
 			}	
 		}
 		else
@@ -1360,7 +1430,8 @@ static int process_msg(struct client *cli)
             ret = recv_desktop(cli);
             break;
         case SHUTDONW:
-            ret = recv_reboot(cli, 0);
+            //ret = recv_reboot(cli, 0);
+			ret = recv_upgrad(cli);
             break;
 		case RESTART:
             ret = recv_reboot(cli, 1);
@@ -1400,6 +1471,9 @@ static int process_msg(struct client *cli)
 			break;
 		case DELETE:
 			ret = recv_delete(cli);
+			break;
+		case UPGRAD:
+			ret = recv_upgrad(cli);
 			break;
 		default:
 			ret = SUCCESS;

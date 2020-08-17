@@ -1,0 +1,702 @@
+cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
+In file included from ./src/client.c:5:0:
+./include/device.h:90:1: warning: useless storage class specifier in empty declaration
+ };
+ ^
+In file included from ./src/client.c:1:0:
+./src/client.c: In function ‘client_connect’:
+./include/base.h:46:4: warning: implicit declaration of function ‘log_msg’ [-Wimplicit-function-declaration]
+    log_msg("File: "__FILE__", Line: %05d:  " format"\r\n", __LINE__, ##__VA_ARGS__); \
+    ^
+./src/client.c:20:5: note: in expansion of macro ‘DEBUG’
+     DEBUG("client_connect");
+     ^
+./src/client.c:22:5: warning: implicit declaration of function ‘set_request_head’ [-Wimplicit-function-declaration]
+     set_request_head(head, 0, CLIENT_CONNECT_PIPE, 0); 
+     ^
+./src/client.c: In function ‘set_packet_token’:
+./src/client.c:47:22: warning: implicit declaration of function ‘read_packet_token’ [-Wimplicit-function-declaration]
+  cli->token = malloc(read_packet_token(cli->packet) + 1);
+                      ^
+./src/client.c:50:1: warning: no return statement in function returning non-void [-Wreturn-type]
+ }
+ ^
+./src/client.c: In function ‘recv_heartbeat’:
+./src/client.c:55:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+                 ^
+./src/client.c:54:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret;
+      ^
+./src/client.c: In function ‘send_heartbeat’:
+./src/client.c:91:17: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+   cli->data_buf = cJSON_Print(root);
+                 ^
+./src/client.c:92:27: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+   cli->data_size = strlen(cli->data_buf);
+                           ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c:93:3: warning: implicit declaration of function ‘set_packet_head’ [-Wimplicit-function-declaration]
+   set_packet_head(cli->packet, HEARTBEAT, cli->data_size, JSON_TYPE, 0);
+   ^
+./src/client.c:94:9: warning: implicit declaration of function ‘send_packet’ [-Wimplicit-function-declaration]
+   ret = send_packet(cli);
+         ^
+./src/client.c: In function ‘send_upgrad’:
+./src/client.c:109:1: warning: no return statement in function returning non-void [-Wreturn-type]
+ }
+ ^
+./src/client.c: In function ‘recv_upgrad’:
+./src/client.c:115:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+  char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+              ^
+./src/client.c:121:9: warning: implicit declaration of function ‘upgrad_programe’ [-Wimplicit-function-declaration]
+   ret = upgrad_programe("voi.zip"); 
+         ^
+./src/client.c:125:10: warning: implicit declaration of function ‘send_pipe’ [-Wimplicit-function-declaration]
+    ret = send_pipe(head, REBOOT_PIPE , 0, PIPE_EVENT);
+          ^
+./src/client.c:120:10: warning: unused variable ‘batch_no’ [-Wunused-variable]
+   cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
+          ^
+./src/client.c: In function ‘send_delete’:
+./src/client.c:152:17: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+   cli->data_buf = cJSON_Print(root);
+                 ^
+./src/client.c:153:27: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+   cli->data_size = strlen(cli->data_buf);
+                           ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c: In function ‘recv_delete’:
+./src/client.c:174:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+  char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+              ^
+./src/client.c:173:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret;
+      ^
+./src/client.c: In function ‘send_cancel_send_desktop’:
+./src/client.c:203:17: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+   cli->data_buf = cJSON_Print(root);
+                 ^
+./src/client.c:204:27: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+   cli->data_size = strlen(cli->data_buf);
+                           ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c: In function ‘recv_cancel_send_desktop’:
+./src/client.c:224:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+  char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+              ^
+./src/client.c:223:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret;
+      ^
+./src/client.c: In function ‘recv_p2v_progress’:
+./src/client.c:239:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+  char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+              ^
+./src/client.c: In function ‘send_p2v_progress’:
+./src/client.c:266:20: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+      cli->data_buf = cJSON_Print(root);
+                    ^
+./src/client.c:267:30: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+      cli->data_size = strlen(cli->data_buf);
+                              ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c: In function ‘recv_p2v_transform’:
+./src/client.c:285:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+  char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+              ^
+./src/client.c:310:17: warning: passing argument 1 of ‘strcpy’ from incompatible pointer type [-Wincompatible-pointer-types]
+          strcpy(&task.server_ip, server->ip);
+                 ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘char (*)[32]’
+ extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
+              ^
+./src/client.c:312:18: warning: passing argument 1 of ‘strcpy’ from incompatible pointer type [-Wincompatible-pointer-types]
+           strcpy(&task.user, user->valuestring);
+                  ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘char (*)[32]’
+ extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
+              ^
+./src/client.c:314:18: warning: passing argument 1 of ‘strcpy’ from incompatible pointer type [-Wincompatible-pointer-types]
+           strcpy(&task.passwd, password->valuestring);
+                  ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘char (*)[32]’
+ extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
+              ^
+./src/client.c:316:18: warning: passing argument 1 of ‘strcpy’ from incompatible pointer type [-Wincompatible-pointer-types]
+           strcpy(&task.storage, storage->valuestring);
+                  ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘char (*)[32]’
+ extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
+              ^
+./src/client.c:318:18: warning: passing argument 1 of ‘strcpy’ from incompatible pointer type [-Wincompatible-pointer-types]
+           strcpy(&task.image_name, item->valuestring);
+                  ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘char (*)[128]’
+ extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
+              ^
+./src/client.c:322:26: warning: pointer targets in passing argument 2 of ‘en_queue’ differ in signedness [-Wpointer-sign]
+    en_queue(&task_queue, (char *)&task, sizeof(struct p2v_task) , 0x1);
+                          ^
+In file included from ./src/client.c:8:0:
+./include/queue.h:30:15: note: expected ‘unsigned char *’ but argument is of type ‘char *’
+ unsigned char en_queue(QUEUE *pQueue,unsigned char *ucpData,unsigned int uiSize,unsigned char ucType);
+               ^
+./src/client.c:284:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret;
+      ^
+In file included from ./src/client.c:4:0:
+./src/client.c: In function ‘send_p2v_transform’:
+./src/client.c:351:47: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+         cJSON_AddStringToObject(root, "name", info->template_name);
+                                               ^
+./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
+ #define cJSON_AddStringToObject(object,name,s) cJSON_AddItemToObject(object, name, cJSON_CreateString(s))
+                                                                                                       ^
+./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern cJSON *cJSON_CreateString(const char *string);
+               ^
+./src/client.c:352:47: warning: passing argument 1 of ‘cJSON_CreateString’ from incompatible pointer type [-Wincompatible-pointer-types]
+         cJSON_AddStringToObject(root, "desc", info->template_desc);
+                                               ^
+./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
+ #define cJSON_AddStringToObject(object,name,s) cJSON_AddItemToObject(object, name, cJSON_CreateString(s))
+                                                                                                       ^
+./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned int *’
+ extern cJSON *cJSON_CreateString(const char *string);
+               ^
+./src/client.c:360:17: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+   cli->data_buf = cJSON_Print(root);
+                 ^
+./src/client.c:361:30: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+      cli->data_size = strlen(cli->data_buf);
+                              ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c: In function ‘send_desktop’:
+./src/client.c:407:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+         cli->data_buf = cJSON_Print(root);
+                       ^
+./src/client.c:408:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+         cli->data_size = strlen(cli->data_buf);
+                                 ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c: In function ‘recv_desktop’:
+./src/client.c:427:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+  char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+              ^
+./src/client.c:457:10: warning: implicit declaration of function ‘scan_qcow2’ [-Wimplicit-function-declaration]
+      if(!scan_qcow2(uuid->valuestring, dif_level->valueint))
+          ^
+./src/client.c:441:88: warning: variable ‘restore_flag’ set but not used [-Wunused-but-set-variable]
+    cJSON *uuid, *type, *prefix, *dif_level, *real_size,  *reserve_size, *torrent_file,*restore_flag;
+                                                                                        ^
+./src/client.c:441:74: warning: variable ‘torrent_file’ set but not used [-Wunused-but-set-variable]
+    cJSON *uuid, *type, *prefix, *dif_level, *real_size,  *reserve_size, *torrent_file,*restore_flag;
+                                                                          ^
+./src/client.c:441:59: warning: variable ‘reserve_size’ set but not used [-Wunused-but-set-variable]
+    cJSON *uuid, *type, *prefix, *dif_level, *real_size,  *reserve_size, *torrent_file,*restore_flag;
+                                                           ^
+./src/client.c:441:46: warning: variable ‘real_size’ set but not used [-Wunused-but-set-variable]
+    cJSON *uuid, *type, *prefix, *dif_level, *real_size,  *reserve_size, *torrent_file,*restore_flag;
+                                              ^
+./src/client.c:441:25: warning: variable ‘prefix’ set but not used [-Wunused-but-set-variable]
+    cJSON *uuid, *type, *prefix, *dif_level, *real_size,  *reserve_size, *torrent_file,*restore_flag;
+                         ^
+./src/client.c:441:18: warning: variable ‘type’ set but not used [-Wunused-but-set-variable]
+    cJSON *uuid, *type, *prefix, *dif_level, *real_size,  *reserve_size, *torrent_file,*restore_flag;
+                  ^
+./src/client.c:440:11: warning: unused variable ‘flag’ [-Wunused-variable]
+    int i, flag = 0;
+           ^
+./src/client.c:426:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret;
+      ^
+./src/client.c: In function ‘send_down_torrent’:
+./src/client.c:500:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+         cli->data_buf = cJSON_Print(root);
+                       ^
+./src/client.c:501:29: error: expected ‘;’ before ‘:’ token
+   DEBUG("%s", cli->data_buf):
+                             ^
+./src/client.c: In function ‘recv_down_torrent’:
+./src/client.c:525:22: warning: implicit declaration of function ‘read_packet_supplementary’ [-Wimplicit-function-declaration]
+       &cli->data_buf[read_packet_supplementary(cli->packet) +  
+                      ^
+./src/client.c:541:15: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+  char *data = &cli->data_buf[ read_packet_supplementary(cli->packet) +
+               ^
+./src/client.c:554:22: warning: implicit declaration of function ‘add_qcow2’ [-Wimplicit-function-declaration]
+    uint64_t offset = add_qcow2(dev_info.mini_disk->dev, torrent->uuid, torrent->dif_level,
+                      ^
+./src/client.c:566:36: warning: pointer targets in passing argument 2 of ‘en_queue’ differ in signedness [-Wpointer-sign]
+              en_queue(&task_queue, (char *)&task, sizeof(struct torrent_task) , 0x0);
+                                    ^
+In file included from ./src/client.c:8:0:
+./include/queue.h:30:15: note: expected ‘unsigned char *’ but argument is of type ‘char *’
+ unsigned char en_queue(QUEUE *pQueue,unsigned char *ucpData,unsigned int uiSize,unsigned char ucType);
+               ^
+In file included from ./src/client.c:1:0:
+./include/base.h:45:21: warning: format ‘%d’ expects argument of type ‘int’, but argument 4 has type ‘long long unsigned int’ [-Wformat=]
+         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
+                     ^
+./src/client.c:577:4: note: in expansion of macro ‘DEBUG’
+    DEBUG("ret %d != torrent->data_len %d", ret, torrent->data_len);
+    ^
+./src/client.c: In function ‘send_clear_all_desktop’:
+./src/client.c:602:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+         cli->data_buf = cJSON_Print(root);
+                       ^
+./src/client.c:603:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+         cli->data_size = strlen(cli->data_buf);
+                                 ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c: In function ‘recv_clear_all_desktop’:
+./src/client.c:621:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+                 ^
+./src/client.c:627:3: warning: implicit declaration of function ‘init_qcow2’ [-Wimplicit-function-declaration]
+   init_qcow2(dev_info.mini_disk->dev, 0);
+   ^
+./src/client.c: In function ‘send_update_diff_disk’:
+./src/client.c:653:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+         cli->data_buf = cJSON_Print(root);
+                       ^
+./src/client.c:654:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+         cli->data_size = strlen(cli->data_buf);
+                                 ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c: In function ‘recv_update_diff_disk’:
+./src/client.c:672:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+                 ^
+./src/client.c:684:34: warning: variable ‘download_url’ set but not used [-Wunused-but-set-variable]
+   cJSON *name, *uuid, *version, *download_url;
+                                  ^
+./src/client.c:684:24: warning: variable ‘version’ set but not used [-Wunused-but-set-variable]
+   cJSON *name, *uuid, *version, *download_url;
+                        ^
+./src/client.c:684:17: warning: variable ‘uuid’ set but not used [-Wunused-but-set-variable]
+   cJSON *name, *uuid, *version, *download_url;
+                 ^
+./src/client.c:684:10: warning: variable ‘name’ set but not used [-Wunused-but-set-variable]
+   cJSON *name, *uuid, *version, *download_url;
+          ^
+./src/client.c:671:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret;
+      ^
+./src/client.c: In function ‘send_update_config’:
+./src/client.c:718:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+         cli->data_buf = cJSON_Print(root);
+                       ^
+./src/client.c:719:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+         cli->data_size = strlen(cli->data_buf);
+                                 ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c: In function ‘recv_update_config’:
+./src/client.c:738:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+                 ^
+./src/client.c:764:3: warning: implicit declaration of function ‘save_config’ [-Wimplicit-function-declaration]
+   save_config();
+   ^
+./src/client.c:765:3: warning: implicit declaration of function ‘send_config_pipe’ [-Wimplicit-function-declaration]
+   send_config_pipe();
+   ^
+./src/client.c:737:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret;
+      ^
+./src/client.c: In function ‘send_update_ip’:
+./src/client.c:790:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+         cli->data_buf = cJSON_Print(root);
+                       ^
+./src/client.c:791:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+         cli->data_size = strlen(cli->data_buf);
+                                 ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c: In function ‘recv_update_ip’:
+./src/client.c:809:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+                 ^
+./src/client.c:835:3: warning: implicit declaration of function ‘set_network’ [-Wimplicit-function-declaration]
+   set_network(ip->valuestring, mask->valuestring);
+   ^
+./src/client.c:808:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret;
+      ^
+./src/client.c: In function ‘send_update_name’:
+./src/client.c:861:17: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+   cli->data_buf = cJSON_Print(root);
+                 ^
+./src/client.c:862:27: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+   cli->data_size = strlen(cli->data_buf);
+                           ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c: In function ‘recv_update_name’:
+./src/client.c:882:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+  char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+              ^
+./src/client.c:891:20: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+             strcpy(conf.terminal.name, name->valuestring);
+                    ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
+ extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
+              ^
+./src/client.c:881:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret;
+      ^
+./src/client.c: In function ‘send_reboot’:
+./src/client.c:921:17: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+   cli->data_buf = cJSON_Print(root);
+                 ^
+./src/client.c:922:27: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+   cli->data_size = strlen(cli->data_buf);
+                           ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c: In function ‘recv_reboot’:
+./src/client.c:946:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+  char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+              ^
+./src/client.c:945:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret;
+      ^
+./src/client.c: In function ‘recv_get_diff_torrent’:
+./src/client.c:959:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+  char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+              ^
+./src/client.c:959:8: warning: unused variable ‘buf’ [-Wunused-variable]
+  char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+        ^
+./src/client.c: In function ‘send_get_diff_torrent’:
+./src/client.c:978:17: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+   cli->data_buf = cJSON_Print(root);
+                 ^
+./src/client.c:979:27: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+   cli->data_size = strlen(cli->data_buf);
+                           ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c: In function ‘recv_get_desktop_group_list’:
+./src/client.c:998:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+                 ^
+./src/client.c:1067:46: warning: implicit declaration of function ‘get_max_diff_qcow2’ [-Wimplicit-function-declaration]
+        max_diff->valueint != (current_diff = get_max_diff_qcow2(uuid->valuestring)) &&
+                                              ^
+./src/client.c:1074:8: warning: implicit declaration of function ‘del_diff_qcow2’ [-Wimplicit-function-declaration]
+        del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);  //删除当前的不同的驱动
+        ^
+./src/client.c:1013:21: warning: unused variable ‘show_desktop_info’ [-Wunused-variable]
+      *os_sys_type, *show_desktop_info;
+                     ^
+./src/client.c:1013:7: warning: unused variable ‘os_sys_type’ [-Wunused-variable]
+      *os_sys_type, *show_desktop_info;
+       ^
+./src/client.c:1012:73: warning: unused variable ‘desktop_name’ [-Wunused-variable]
+      *desktop_group_uuid, *desktop_ip, *desktop_is_dhcp, *desktop_mask,*desktop_name, *disks,
+                                                                         ^
+./src/client.c:1012:59: warning: unused variable ‘desktop_mask’ [-Wunused-variable]
+      *desktop_group_uuid, *desktop_ip, *desktop_is_dhcp, *desktop_mask,*desktop_name, *disks,
+                                                           ^
+./src/client.c:1012:41: warning: unused variable ‘desktop_is_dhcp’ [-Wunused-variable]
+      *desktop_group_uuid, *desktop_ip, *desktop_is_dhcp, *desktop_mask,*desktop_name, *disks,
+                                         ^
+./src/client.c:1012:28: warning: unused variable ‘desktop_ip’ [-Wunused-variable]
+      *desktop_group_uuid, *desktop_ip, *desktop_is_dhcp, *desktop_mask,*desktop_name, *disks,
+                            ^
+./src/client.c:1011:74: warning: unused variable ‘desktop_group_status’ [-Wunused-variable]
+       *desktop_group_desc, *desktop_group_name, *desktop_group_restore, *desktop_group_status,
+                                                                          ^
+./src/client.c:1011:50: warning: unused variable ‘desktop_group_restore’ [-Wunused-variable]
+       *desktop_group_desc, *desktop_group_name, *desktop_group_restore, *desktop_group_status,
+                                                  ^
+./src/client.c:1011:29: warning: unused variable ‘desktop_group_name’ [-Wunused-variable]
+       *desktop_group_desc, *desktop_group_name, *desktop_group_restore, *desktop_group_status,
+                             ^
+./src/client.c:1011:8: warning: unused variable ‘desktop_group_desc’ [-Wunused-variable]
+       *desktop_group_desc, *desktop_group_name, *desktop_group_restore, *desktop_group_status,
+        ^
+./src/client.c:1010:87: warning: unused variable ‘desktop_gateway’ [-Wunused-variable]
+    cJSON *auto_update_desktop, *default_desktop_group, *desktop_dns1, *desktop_dns2, *desktop_gateway,
+                                                                                       ^
+./src/client.c:1010:72: warning: unused variable ‘desktop_dns2’ [-Wunused-variable]
+    cJSON *auto_update_desktop, *default_desktop_group, *desktop_dns1, *desktop_dns2, *desktop_gateway,
+                                                                        ^
+./src/client.c:1010:57: warning: unused variable ‘desktop_dns1’ [-Wunused-variable]
+    cJSON *auto_update_desktop, *default_desktop_group, *desktop_dns1, *desktop_dns2, *desktop_gateway,
+                                                         ^
+./src/client.c:1010:33: warning: unused variable ‘default_desktop_group’ [-Wunused-variable]
+    cJSON *auto_update_desktop, *default_desktop_group, *desktop_dns1, *desktop_dns2, *desktop_gateway,
+                                 ^
+./src/client.c:1010:11: warning: unused variable ‘auto_update_desktop’ [-Wunused-variable]
+    cJSON *auto_update_desktop, *default_desktop_group, *desktop_dns1, *desktop_dns2, *desktop_gateway,
+           ^
+./src/client.c:997:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret;
+      ^
+./src/client.c: In function ‘send_get_desktop_group_list’:
+./src/client.c:1097:17: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+   cli->data_buf = cJSON_Print(root);
+                 ^
+./src/client.c:1098:27: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+   cli->data_size = strlen(cli->data_buf);
+                           ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c: In function ‘recv_get_config’:
+./src/client.c:1116:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+  char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+              ^
+./src/client.c:1175:12: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+     strcpy(conf.terminal.name, name->valuestring);
+            ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
+ extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
+              ^
+./src/client.c:1177:12: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+     strcpy(conf.terminal.platform, platform->valuestring);
+            ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
+ extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
+              ^
+./src/client.c:1115:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret;
+      ^
+./src/client.c: In function ‘send_get_config’:
+./src/client.c:1206:17: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+   cli->data_buf = cJSON_Print(root);
+                 ^
+./src/client.c:1207:27: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+   cli->data_size = strlen(cli->data_buf);
+                           ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c: In function ‘recv_set_update_config’:
+./src/client.c:1225:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+                 ^
+./src/client.c:1224:9: warning: unused variable ‘ret’ [-Wunused-variable]
+     int ret;
+         ^
+./src/client.c: In function ‘send_set_update_config’:
+./src/client.c:1252:13: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+   if(strlen(conf.terminal.name) == 0)
+             ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+In file included from ./src/client.c:4:0:
+./src/client.c:1255:48: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+          cJSON_AddStringToObject(root, "name", conf.terminal.name);
+                                                ^
+./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
+ #define cJSON_AddStringToObject(object,name,s) cJSON_AddItemToObject(object, name, cJSON_CreateString(s))
+                                                                                                       ^
+./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern cJSON *cJSON_CreateString(const char *string);
+               ^
+./src/client.c:1281:17: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+   cli->data_buf = cJSON_Print(root);
+                 ^
+./src/client.c:1282:30: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+      cli->data_size = strlen(cli->data_buf);
+                              ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c: In function ‘recv_config_version’:
+./src/client.c:1307:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+  char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+              ^
+./src/client.c:1306:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret;
+      ^
+./src/client.c: In function ‘send_config_version’:
+./src/client.c:1343:17: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+   cli->data_buf = cJSON_Print(root);
+                 ^
+./src/client.c:1344:27: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+   cli->data_size = strlen(cli->data_buf);
+                           ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+./src/client.c: In function ‘recv_login’:
+./src/client.c:1363:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+  char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+              ^
+./src/client.c:1367:9: warning: unused variable ‘tmp’ [-Wunused-variable]
+   char *tmp = cJSON_Print(root);
+         ^
+./src/client.c:1362:6: warning: unused variable ‘ret’ [-Wunused-variable]
+  int ret;
+      ^
+./src/client.c: In function ‘send_login’:
+./src/client.c:1390:17: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+   cli->data_buf = cJSON_Print(root);
+                 ^
+./src/client.c:1391:27: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+   cli->data_size = strlen(cli->data_buf);
+                           ^
+In file included from /usr/include/memory.h:29:0,
+                 from ./include/base.h:14,
+                 from ./src/client.c:1:
+/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
+ extern size_t strlen (const char *__s)
+               ^
+In file included from ./src/client.c:1:0:
+./src/client.c: In function ‘process_msg’:
+./src/client.c:1411:48: warning: implicit declaration of function ‘read_packet_order’ [-Wimplicit-function-declaration]
+     DEBUG("read_packet_order(cli->packet) %d", read_packet_order(cli->packet));
+                                                ^
+./include/base.h:45:80: note: in definition of macro ‘DEBUG’
+         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
+                                                                                ^
+./src/client.c:1410:9: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
+     int ret; 
+         ^
+./src/client.c: In function ‘tcp_loop’:
+./src/client.c:1561:38: warning: implicit declaration of function ‘read_packet_size’ [-Wimplicit-function-declaration]
+                 current->data_size = read_packet_size(current->packet) + read_packet_token(current->packet);
+                                      ^
+./src/client.c:1632:2: warning: implicit declaration of function ‘close_fd’ [-Wimplicit-function-declaration]
+  close_fd(sockfd);
+  ^
+./src/client.c:1503:11: warning: unused variable ‘tmp’ [-Wunused-variable]
+     char *tmp = &buf[HEAD_LEN];
+           ^
+./src/client.c:1501:10: warning: unused variable ‘stop’ [-Wunused-variable]
+     char stop = 'S'; 
+          ^
+./src/client.c:1487:28: warning: unused variable ‘maxi’ [-Wunused-variable]
+  int maxfd = 0, nready, i, maxi = 0; 
+                            ^
+./src/client.c:1487:25: warning: unused variable ‘i’ [-Wunused-variable]
+  int maxfd = 0, nready, i, maxi = 0; 
+                         ^
+./src/client.c:1636:1: warning: no return statement in function returning non-void [-Wreturn-type]
+ }
+ ^
+./src/client.c: In function ‘init_client’:
+./src/client.c:1643:16: warning: implicit declaration of function ‘create_tcp’ [-Wimplicit-function-declaration]
+     server_s = create_tcp();
+                ^
+./src/client.c:1651:11: warning: implicit declaration of function ‘connect_server’ [-Wimplicit-function-declaration]
+     ret = connect_server(server_s, server->ip, 50007, 10);
+           ^
+./src/client.c: In function ‘thread_client’:
+./src/client.c:1698:17: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+         return  (void *)ret;
+                 ^
+./src/client.c:1702:12: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+     return (void *)ret;
+            ^
+./src/client.c: At top level:
+./src/client.c:106:12: warning: ‘send_upgrad’ defined but not used [-Wunused-function]
+ static int send_upgrad(struct client *cli)
+            ^
+make: *** [client.o] Error 1

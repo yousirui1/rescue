@@ -37,7 +37,7 @@ dllobj =
 libobj = 
 
 mainobj = main.o tools.o log.o inirw.o device.o qcow2.o linux.o gpt.o StoreConfig.o event.o socket.o cJSON.o client.o window.o \
-		  queue.o task.o shell.o config.o error.o
+		  queue.o task.o shell.o config.o error.o update.o
 
 cppobj = torrent.o
 

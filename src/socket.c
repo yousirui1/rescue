@@ -19,6 +19,10 @@ unsigned short read_packet_token(unsigned char *buf)
     return *(uint16_t *)&buf[PACKET_TOKEN_OFFSET];
 }
 
+unsigned short read_packet_supplementary(unsigned char *buf)
+{
+	return *(uint16_t *)&buf[PACKET_SUPPLEMENTARY_OFFSET];
+}
 
 /* pipe msg */
 unsigned char read_msg_syn(unsigned char *buf)

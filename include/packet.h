@@ -96,6 +96,7 @@ typedef enum yzy_cmd
 	SEND_DESKTOP,
 	CANCEL_SEND_DESKTOP = 1025,
 
+	UPGRAD = 1030,
     //SHUT  
 
     HEARTBEAT = 9000,
@@ -114,6 +115,7 @@ typedef enum yzy_cmd
 
 #pragma pack(1)
 struct yzy_torrent{
+	//char task_uuid[36];
     char uuid[36]; 
     char type;
     char sys_type;

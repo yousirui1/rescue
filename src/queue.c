@@ -50,6 +50,12 @@ unsigned char empty_queue(QUEUE *pQueue)
   else
     return 0x0;
 }
+
+void clear_queue(QUEUE *pQueue)
+{
+	pQueue->uiBufOffset = pQueue->uiRear = pQueue->uiFront = 0;
+}
+
 unsigned char full_queue(QUEUE *pQueue)
 {
     unsigned int  uiPos;

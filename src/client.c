@@ -426,6 +426,7 @@ static int recv_desktop(struct client *cli)
 	int ret;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
+	DEBUG("%s", buf);
 	if(root)
 	{
 		cJSON* desktop = cJSON_GetObjectItem(root, "desktop");
@@ -532,11 +533,11 @@ static int recv_down_torrent(struct client *cli)
     DEBUG("torrent->space_size %lld", torrent->space_size);
     DEBUG("torrent->file_size %lld", torrent->file_size);
     DEBUG("torrent->data_len %lld", torrent->data_len);
-
-	//memcpy(task_uuid, torrent->task_uuid, 36);
-	//strcpy(task_uuid, torrent->task_uuid);
 	//DEBUG("torrent->task_uuid %s:", torrent->task_uuid);
-    //memcpy(task_uuid, torrent->task_uuid, strlen(torrent->task_uuid));
+
+    //memcpy(task_uuid, torrent->task_uuid, 35);
+	//strcpy(task_uuid, torrent->task_uuid);
+	//DEBUG("task_uuid %s", task_uuid);
 
 	char *data = &cli->data_buf[ read_packet_supplementary(cli->packet) +
 						read_packet_token(cli->packet) + sizeof(yzy_torrent)];
@@ -1011,10 +1012,9 @@ static int recv_get_desktop_group_list(struct client *cli)
 				 	*desktop_group_desc, *desktop_group_name, *desktop_group_restore, *desktop_group_status,
 					*desktop_group_uuid, *desktop_ip, *desktop_is_dhcp, *desktop_mask,*desktop_name, *disks,
 					*os_sys_type, *show_desktop_info;
-					
 			
 			cJSON *dif_level, *prefix, *real_size, *reserve_size, *type, *uuid, *max_diff;
-		
+				
 			char current_uuid[32] = {0};
 			int update_flag = 0;
 			uint32_t current_diff = -1;
@@ -1023,9 +1023,10 @@ static int recv_get_desktop_group_list(struct client *cli)
 				cJSON *item = cJSON_GetArrayItem(desktop_group_list, i);			
 				if(!item)
 					continue;
-
+				//auto_update_desktop = cJSON_GetObjectItem(item, "auto_update_desktop");
 				desktop_group_uuid = cJSON_GetObjectItem(item, "desktop_group_uuid");
 				disks = cJSON_GetObjectItem(item, "disks");
+				//if(disks && desktop_group_uuid && auto_update_desktop->valueint)
 				if(disks && desktop_group_uuid)
 				{
 					for(j = 0; j < cJSON_GetArraySize(disks); j++)
@@ -1089,6 +1090,7 @@ static int send_get_desktop_group_list(struct client *cli)
 	if(cli->data_buf)
 		free(cli->data_buf);
 
+	DEBUG("send_get_desktop_group_list");
 	cJSON *root = cJSON_CreateObject();
 	if(root)
 	{
@@ -1184,6 +1186,7 @@ static int recv_get_config(struct client *cli)
 				
 			save_config();	
 			send_config_pipe();
+			DEBUG("conf.install_flag %d", conf.install_flag);
 			if(conf.install_flag)
 				return send_get_desktop_group_list(cli);
 			else	

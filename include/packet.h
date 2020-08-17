@@ -115,7 +115,6 @@ typedef enum yzy_cmd
 
 #pragma pack(1)
 struct yzy_torrent{
-	//char task_uuid[36];
     char uuid[36]; 
     char type;
     char sys_type;
@@ -124,6 +123,7 @@ struct yzy_torrent{
     unsigned long long space_size;
 	unsigned long long file_size;
     unsigned long long data_len;
+	char task_uuid[36];
 };
 
 typedef struct yzy_torrent yzy_torrent;

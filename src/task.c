@@ -8,6 +8,8 @@ QUEUE task_queue;
 
 extern struct device_info dev_info;
 
+
+
 void task_loop()
 {
     QUEUE_INDEX *index = NULL;
@@ -58,6 +60,11 @@ void task_loop()
         }   
         de_queuePos(&task_queue);
     }  
+}
+
+void clear_task()
+{
+	clear_queue(&task_queue);
 }
 
 void *thread_task(void *param)

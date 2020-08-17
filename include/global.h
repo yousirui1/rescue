@@ -17,6 +17,7 @@ void *thread_client(void *param);
 
 /* task.c */
 void *thread_task(void *param);
+void clear_task();
 
 /* shell.c */
 extern char mount_sh[];

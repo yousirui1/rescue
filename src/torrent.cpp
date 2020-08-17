@@ -1,4 +1,7 @@
+extern "C"
+{
 #include "base.h"
+}
 #include "torrent.h"
 #include <iostream>
 #include "libtorrent/entry.hpp"
@@ -35,8 +38,6 @@ extern time_t current_time;
 
 progress_info info;
 char *pipe_buf = NULL;
-
-
 
 
 void set_request_head(char *buf, char encrypt_flag, short cmd, int data_size)
@@ -133,6 +134,7 @@ void stop_torrent()
 {
 	cout<<"stop_torrent"<<endl;
 	complete = 1;
+	clear_task();
 }
 
 

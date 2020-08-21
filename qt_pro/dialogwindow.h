@@ -24,7 +24,7 @@ public:
     ~DialogWindow();
     void setType(int);
     void hideAll();
-    void setErrorText(const char *msg);
+    void setErrorText(QString msg);
     void showEvent(QShowEvent *e);
 
 signals:

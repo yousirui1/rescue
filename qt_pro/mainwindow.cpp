@@ -28,7 +28,12 @@ MainWindow::MainWindow(QWidget *parent) :
         this->showFullScreen();
         this->setAutoFillBackground(true);
     }
-
+#if 0
+    ui.pushButton->setFocus();    //设置默认焦点
+    ui.pushButton->setShortcut( QKeySequence::InsertParagraphSeparator );  //设置快捷键为键盘的“回车”键
+    ui.pushButton->setShortcut(Qt::Key_Enter);  //设置快捷键为enter键
+    ui.pushButton->setShortcut(Qt::Key_Return); //设置快捷键为小键盘上的enter键
+#endif
     global->setDesktopRect(QApplication::desktop()->availableGeometry());
 
     loadFont("/opt/freetype2/font/pin.ttf");

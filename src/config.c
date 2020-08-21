@@ -86,8 +86,11 @@ void init_config()
     server->port = read_profile_int(SERVER_SECTION, SERVER_PORT_KEY, server->port, config_file);
 
     /* version */
-    conf.major_ver = read_profile_int(VERSION_SECTION, VER_MAJOR_KEY, 0, config_file);
-    conf.minor_ver = read_profile_int(VERSION_SECTION, VER_MINOR_KEY, 0, config_file);
+    //conf.major_ver = read_profile_int(VERSION_SECTION, VER_MAJOR_KEY, 0, config_file);
+    //conf.minor_ver = read_profile_int(VERSION_SECTION, VER_MINOR_KEY, 0, config_file);
+	
+	get_version(&conf.major_ver, &conf.minor_ver);
+		
 
     if(!net->is_dhcp)
     {   

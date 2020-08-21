@@ -64,7 +64,11 @@ void set_packet_head(char *buf, int cmd, int data_size, char data_type, int req_
     packet->dataSize = data_size;
     packet->dataType = 0x01;
     packet->encoding = 0x00;
-    packet->clientType = 0x02;
+	if(conf.install_flag)
+    	packet->clientType = 0x02;
+	else
+    	packet->clientType = 0x05;
+	
     if(req_flag)
         packet->reqOrRes = 0x02;
     else

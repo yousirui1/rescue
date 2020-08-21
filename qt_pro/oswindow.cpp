@@ -114,6 +114,7 @@ void OSWindow::on_pushButton_12_clicked()
     DEBUG("%s", info.template_name);
     DEBUG("%s", info.template_desc);
 
+    global->setTemplate(&info);
     char *buf = (char *)malloc(sizeof(struct template_info) + HEAD_LEN +1);
     if(!buf)
           return;

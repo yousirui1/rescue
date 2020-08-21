@@ -138,13 +138,12 @@ struct progress_info{
 
 
 
-struct progress_info p_info = {0};
+static struct progress_info *info = NULL;
+static char pipe_buf[sizeof(struct progress_info) + HEAD_LEN + 1] = {0};
 
 static int notify_event(char *buf, int size)
 {
-	//char *data = (char *)malloc(sizeof(struct progress_info) + HEAD_LEN + 1);
-	char data[sizeof(struct progress_info) + HEAD_LEN] = {0};
-	char *tmp = &data[HEAD_LEN];
+	
 		
 	char *token;
 	char *os_tmp;
@@ -165,9 +164,8 @@ static int notify_event(char *buf, int size)
 		{
 			sscanf(&token[4], "(%f/%f)", &progress, &progress_end);
 			//DEBUG("%f", progress);
-			p_info.progress = (int)progress;
-			memcpy(tmp, &p_info, sizeof(struct progress_info));			
-			send_pipe(data, P2V_OS_PROGRESS_PIPE, sizeof(struct progress_info));
+			info->progress = (int)progress;
+			send_pipe(pipe_buf, P2V_OS_PROGRESS_PIPE, sizeof(struct progress_info));
 		}
 		else if((strlen(os_type) == 0) && (os_tmp = strstr(token, "Windows (")))
 		{
@@ -175,9 +173,8 @@ static int notify_event(char *buf, int size)
 			sscanf(os_tmp, "%s (%s %s %s)", value, os_tmp, platform, value);
 			sprintf(os_type, "Window_%s_%s", os_tmp, platform);
 			DEBUG("os_type: %s", os_type);
-			strcpy(p_info.file_name, os_type);
-			memcpy(tmp, &p_info, sizeof(struct progress_info));			
-			send_pipe(data, P2V_OS_PROGRESS_PIPE, sizeof(struct progress_info));
+			strcpy(info->file_name, os_type);
+			send_pipe(pipe_buf, P2V_OS_PROGRESS_PIPE, sizeof(struct progress_info));
 		}
 	}
 }
@@ -267,13 +264,15 @@ start_conversion (struct config *config,
   char p2v_version_file[] = "/tmp/p2v.XXXXXX/p2v-version";
   int inhibit_fd = -1;
 
-	p_info.type = 1;
+	memset(pipe_buf, 0, sizeof(struct progress_info) + HEAD_LEN);
+	info = (struct progress_info *)&pipe_buf[HEAD_LEN];
+	info->type = 1;
 
 	DEBUG("config->guestname :%s", config->guestname);
 	DEBUG("config->output.storage :%s", config->output.storage);
 
-	strcpy(p_info.image_name, config->guestname);
-	strcpy(p_info.storage, config->output.storage);
+	strcpy(info->image_name, config->guestname);
+	strcpy(info->storage, config->output.storage);
 
 
 #if DEBUG_STDERR
@@ -475,7 +474,7 @@ start_conversion (struct config *config,
   /* Read output from the virt-v2v process and echo it through the
    * notify function, until virt-v2v closes the connection.
    */
-	strcpy(p_info.state, "seeding");
+	strcpy(info->state, "seeding");
   while (!is_cancel_requested ()) {
     char buf[257];
     ssize_t r;

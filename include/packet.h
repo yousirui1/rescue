@@ -95,6 +95,7 @@ typedef enum yzy_cmd
 	UPLOAD_DESKTOP,
 	SEND_DESKTOP,
 	CANCEL_SEND_DESKTOP = 1025,
+	CANCEL_P2V,
 
 	UPGRAD = 1030,
     //SHUT  
@@ -110,6 +111,7 @@ typedef enum yzy_cmd
 	P2V_OS_TRANSFORM = 9020,
 	P2V_PROGRESS = 9021,
 	DIFF_DOWN_TORRENT = 9023,
+	BT_TASK_STATE = 9025,
 }yzy_cmd;
 
 

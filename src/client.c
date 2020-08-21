@@ -119,6 +119,7 @@ static int recv_upgrad(struct client *cli)
 	{
 		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
 		ret = upgrad_programe("voi.zip");	
+
 		if(ret == SUCCESS)
 		{
 			char head[HEAD_LEN] = {0};
@@ -223,7 +224,6 @@ static int recv_cancel_send_desktop(struct client *cli)
 	int ret;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
-	DEBUG("recv_cancel_download_desktop buf %s", buf);
 	if(root)
 	{
 		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
@@ -256,18 +256,33 @@ int send_p2v_progress(struct client *cli, char *buf)
     cJSON *root = cJSON_CreateObject();
     if(root)
     {
-        cJSON_AddStringToObject(root, "os_type", "windows_10_x64");
-        cJSON_AddStringToObject(root, "image_name", info->image_name);
-        cJSON_AddNumberToObject(root, "progress", info->progress);
-        cJSON_AddNumberToObject(root, "status", 1);
-        cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
-        cJSON_AddStringToObject(root, "storage", info->storage);
+		if(info->type == 0)		//bt 下载
+		{
+			cJSON_AddStringToObject(root, "torrent_name", info->image_name);
+        	cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
+        	cJSON_AddNumberToObject(root, "progress", info->progress);
+        	cJSON_AddStringToObject(root, "state", info->state);
 
-    	cli->data_buf = cJSON_Print(root);
-    	cli->data_size = strlen(cli->data_buf);
+    		cli->data_buf = cJSON_Print(root);
+    		cli->data_size = strlen(cli->data_buf);
+    		set_packet_head(cli->packet, BT_TASK_STATE, cli->data_size, JSON_TYPE, 0);
+    		ret = send_packet(cli);
+		}
+		else if(info->type == 1)	//p2v 上传
+		{
+			cJSON_AddStringToObject(root, "os_type", "windows_10_x64");
+        	cJSON_AddStringToObject(root, "image_name", info->image_name);
+        	cJSON_AddNumberToObject(root, "progress", info->progress);
+        	cJSON_AddNumberToObject(root, "status", 1);
+        	cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
+        	cJSON_AddStringToObject(root, "storage", info->storage);
 
-    	set_packet_head(cli->packet, P2V_PROGRESS, cli->data_size, JSON_TYPE, 0);
-    	ret = send_packet(cli);
+    		cli->data_buf = cJSON_Print(root);
+    		cli->data_size = strlen(cli->data_buf);
+
+    		set_packet_head(cli->packet, P2V_PROGRESS, cli->data_size, JSON_TYPE, 0);
+    		ret = send_packet(cli);
+		}
     }
 	else
 	{
@@ -277,6 +292,58 @@ int send_p2v_progress(struct client *cli, char *buf)
     if(root)
        cJSON_Delete(root);
     return ret;
+}
+
+static int send_cancel_p2v(struct client *cli, int batch_no)
+{
+    int ret; 
+    if(cli->data_buf)
+        free(cli->data_buf);
+    
+    cJSON *root = cJSON_CreateObject();
+    cJSON *data = cJSON_CreateObject();
+    
+    if(root && data)
+    {    
+        cJSON_AddNumberToObject(root, "code", 0);  
+        cJSON_AddStringToObject(root, "msg", "Success");
+
+        cJSON_AddItemToObject(root, "data", data);
+    
+        cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
+        cJSON_AddNumberToObject(data, "batch_no", batch_no);
+    
+        cli->data_buf = cJSON_Print(root);
+        cli->data_size = strlen(cli->data_buf);
+        set_packet_head(cli->packet, CANCEL_P2V, cli->data_size, JSON_TYPE, 1);  
+        ret = send_packet(cli);
+    }    
+    else 
+    {    
+        if(data)
+            cJSON_Delete(data);
+        return ERROR;
+    }    
+
+    if(root)
+       cJSON_Delete(root);
+    return ret; 
+}
+
+static int recv_cancel_p2v(struct client *cli)
+{
+	int ret;
+	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
+	cJSON *root = cJSON_Parse((char*)(buf));
+	
+	if(root)
+	{
+		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
+		cancel_conversion();
+		return send_cancel_p2v(cli, batch_no->valueint);		
+	}
+
+	return ERROR;
 }
 
 static int recv_p2v_transform(struct client *cli)
@@ -316,15 +383,18 @@ static int recv_p2v_transform(struct client *cli)
         		strcpy(&task.storage, storage->valuestring);
 			if(item)	
         		strcpy(&task.image_name, item->valuestring);
+			//if(template_name)
+				//strcpy(&task.template_name, );
+
 			DEBUG("user->valuestring %s password->valuestring %s storage->valuestring %s", user->valuestring,
 			password->valuestring, storage->valuestring);
 
 			en_queue(&task_queue, (char *)&task, sizeof(struct p2v_task) , 0x1);
 			return SUCCESS;
 		}
-		//else if(code && code->valueint == 20707)
+		else 
 		{
-				
+			send_error_msg(P2V_NAME_ERR);			
 		}
 	}	
 	return ERROR;
@@ -426,7 +496,6 @@ static int recv_desktop(struct client *cli)
 	int ret;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
-	DEBUG("%s", buf);
 	if(root)
 	{
 		cJSON* desktop = cJSON_GetObjectItem(root, "desktop");
@@ -520,7 +589,7 @@ static int recv_down_torrent(struct client *cli)
 {
 	int ret;
 	char torrent_file[128] = {0};
-	char task_uuid[36] = {0};
+	char task_uuid[36 + 1] = {0};
 
 	yzy_torrent *torrent = (yzy_torrent *)
 						&cli->data_buf[read_packet_supplementary(cli->packet) +  
@@ -533,11 +602,9 @@ static int recv_down_torrent(struct client *cli)
     DEBUG("torrent->space_size %lld", torrent->space_size);
     DEBUG("torrent->file_size %lld", torrent->file_size);
     DEBUG("torrent->data_len %lld", torrent->data_len);
-	//DEBUG("torrent->task_uuid %s:", torrent->task_uuid);
 
-    //memcpy(task_uuid, torrent->task_uuid, 35);
-	//strcpy(task_uuid, torrent->task_uuid);
-	//DEBUG("task_uuid %s", task_uuid);
+    memcpy(task_uuid, torrent->task_uuid, 36);
+	DEBUG("task_uuid %s", task_uuid);
 
 	char *data = &cli->data_buf[ read_packet_supplementary(cli->packet) +
 						read_packet_token(cli->packet) + sizeof(yzy_torrent)];
@@ -570,12 +637,14 @@ static int recv_down_torrent(struct client *cli)
 			else
 			{
 				DEBUG("add_qcow2 fail torrent->file_size %lld torrent->real_size %lld", torrent->file_size,torrent->real_size);
+				send_error_msg(BT_DISK_FULL_ERR);
 				return send_down_torrent(cli, task_uuid, ERROR);
 			}	
 		}
 		else
 		{
 			DEBUG("ret %d != torrent->data_len %d", ret, torrent->data_len);
+			return send_down_torrent(cli, task_uuid, ERROR);
 		}
     }  
 	return ERROR;
@@ -620,7 +689,7 @@ static int recv_clear_all_desktop(struct client *cli)
 {
 	int ret;
     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
-
+	DEBUG("clear_all_desktop");
     cJSON *root = cJSON_Parse((char*)(buf));
     if(root)
     {
@@ -1023,11 +1092,10 @@ static int recv_get_desktop_group_list(struct client *cli)
 				cJSON *item = cJSON_GetArrayItem(desktop_group_list, i);			
 				if(!item)
 					continue;
-				//auto_update_desktop = cJSON_GetObjectItem(item, "auto_update_desktop");
+				auto_update_desktop = cJSON_GetObjectItem(item, "auto_update_desktop");
 				desktop_group_uuid = cJSON_GetObjectItem(item, "desktop_group_uuid");
 				disks = cJSON_GetObjectItem(item, "disks");
-				//if(disks && desktop_group_uuid && auto_update_desktop->valueint)
-				if(disks && desktop_group_uuid)
+				if(disks && desktop_group_uuid && auto_update_desktop->valueint)
 				{
 					for(j = 0; j < cJSON_GetArraySize(disks); j++)
 					{
@@ -1433,8 +1501,7 @@ static int process_msg(struct client *cli)
             ret = recv_desktop(cli);
             break;
         case SHUTDONW:
-            //ret = recv_reboot(cli, 0);
-			ret = recv_upgrad(cli);
+            ret = recv_reboot(cli, 0);
             break;
 		case RESTART:
             ret = recv_reboot(cli, 1);
@@ -1471,6 +1538,9 @@ static int process_msg(struct client *cli)
 			break;
 		case CANCEL_SEND_DESKTOP:
 			ret = recv_cancel_send_desktop(cli);
+			break;
+		case CANCEL_P2V:
+			ret = recv_cancel_p2v(cli);
 			break;
 		case DELETE:
 			ret = recv_delete(cli);

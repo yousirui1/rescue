@@ -13,6 +13,7 @@ extern struct device_info dev_info;
 void task_loop()
 {
     QUEUE_INDEX *index = NULL;
+	int ret;
     for(;;)
     {   
         if(empty_queue(&task_queue))
@@ -28,7 +29,13 @@ void task_loop()
             DEBUG("index->torrent_file %s", task->torrent_file);
             DEBUG("index->torrent_file %d", task->offset);
             DEBUG("dev_info.mini_disk->dev->path %s", dev_info.mini_disk->dev->path);
-            start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name, (uint64_t)task->offset * 512); 
+            ret = start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name, (uint64_t)task->offset * 512); 
+			if(ret != SUCCESS)
+			{
+				clear_task(&task_queue);		
+				continue;
+			}
+
             if(task->diff != 0)
             {   
                 if(change_back_file_qcow2(dev_info.mini_disk->dev, task->uuid ,task->diff) == SUCCESS)

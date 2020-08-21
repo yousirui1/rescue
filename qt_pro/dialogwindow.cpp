@@ -164,7 +164,7 @@ void DialogWindow::setType(int type)
     }
 }
 
-void DialogWindow::setErrorText(const char *msg)
+void DialogWindow::setErrorText(QString msg)
 {
     this->show();
     hideAll();

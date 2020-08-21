@@ -1,6 +1,7 @@
 #include "base.h"
 #include "device.h"
 #include "StoreConfig.h"
+#include "torrent.h"
 
 struct device_info dev_info;
 #define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
@@ -182,7 +183,6 @@ void find_all_netcards()
     {   
         DEBUG("dev_info.net[%d].name %s",i, dev_info.net[i].name);
         DEBUG("dev_info.net[%d].ip %s", i, dev_info.net[i].ip);
-        //DEBUG("dev_info.net[%d].mac %s", i ,dev_info.net[i].mac);
         DEBUG("dev_info.net[%d].netmask %s", i, dev_info.net[i].netmask);
 		
         if(STRPREFIX(dev_info.net[i].name, "eth0"))
@@ -190,10 +190,7 @@ void find_all_netcards()
             memcpy(net->ip, dev_info.net[i].ip, 32);
             memcpy(net->netmask, dev_info.net[i].netmask, 32);
 
-			//char *mac = dev_info.net[i].mac;
-			//mac = strupr(mac);
 			strupr(dev_info.net[i].mac);	
-            //memcpy(net->mac, mac, 32);
 			DEBUG("mac %s", dev_info.net[i].mac);
 			memcpy(net->mac, dev_info.net[i].mac, 32);
 			
@@ -233,6 +230,25 @@ void init_device()
 		terminal->memory = 1024 * 1024 * 1024;
 	else
 		terminal->memory = ret;
+
+	ret = sysconf(_SC_PAGESIZE);
+	if(ret == -1)
+	{
+		terminal->memory *= 4096;
+	}
+	else
+		terminal->memory *= ret;
+
+  	terminal->memory--;
+  	terminal->memory |= terminal->memory >> 1;
+  	terminal->memory |= terminal->memory >> 2;
+  	terminal->memory |= terminal->memory >> 4;
+  	terminal->memory |= terminal->memory >> 8;
+  	terminal->memory |= terminal->memory >> 16; 
+  	terminal->memory |= terminal->memory >> 32; 
+  	terminal->memory++;
+
+
 	DEBUG("terminal->memory %lld", terminal->memory);	
 	DEBUG("terminal->cpu %s", terminal->cpu);	
 	DEBUG("terminal->netcard %s", terminal->netcard);	
@@ -325,12 +341,12 @@ int format_disk(const char *path)
 
     sleep(1);
     exec_cmd("mdev -s", result); 
-    //sleep(1);
 
     sprintf(cmd, "mkfs.vfat %s1", path);
     DEBUG("cmd: %s", cmd);
     exec_cmd(cmd, result); 
 	DEBUG("result %s", result);
+	init_qcow2(dev_info.mini_disk->dev, 0);
 	return SUCCESS;
     if(!strlen(result))
     {   
@@ -385,27 +401,85 @@ int install_programe()
 {
     char result[MAX_BUFLEN] = {0};
     char cmd[MAX_BUFLEN] = {0};
-	
+	char buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};
+	progress_info *info = (progress_info *)&buf[HEAD_LEN];
+	struct server_info *server = &(conf.server);
+
+#if 0
 	if(!dev_info.usb_disk)
 	{
 		DEBUG("no found usb flash disk");	
 		send_error_msg(U_DISK_NO_FOUD_ERR);
 		return ERROR;
 	}
+#endif
 
 	if(!dev_info.mini_disk)
 	{
 		DEBUG("no found ready disk");	
+		send_error_msg(DISK_NO_FOUND_ERR);
 		return ERROR;
 	}
 
 	sprintf(cmd, "/dev/%s", dev_info.mini_disk->name);
-	format_disk(cmd);
-	init_qcow2(dev_info.mini_disk->dev, 0);
+	if(format_disk(cmd) != SUCCESS)
+	{
+		DEBUG("format disk: %s error", cmd);
+		send_error_msg(DISK_FORMAT_ERR);
+		return ERROR;
+	}
+
+	info->progress = 5;
+	info->type = 2;		
+	char version[32] = {0};
+	sprintf(version, "V%d.0.0.%d", conf.major_ver, conf.minor_ver);
+	strcpy(info->file_name, version);
+
+	send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
+
+	umount_boot();
+	if(mount_boot() != SUCCESS)
+	{
+		DEBUG("mount error");
+		send_error_msg(INSTALL_ERR);
+		return ERROR;
+	}
+
+	sprintf(cmd, upgrad_sh, "voi.zip", server->ip);
+	DEBUG("%s", cmd);
+    exec_cmd(cmd, result);
+
+	if(strstr(result, "successd"))
+	{
+		DEBUG("install programe ok");
+		conf.install_flag = 1;
+
+		info->progress = 100;
+		send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
+
+		exec_cmd("mkdir -p /boot/conf", result);
+        strcpy(config_file, "/boot/conf/config.ini");
+		DEBUG("install_flag %d", conf.install_flag);
+		return SUCCESS;
+	}
+	else
+	{
+		DEBUG("install programe error %s", result);
+		conf.install_flag = 0;
+		umount_boot();
+		DEBUG("install_flag %d", conf.install_flag);
+		return ERROR;
+	}
+#if 0
+	DEBUG("dev_info.mini_disk->name %s", dev_info.mini_disk->name);	
+	DEBUG("dev_info.usb_disk->name %s", dev_info.usb_disk->name);	
+    sprintf(cmd, install_sh, dev_info.mini_disk->name, dev_info.usb_disk->name);
+    exec_cmd(cmd, result);
+	DEBUG("%s", cmd);
+
 
     sprintf(cmd, install_sh, dev_info.mini_disk->name, dev_info.usb_disk->name);
     exec_cmd(cmd, result);
-	//DEBUG("result %s", result);
 	if(strstr(result, "successd"))
 	{
 		DEBUG("install programe ok");
@@ -425,4 +499,5 @@ int install_programe()
 		DEBUG("install_flag %d", conf.install_flag);
 		return ERROR;
 	}	
+#endif
 }

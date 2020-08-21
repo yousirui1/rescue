@@ -67,17 +67,6 @@ typedef enum PIPE_MSG{
 }PIPE_MSG;
 
 
-typedef enum ERR_MSG_DESC {
-    INSTALL_ERR = 0,
-    DISK_NO_FOUND_ERR,
-    U_DISK_NO_FOUD_ERR,
-    P2V_DISK_FAST_ERR,
-    P2V_DISK_NO_FOUND_ERR,
-    P2V_ERR,
-    BT_DISK_FULL_ERR,
-}ERR_MSG_DESC;
-
-extern const char err_msg_desc[][128];
 
 struct hwinfo
 { 
@@ -138,7 +127,8 @@ public:
      void setDownloadWindow(DownloadWindow *w);
      void startTimeOut();
      void setDisplay(int index);
-     void setErrorMsg(const char *msg);
+     void setErrorMsg(int msg);
+     void setTemplate(struct template_info *info);
 
 private:
      Global();
@@ -176,6 +166,7 @@ public:
     QRect desktop_rect;
 	int install_flag;
     int download_flag;
+    struct template_info template_i;
 };
 
 

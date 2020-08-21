@@ -14,6 +14,7 @@ char install_sh[] = {"#!/bin/sh \n"
 					"rm -rf src dst \n"
 					};
 
+
 char upgrad_sh[] = {"#!/bin/sh \n"
 					 "tftp -g -r %s %s	\n"
 					 "outpu=`unzip -o /voi.zip -d /boot/ `\n"

@@ -23,7 +23,6 @@ Uploadwindow::Uploadwindow(QWidget *parent) :
         this->setGeometry(QApplication::desktop()->availableGeometry());
     }
 
-
     date_label = ui->dataLabel;
 
     QString ip = "127.0.0.1";
@@ -69,7 +68,7 @@ Uploadwindow::Uploadwindow(QWidget *parent) :
     ui->i_cpu_label->setAlignment(Qt::AlignTop);
     ui->i_cpu_label->setText(global->conf.terminal.cpu);
     ui->i_num_label->setText(QString::number(global->conf.terminal.id));
-    ui->i_memory_label->setText(QString::number(global->conf.terminal.memory / 1024) + "MB");
+    ui->i_memory_label->setText(QString::number(global->conf.terminal.memory / 1024 / 1024) + "MB");
     ui->i_ip_label->setText(global->conf.netcard.ip);
     ui->i_mac_label->setText(global->conf.netcard.mac);
     ui->i_disk_info_label->setText(QString::number(global->conf.terminal.disk_size / 2/ 1024 / 1024) + "GB");
@@ -84,7 +83,6 @@ Uploadwindow::Uploadwindow(QWidget *parent) :
     {
         ui->i_title_label->setText(tr("部署模式"));
     }
-
 
     QLabel *logo_label = new QLabel(this);
     logo_label->setText("");
@@ -102,15 +100,12 @@ Uploadwindow::Uploadwindow(QWidget *parent) :
     ui->i_upload_rate_label->hide();
     ui->i_download_rate_t_label->hide();
     ui->i_download_rate_label->hide();
-
-
 }
 
 Uploadwindow::~Uploadwindow()
 {
     delete ui;
 }
-
 
 void Uploadwindow::showEvent(QShowEvent *e)
 {
@@ -121,9 +116,9 @@ void Uploadwindow::showEvent(QShowEvent *e)
     }
     else
     {
+
         ui->i_status_label->setText(tr("正在等待上传模板..."));
     }
-
     ui->i_progress_label->setText("0%");
     ui->i_num_label->setText(QString::number(global->conf.terminal.id));
     ui->i_ip_label->setText(global->conf.netcard.ip);
@@ -172,7 +167,6 @@ void Uploadwindow::showErrorDialog(char *err_msg)
     dialog_ui->show();
 }
 
-
 QString add_suffix_float(double val, char const* suffix)
 {
     if (val < 0.001)
@@ -194,7 +188,6 @@ QString add_suffix_float(double val, char const* suffix)
     char ret[100];
     snprintf(ret, sizeof(ret), "%4.*f%s%s", val < 99 ? 1 : 0, val, prefix[i], suffix ? suffix : "");
     return ret;
-
 }
 
 void Uploadwindow::upConfig(struct config *conf)
@@ -203,75 +196,131 @@ void Uploadwindow::upConfig(struct config *conf)
     ui->i_ip_label->setText(conf->netcard.ip);
 }
 
+void Uploadwindow::Reboot()
+{
+    char head[HEAD_LEN] = {0};
+    Global *global = Global::getGlobal();
+    global->pipe->send_pipe(head, REBOOT_PIPE, 0);
+}
+
 void Uploadwindow::setProgressValue(struct progress_info *info)
 {
-    ui->i_status_label->show();
-    ui->i_progress_t_label->show();
-    ui->i_progress_label->show();
-    ui->i_remain_time_t_label->show();
-    ui->i_remain_time_label->show();
-    ui->i_upload_rate_t_label->show();
-    ui->i_upload_rate_label->show();
-    ui->i_download_rate_t_label->show();
-    ui->i_download_rate_label->show();
-
-    ui->i_upload_rate_label->setText("0kB/s");
-    ui->i_download_rate_label->setText("0kB/s");
-
-    QString state;
-    unsigned long long remain_time = 0;
-    if(STRPREFIX(info->state, "checking"))
+    if(info->type == 2) //安装或更新
     {
-        state = tr("检测文件完整性: ");
+         ui->i_status_label->show();
+         Global *global = Global::getGlobal();
+         QString state;
+         if(global->install_flag)
+         {
+             state = tr("更新客户端: ");
+         }
+         else
+         {
+             state = tr("安装客户端: ");
+         }
+         if(info->progress == 100)
+         {
+            state = tr("安装客户端完成,5秒后重启");
+            QTimer::singleShot(5000, this, SLOT(Reboot()));
+         }
+         else {
+             state += QString(info->filename);
+         }
+        progress->setValue((double)info->progress);
+        ui->i_status_label->setText(state);
     }
-    else if(STRPREFIX(info->state, "downloading"))
+    else if(info->type == 1)
     {
-        state = tr("下载模板中: ");
-        if(info->upload_rate > 0)
-            ui->i_upload_rate_label->setText(add_suffix_float(info->upload_rate, "/s"));
-        if(info->download_rate > 0)
-            ui->i_download_rate_label->setText(add_suffix_float(info->download_rate, "/s"));
-        ui->i_progress_label->setText(QString("%1%").arg(info->progress));
-
-        if(info->download_rate != 0 && info->total_size != 0)
-        {  
-            remain_time = (info->file_size - info->total_size)/info->download_rate;
-            if(remain_time > 3600 * 24) //大于一天
-            {
-                ui->i_remain_time_label->setText(tr("-秒"));
-            }
-            else if(remain_time < 3600 * 24 && remain_time > 3600 )
-            {
-                //ui->i_remain_time_label->setText(QString("%1小时%2分钟").arg(remain_time / 3600, (remain_time % 3600)));
-                ui->i_remain_time_label->setText(QString("%1小时").arg(remain_time / 3600));
-            }
-            else if(remain_time < 3600 && remain_time > 60 )
-            {
-                ui->i_remain_time_label->setText(QString("%1分钟").arg(remain_time / 60 ));
-            }
-            else {
-                ui->i_remain_time_label->setText(QString("%1秒").arg(remain_time));
-            }
+        QString state;
+        ui->i_status_label->show();
+        if(STRPREFIX(info->state, "seeding"))
+        {
+            state = tr("上传模板中: ");
         }
-        else
-            ui->i_remain_time_label->setText(tr("-秒"));
+        if(info->progress == 100)
+        {
+           state = tr("模板上传完成,5秒后重启");
+           QTimer::singleShot(5000, this, SLOT(Reboot()));
+        }
+        progress->setValue((double)info->progress);
+        state += QString(info->filename);
+        ui->i_status_label->setText(state);
     }
-    else if(STRPREFIX(info->state, "finished") || info->progress == 100)
+    else
     {
-        state = tr("完成模板下载：");
-        ui->i_progress_label->setText(QString("%1%").arg(info->progress));
+        ui->i_status_label->show();
+        ui->i_progress_t_label->show();
+        ui->i_progress_label->show();
+        ui->i_remain_time_t_label->show();
+        ui->i_remain_time_label->show();
+        ui->i_upload_rate_t_label->show();
+        ui->i_upload_rate_label->show();
+        ui->i_download_rate_t_label->show();
+        ui->i_download_rate_label->show();
+
         ui->i_upload_rate_label->setText("0kB/s");
         ui->i_download_rate_label->setText("0kB/s");
-        ui->i_remain_time_label->setText(tr("-秒"));
-    }
-    else if(STRPREFIX(info->state, "seeding"))
-    {
-        state = tr("上传模板中: ");
-    }
-    progress->setValue((double)info->progress);
-    state += QString(info->filename);
-    ui->i_status_label->setText(state);
 
+        QString state;
+        unsigned long long remain_time = 0;
+        if(STRPREFIX(info->state, "checking"))
+        {
+            state = tr("检测文件完整性: ");
+        }
+        else if(STRPREFIX(info->state, "downloading"))
+        {
+            state = tr("下载模板中: ");
+            if(info->upload_rate > 0)
+                ui->i_upload_rate_label->setText(add_suffix_float(info->upload_rate, "/s"));
+            if(info->download_rate > 0)
+                ui->i_download_rate_label->setText(add_suffix_float(info->download_rate, "/s"));
+            ui->i_progress_label->setText(QString("%1%").arg(info->progress));
+
+            if(info->download_rate != 0 && info->total_size != 0)
+            {
+                remain_time = (info->file_size - info->total_size)/info->download_rate;
+                if(remain_time > 3600 * 24) //大于一天
+                {
+                    ui->i_remain_time_label->setText(tr("-秒"));
+                }
+                else if(remain_time < 3600 * 24 && remain_time > 3600 )
+                {
+                    //ui->i_remain_time_label->setText(QString("%1小时%2分钟").arg(remain_time / 3600, (remain_time % 3600)));
+                    ui->i_remain_time_label->setText(QString("%1小时").arg(remain_time / 3600));
+                }
+                else if(remain_time < 3600 && remain_time > 60 )
+                {
+                    ui->i_remain_time_label->setText(QString("%1分钟").arg(remain_time / 60 ));
+                }
+                else {
+                    ui->i_remain_time_label->setText(QString("%1秒").arg(remain_time));
+                }
+            }
+            else
+                ui->i_remain_time_label->setText(tr("-秒"));
+        }
+        else if(STRPREFIX(info->state, "finished") || info->progress == 100)
+        {
+            if(info->progress == 100)
+            {
+                state = tr("完成模板下载：");
+            }
+            else {
+                state = tr("下载模板中断：");
+            }
+            ui->i_progress_label->setText(QString("%1%").arg(info->progress));
+            ui->i_upload_rate_label->setText("0kB/s");
+            ui->i_download_rate_label->setText("0kB/s");
+            ui->i_remain_time_label->setText(tr("-秒"));
+        }
+        else if(STRPREFIX(info->state, "seeding"))
+        {
+            state = tr("上传模板中: ");
+        }
+        progress->setValue((double)info->progress);
+        state += QString(info->filename);
+        ui->i_status_label->setText(state);
+    }
 }
 
 

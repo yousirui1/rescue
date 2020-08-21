@@ -491,7 +491,7 @@ font: 12pt &quot;黑体&quot;;</string>
            <rect>
             <x>708</x>
             <y>420</y>
-            <width>151</width>
+            <width>251</width>
             <height>21</height>
            </rect>
           </property>
@@ -1411,6 +1411,12 @@ color: #FFFFFF;</string>
          </item>
          <item>
           <widget class="QLabel" name="ip_label">
+           <property name="minimumSize">
+            <size>
+             <width>150</width>
+             <height>42</height>
+            </size>
+           </property>
            <property name="styleSheet">
             <string notr="true">font: 12pt &quot;黑体&quot;;
 color: #FFFFFF;</string>

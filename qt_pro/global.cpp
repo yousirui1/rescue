@@ -2,15 +2,8 @@
 
 #include <QDateTime>
 
-const char err_msg_desc[][128] = {
-                "格式化或安装失败′\0",
-                "没有找到可用的磁盘′\0"
-                "未检测到安装U盘′\0"
-                "P2V 上传系统失败,\n请关闭Window硬盘快速启动.′\0",
-                "P2V 磁盘错误,上传失败′\0",
-                "P2V 失败′\0"
-                "硬盘容量不足下载失败′\0",
-            };
+
+QStringList err_msg_list;
 
 
 Global::Global()
@@ -20,6 +13,12 @@ Global::Global()
     current_index = 0;
     net_state = NET_UP;
     download_flag = 1;
+    memset(&template_i, 0, sizeof(struct template_info));
+    memset(&conf, 0, sizeof(struct config));
+    err_msg_list<<QString::fromUtf8("安装失败")<<QString::fromUtf8("没有找到可用的磁盘")<<QString::fromUtf8("未检测到安装U盘")<<QString::fromUtf8("格式化硬盘失败")<<QString::fromUtf8("P2V 上传系统失败,\n请关闭Window硬盘快速启动")
+               <<QString::fromUtf8("P2V 磁盘错误,上传失败")<<QString::fromUtf8("P2V 模板名已存在, 上传失败")<<QString::fromUtf8("P2V 失败")<<QString::fromUtf8("硬盘容量不足下载失败");
+
+    QStringListIterator strIterator((err_msg_list));
 }
 
 Global::~Global()
@@ -66,22 +65,22 @@ void Global::setDialogWindow(DialogWindow *w)
     dialog_ui = w;
 }
 
-void Global::setErrorMsg(const char *msg)
+void Global::setErrorMsg(int msg)
 {
-    DEBUG("current_index %d", current_index);
+    DEBUG("------%d-------", msg);
     switch(current_index)
     {
         case MAINWINDOW_PAGE:         //MainWindow
-            main_ui->dialog_ui->setErrorText(msg);
+            main_ui->dialog_ui->setErrorText(err_msg_list[msg]);
             break;
         case CONFIGWINDOW_PAGE:         //ConfigWindow
-             config_ui->dialog_ui->setErrorText(msg);
+             config_ui->dialog_ui->setErrorText(err_msg_list[msg]);
              break;
         case UPLOADWINDOW_PAGE:         //UploadWindow
-             upload_ui->dialog_ui->setErrorText(msg);
+             upload_ui->dialog_ui->setErrorText(err_msg_list[msg]);
             break;
         case OSWINDOW_PAGE:         //OSWindow
-            os_ui->dialog_ui->setErrorText(msg);
+            os_ui->dialog_ui->setErrorText(err_msg_list[msg]);
             break;
     }
 }
@@ -140,6 +139,10 @@ void Global::setDisplay(int index)
     emit display(index);
 }
 
+void Global::setTemplate(struct template_info *info)
+{
+    memcpy(&template_i, info, sizeof(struct template_info));
+}
 
 void Global::FormatDisk()
 {

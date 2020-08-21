@@ -24,6 +24,7 @@ public:
 public slots:
      void setProgressValue(struct progress_info *info);
      void showErrorDialog(char *err_msg);
+     void Reboot();
 
 signals:
     void display(int number);

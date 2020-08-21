@@ -16,7 +16,7 @@ using namespace std;
 using namespace chrono;
 static int count;
 int64_t downloadsize = 0;
-int complete = 0;
+int run_flag = 0;
 
 char const* state(lt::torrent_status::state_t s)
 {   
@@ -36,9 +36,8 @@ time_t last_time;
 extern time_t current_time;
 
 
-progress_info info;
-char *pipe_buf = NULL;
-
+static progress_info *info;
+static char pipe_buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};
 
 void set_request_head(char *buf, char encrypt_flag, short cmd, int data_size)
 {
@@ -53,9 +52,8 @@ void set_request_head(char *buf, char encrypt_flag, short cmd, int data_size)
 static int send_pipe(char *buf, short cmd, int size)
 {
     set_request_head(buf, 0x0, cmd, size);
-    return write(pipe_qt[1], buf, size + HEAD_LEN); 
+    return write(pipe_event[1], buf, size + HEAD_LEN); 
 }
-
 
 std::string add_suffix_float(double val, char const* suffix)
 {
@@ -114,34 +112,33 @@ bool handle_alter(lt::session& ses, lt::alert* a, lt::torrent_handle &th)
             	lt::torrent_status s = th.status(lt::torrent_handle::query_save_path);   
 				cout << state(s.state) << " download rate " << s.download_payload_rate / 1000 << "KB /s, total_download " << s.total_done / 1000 << "KB, uprate " << s.upload_rate / 1000 << "KB /s, total_up " << s.total_upload / 1000
                 << "KB, progress " << s.progress << " progress_ppm " << s.progress_ppm << " progress " << s.progress_ppm / 10000 << "  " << file_progress[0] * 100 / downloadsize << endl;
-				strcpy(info.state, state(s.state));
-				info.progress = s.progress_ppm / 10000;
-				info.download_rate = s.download_payload_rate;
-				info.upload_rate = s.upload_rate;
-				info.total_size = s.total_done;
-				memcpy(&pipe_buf[HEAD_LEN], &info, sizeof(progress_info));
+				strcpy(info->state, state(s.state));
+				info->progress = s.progress_ppm / 10000;
+				info->download_rate = s.download_payload_rate;
+				info->upload_rate = s.upload_rate;
+				info->total_size = s.total_done;
 				send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info));
+					
             	std::cout.flush();
 			}
         }
     }
-	
     return true;
 }
-
 
 void stop_torrent()
 {
 	cout<<"stop_torrent"<<endl;
-	complete = 1;
-	clear_task();
+	run_flag = 1;
 }
-
 
 int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t physical_offset)
 try
 {
-	pipe_buf = (char *)malloc(HEAD_LEN + sizeof(progress_info) + 1);
+
+	int complete = 0;
+	memset(pipe_buf, 0, HEAD_LEN + sizeof(progress_info) + 1);
+	info = (progress_info *)&pipe_buf[HEAD_LEN];
 
     int nTimedOut = 2000; //设置下载超时时间
     //std::string save_path("/dev/vdc/");//保存文件路径
@@ -206,8 +203,11 @@ try
 
 
 	if(file_name)
-		strcpy(info.file_name, file_name);
-	info.type = 0x00;
+		strcpy(info->file_name, file_name);
+
+	sscanf(torrent, "/root/%s", info->image_name);	
+
+	info->type = 0x00;
 
     lt::session ses(pack);
 
@@ -218,17 +218,16 @@ try
     params.download_limit = torrent_download_limit;
     params.upload_limit = torrent_upload_limit;
 	
-
     auto start = system_clock::now();
     lt::torrent_handle th = ses.add_torrent(params);
     static auto end = system_clock::now();
     static auto duration = duration_cast<microseconds>(end - start);;
     params.ti->set_physicaldrive_offset(physical_offset);
-	complete = 0;
-    while (!complete)
+	run_flag = 0;
+    while (!run_flag)
     {
         downloadsize = params.ti->files().file_size(0); //下载文件的总大小
-		info.file_size = downloadsize;
+		info->file_size = downloadsize;
         std::vector<lt::alert*> alerts;
         ses.pop_alerts(&alerts);
         for (auto a : alerts)
@@ -237,7 +236,7 @@ try
             //{
             //  continue;
             //}
-            ::handle_alter(ses, a, th);
+            handle_alter(ses, a, th);
         }
         std::vector<std::int64_t> file_progress;
         th.file_progress(file_progress); // 获取文件下载进度
@@ -268,12 +267,22 @@ try
     }
     std::string title = params.ti->files().file_name(0).to_string();
     cout << "download "<<title<<" cost " << double(duration.count())*microseconds::period::num / microseconds::period::den<<"s"<<endl;
-	strcpy(info.state, "finished");
-	info.progress = 100;
-	info.download_rate = 0;
-	memcpy(&pipe_buf[HEAD_LEN], &info, sizeof(progress_info));
-	send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info));
-    return 0;
+	if(complete)
+	{
+		strcpy(info->state, "finished");
+		info->progress = 100;
+		info->download_rate = 0;
+		send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info));
+		return 0;
+	}
+	else
+	{
+		strcpy(info->state, "finished");
+		info->progress = 0;
+		info->download_rate = 0;
+		send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info));
+    	return 1;
+	}
 }
 catch (std::exception const &e) {
     std::cerr << "ERROR: " << e.what() << "\n";

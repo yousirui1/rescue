@@ -110,13 +110,17 @@ void PipeThread::process_pipe(unsigned char *msg, int len)
         {
             Global *global = Global::getGlobal();
             struct progress_info *info = (struct progress_info *)tmp;
+            if(!global->download_flag)  //上传
+            {
+                memcpy(info->filename, global->template_i.template_name, sizeof(global->template_i.template_name));
+            }
             global->setProgressValue(info);
             break;
         }
         case ERROR_MSG_PIPE:
         {
             Global *global = Global::getGlobal();
-            global->setErrorMsg(err_msg_desc[*(int*)&tmp[0]]);
+            global->setErrorMsg(*(int*)&tmp[0]);
             break;
         }
         default:

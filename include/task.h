@@ -9,6 +9,7 @@ struct p2v_task{
     char passwd[32];    
     char storage[32];
     char image_name[128];
+	char template_name[128];
 };
 
 

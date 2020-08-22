@@ -198,6 +198,106 @@ int set_network(const char *ip, const char *netmask)
 	exec_cmd(cmd, result);
 }
 
+#if 0
+int create_udp()
+{
+
+}
+#endif
+
+struct sock_udp create_udp(char *ip, int port, int mreq_flag)
+{
+    DEBUG("udp create ip %s, port %d", ip, port);
+    int fd = -1; 
+    int sock_opt = 0;
+    struct sockaddr_in send_addr, recv_addr;
+    struct sock_udp udp;
+
+    memset(&udp, 0, sizeof(struct sock_udp));
+
+#ifdef _WIN32
+    int socklen = sizeof(struct sockaddr_in);
+#else
+    socklen_t socklen = sizeof(struct sockaddr_in);
+#endif
+    fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); 
+    if (fd < 0)
+    {   
+        DEBUG("socket creating err in udptalk");
+        return udp;
+    }   
+    if (NULL != ip) 
+    {   
+        memset(&send_addr, 0, socklen);
+        send_addr.sin_family = AF_INET;
+        send_addr.sin_port = htons(port);
+        send_addr.sin_addr.s_addr = inet_addr(ip);
+
+        if(mreq_flag)
+        {   
+            /* 加入组播 */
+            struct ip_mreq mreq;
+            /* 设置要加入组播的地址 */
+            memset(&mreq, 0, sizeof (struct ip_mreq));
+            mreq.imr_multiaddr.s_addr = inet_addr(ip);
+            /* 设置发送组播消息的源主机的地址信息 */
+            mreq.imr_interface.s_addr = htonl (INADDR_ANY);
+    
+            /* 把本机加入组播地址，即本机网卡作为组播成员，只有加入组才能收到组播消息 */
+            if (setsockopt(fd, IPPROTO_IP, IP_ADD_MEMBERSHIP , (char *)&mreq,sizeof (struct ip_mreq)) == -1)
+            {
+                DEBUG ("setsockopt IP_ADD_MEMBERSHIP error: %s", strerror(errno));
+                close_fd(fd);
+                return udp;
+            }
+        }
+    }
+
+    sock_opt = 1;
+    if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (char *)&sock_opt, sizeof(sock_opt)) < 0)
+    {
+        DEBUG("setsocksock_sock_sock_opt SO_REUSEADDR");
+    }
+
+    sock_opt = 521 * 1024; //设置为512K
+    if (setsockopt(fd, SOL_SOCKET, SO_SNDBUF, (char *)&sock_opt, sizeof(sock_opt)) == -1)
+    {
+        DEBUG("IP_MULTICAST_LOOP set fail!");
+    }
+
+    sock_opt = 512 * 1024; //设置为512K
+    if (setsockopt(fd, SOL_SOCKET, SO_RCVBUF, (char *)&sock_opt, sizeof(sock_opt)) == -1)
+    {
+        DEBUG("IP_MULTICAST_LOOP set fail!");
+    }
+#ifdef _WIN32
+    sock_opt = 1;
+    if (ioctlsocket(fd, FIONBIO, (u_long *)&sock_opt) == SOCKET_ERROR)
+    {
+        DEBUG("fcntl F_SETFL fail");
+    }
+#endif
+    memset(&recv_addr, 0, sizeof(recv_addr));
+    recv_addr.sin_family = AF_INET;
+    recv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    recv_addr.sin_port = htons(port);
+
+    /* 绑定自己的端口和IP信息到socket上 */
+    if (bind(fd, (struct sockaddr *)&recv_addr, sizeof(struct sockaddr_in)) == -1)
+    {
+        DEBUG("bind port %d error", port);
+        close_fd(fd);
+        return udp;
+    }
+    if (fd)
+        udp.fd = fd;
+    udp.port = port;
+    udp.recv_addr = recv_addr;
+    udp.send_addr = send_addr;
+
+    DEBUG("udp.fd %d", udp.fd);
+    return udp;
+}
 
 int create_tcp()
 {

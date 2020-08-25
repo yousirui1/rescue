@@ -1,5 +1,7 @@
 #include "base.h"
 #include "config.h"
+#include "cJSON.h"
+
 
 int send_config_pipe()
 {
@@ -191,94 +193,289 @@ int save_config()
     write_profile_string(VERSION_SECTION, VER_MINOR_KEY, buf, config_file);
 
 }
+#define MAX_DESKTOP 7
+
+
+void update_desktop(char *json)
+{
+	int i, j, ret;
+	char section[12] = {0};
+	char buf[12] = {0};
+	cJSON *root = cJSON_Parse(json);
+	if(!root)
+	{
+		DEBUG("cJSON_Parse root error");
+		return ERROR;
+	}
+
+	cJSON* desktop = cJSON_GetObjectItem(root, "desktop");
+	if(!desktop)
+	{
+		DEBUG("cJSON_Parse desktop error");
+		return ERROR;
+	}
+	
+	cJSON *desktop_group_uuid = cJSON_GetObjectItem(desktop, "desktop_group_uuid");
+	if(!desktop_group_uuid)
+	{
+		DEBUG("cJSON_Parse desktop_group_uuid error");
+		return ERROR;
+	}	
+
+
+	for(i = 0; i < MAX_DESKTOP; i++)		//是否存在
+	{
+        sprintf(section, DESKTOP_SECTION"%02d", i);
+		if(read_profile_string(section, DESKTOP_GROUP_UUID_KEY, buf, sizeof(buf), NULL, DESKTOP_FILE)) 
+        {
+            if(STRPREFIX(desktop_group_uuid->valuestring, buf))            //相等
+			{
+				DEBUG("section: %s found %s check ", section, desktop_group_uuid->valuestring);
+				goto add_desktop;
+			}
+        }
+	}
+
+	for(i = 0; i < MAX_DESKTOP; i++)		//是否存在
+	{
+        sprintf(section, DESKTOP_SECTION"%02d", i);
+		if(!read_profile_string(section, DESKTOP_GROUP_UUID_KEY, buf, sizeof(buf), NULL, DESKTOP_FILE))  //不存在
+        {
+			DEBUG("section: %s NO found ", section);
+			goto add_desktop;
+        }
+
+		if(read_profile_int(section, DESKTOP_VALID_KEY, 0, DESKTOP_FILE) == 0)		//valid = 0
+		{
+			DEBUG("section: %s valid = 0", section);
+			goto add_desktop;	
+		}
+	}
+	DEBUG("update_desktop error");
+	return ERROR;
+
+add_desktop:
+	sprintf(buf, "%d", 1);
+	write_profile_string(section, DESKTOP_VALID_KEY, buf, DESKTOP_FILE);
+	
+	cJSON *desktop_is_dhcp = cJSON_GetObjectItem(desktop, "desktop_is_dhcp");
+	if(desktop_is_dhcp)
+	{
+		sprintf(buf, "%d", desktop_is_dhcp->valueint);
+		write_profile_string(section, DESKTOP_DHCP_KEY, buf, DESKTOP_FILE);
+	}	
+
+	cJSON *desktop_ip = cJSON_GetObjectItem(desktop, "desktop_ip");
+	if(desktop_ip)
+		write_profile_string(section, DESKTOP_IP_KEY, desktop_ip->valuestring, DESKTOP_FILE);
+
+	cJSON *desktop_mask = cJSON_GetObjectItem(desktop, "desktop_mask");
+	if(desktop_mask)
+		write_profile_string(section, DESKTOP_MASK_KEY, desktop_mask->valuestring, DESKTOP_FILE);
+
+	cJSON *desktop_gateway = cJSON_GetObjectItem(desktop, "desktop_gateway");
+	if(desktop_gateway)
+		write_profile_string(section, DESKTOP_GATEWAY_KEY, desktop_gateway->valuestring, DESKTOP_FILE);
+		
+	cJSON *desktop_dns1 = cJSON_GetObjectItem(desktop, "desktop_dns1");
+	if(desktop_dns1)
+		write_profile_string(section, DESKTOP_DNS1_KEY, desktop_dns1->valuestring, DESKTOP_FILE);
+	
+	cJSON *desktop_dns2 = cJSON_GetObjectItem(desktop, "desktop_dns2");
+	if(desktop_dns2)
+		write_profile_string(section, DESKTOP_DNS2_KEY, desktop_dns2->valuestring, DESKTOP_FILE);
+	
+	cJSON *desktop_group_name = cJSON_GetObjectItem(desktop, "desktop_group_name");
+	if(desktop_group_name)
+		write_profile_string(section, DESKTOP_GROUP_NAME_KEY, desktop_group_name->valuestring, DESKTOP_FILE);
+	
+	write_profile_string(section, DESKTOP_GROUP_UUID_KEY, desktop_group_uuid->valuestring, DESKTOP_FILE);
+	
+#if 0
+	cJSON *desktop_group_status = cJSON_GetObjectItem(desktop, "desktop_group_status");
+	if(desktop_group_status)
+	{
+		sprintf(buf, "%d", desktop_group_status->valueint);
+		write_profile_string(section, DESKTOP_GROUP_STATUS_KEY, buf, DESKTOP_FILE);
+	}
+#endif
+	
+	cJSON *default_desktop_group = cJSON_GetObjectItem(desktop, "default_desktop_group");
+	if(default_desktop_group)
+	{
+		sprintf(buf, "%d", default_desktop_group->valueint);
+		write_profile_string(section, DESKTOP_DEFAULT_GROUP_KEY, buf, DESKTOP_FILE);
+	}
+
+	cJSON *os_sys_type = cJSON_GetObjectItem(desktop, "os_sys_type");
+	if(os_sys_type)
+	{
+		sprintf(buf, "%d", os_sys_type->valueint);
+		write_profile_string(section, DESKTOP_OS_TYPE_KEY, buf, DESKTOP_FILE);
+	}
+
+	cJSON *desktop_name = cJSON_GetObjectItem(desktop, "desktop_name");
+	if(desktop_name)
+		write_profile_string(section, DESKTOP_NAME_KEY, desktop_name->valuestring, DESKTOP_FILE);
+
+	cJSON *desktop_group_desc = cJSON_GetObjectItem(desktop, "desktop_group_desc");
+	if(desktop_group_desc)
+		write_profile_string(section, DESKTOP_DESC_KEY, desktop_group_desc->valuestring, DESKTOP_FILE);
+
+	cJSON *disks = cJSON_GetObjectItem(desktop, "disks");
+	if(!disks)
+	{
+		DEBUG("");
+		return ERROR;
+	}
+
+	cJSON *uuid, *type, *prefix, *dif_level, *real_size,  *reserve_size, *torrent_file,*restore_flag;
+	for(j = 0; j < cJSON_GetArraySize(disks); j++)
+	{
+		cJSON *item = cJSON_GetArrayItem(disks, j);
+        uuid = cJSON_GetObjectItem(item, "uuid");
+        type = cJSON_GetObjectItem(item, "type");
+        prefix = cJSON_GetObjectItem(item, "prefix");
+        dif_level = cJSON_GetObjectItem(item, "dif_level");
+        real_size = cJSON_GetObjectItem(item, "real_size");
+        reserve_size = cJSON_GetObjectItem(item, "reserve_size");
+        torrent_file = cJSON_GetObjectItem(item, "torrent_file");
+        restore_flag = cJSON_GetObjectItem(item, "restore_flag");
+		if(!uuid || !type || !prefix || !dif_level || !real_size ||!reserve_size || !torrent_file|| !restore_flag)
+		{
+			DEBUG("");
+			return ERROR;
+		}
+
+		switch(type->valueint)
+		{
+			case 0:		//系统盘
+			{
+                write_profile_string(section, BASE_UUID_KEY, uuid->valuestring, DESKTOP_FILE);
+                sprintf(buf, "%d", dif_level->valueint);
+                write_profile_string(section, BASE_DIF_KEY, buf, DESKTOP_FILE);
+                write_profile_string(section, BASE_PREFIX_KEY, prefix->valuestring, DESKTOP_FILE);
+                write_profile_string(section, BASE_REAL_SIZE_KEY, real_size->valuestring, DESKTOP_FILE);
+                write_profile_string(section, BASE_RESERVE_SIZE_KEY, reserve_size->valuestring, DESKTOP_FILE);
+                //sprintf(buf, "%d", disk->restore_flag);
+                //write_profile_string(section, BASE_FLAG_KEY, buf, DESKTOP_FILE);
+                break;
+			}	
+            case 1:             //数据盘
+            {
+				write_profile_string(section, DATA_UUID_KEY, uuid->valuestring, DESKTOP_FILE);
+                sprintf(buf, "%d", dif_level->valueint);
+                write_profile_string(section, DATA_DIF_KEY, buf, DESKTOP_FILE);
+                write_profile_string(section, DATA_PREFIX_KEY, prefix->valuestring, DESKTOP_FILE);
+                write_profile_string(section, DATA_REAL_SIZE_KEY, real_size->valuestring, DESKTOP_FILE);
+                write_profile_string(section, DATA_RESERVE_SIZE_KEY, reserve_size->valuestring, DESKTOP_FILE);
+                //sprintf(buf, "%d", disk->restore_flag);
+                //write_profile_string(section, DATA_FLAG_KEY, buf, DESKTOP_FILE);
+
+                break;
+            }
+            case 2:             //共享盘
+            {
+				write_profile_string(section, SHARE_UUID_KEY, uuid->valuestring, DESKTOP_FILE);
+                sprintf(buf, "%d", dif_level->valueint);
+                write_profile_string(section, SHARE_DIF_KEY, buf, DESKTOP_FILE);
+                write_profile_string(section, SHARE_PREFIX_KEY, prefix->valuestring, DESKTOP_FILE);
+                write_profile_string(section, SHARE_REAL_SIZE_KEY, real_size->valuestring, DESKTOP_FILE);
+                write_profile_string(section, SHARE_RESERVE_SIZE_KEY, reserve_size->valuestring, DESKTOP_FILE);
+                //sprintf(buf, "%d", disk->restore_flag);
+                //write_profile_string(section, SHARE_FLAG_KEY, buf, DESKTOP_FILE);
+
+                break;
+            }
+            default:
+                break;
+		}	
+	}
+
 
 #if 0
-void update_desktop(desktop_info *desktop)
-{
-    char buf[128] = {0};
-    char section[24] = {0};
-    disk_info *disk;
+	cJSON *sys_restore = cJSON_GetObjectItem(desktop, "sys_restore");
+	if(sys_restore)
+		write_profile_string(section, DESKTOP_MASK_KEY, desktop_mask->valuestring, DESKTOP_FILE);
 
-    int i, j;
-    for(i = 0; i < MAX_DESKTOP; i++)
+	cJSON *desktop_gateway = cJSON_GetObjectItem(desktop, "desktop_gateway");
+	if(desktop_gateway)
+		write_profile_string(section, DESKTOP_MASK_KEY, desktop_mask->valuestring, DESKTOP_FILE);
+
+	cJSON *desktop_gateway = cJSON_GetObjectItem(desktop, "desktop_gateway");
+	if(desktop_gateway)
+		write_profile_string(section, DESKTOP_MASK_KEY, desktop_mask->valuestring, DESKTOP_FILE);
+
+
+	cJSON *desktop_is_dhcp = cJSON_GetObjectItem(desktop, "desktop_is_dhcp");
+	if(desktop_is_dhcp)
+	{
+		sprintf(buf, "%d", desktop_is_dhcp->valueint);
+		write_profile_string(section, DESKTOP_DHCP_KEY, buf, DESKTOP_FILE);
+	}	
+	write_profile_string(section, DESKTOP_GROUP_UUID_KEY, desktop_group_uuid->valuestring, DESKTOP_FILE);
+
+
+	for(j = 0; j < desktop->disk_count; j++)
     {
-        sprintf(section, DESKTOP_SECTION"%02d", i);
-        DEBUG("%s", section);
-        if(read_profile_string(section, DESKTOP_GROUP_UUID_KEY, buf, sizeof(buf), NULL, DESKTOP_FILE))
+        disk = &(desktop->disks[j]);
+        switch(disk->type)
         {
-            if(strcmp(desktop->desktop_group_uuid, buf))            //不相等
-                continue;
-        }
-        sprintf(buf, "%d", 1);
-        write_profile_string(section, DESKTOP_VALID_KEY, buf, DESKTOP_FILE);
-        sprintf(buf, "%d", desktop->os_sys_type);
-        write_profile_string(section, DESKTOP_OS_TYPE_KEY, buf, DESKTOP_FILE);
-        sprintf(buf, "%d", desktop->desktop_group_status);
-        write_profile_string(section, DESKTOP_GROUP_STATUS_KEY, buf, DESKTOP_FILE);
-        write_profile_string(section, DESKTOP_GROUP_NAME_KEY, desktop->desktop_group_name, DESKTOP_FILE);
-        sprintf(buf, "%d", desktop->default_desktop_group);
-        write_profile_string(section, DESKTOP_DEFAULT_GROUP_KEY, buf, DESKTOP_FILE);
-        write_profile_string(section, DESKTOP_GROUP_UUID_KEY, desktop->desktop_group_uuid, DESKTOP_FILE);
-
-        DEBUG("--------- desktop->disk_count %d -----", desktop->disk_count);
-        for(j = 0; j < desktop->disk_count; j++)
-        {
-            disk = &(desktop->disks[j]);
-            switch(disk->type)
+            case 0:             //系统盘
             {
-                case 0:             //系统盘
-                {
-                    write_profile_string(section, BASE_DISK_UUID_KEY, disk->uuid, DESKTOP_FILE);
-                    sprintf(buf, "%d", disk->type);
-                    write_profile_string(section, BASE_DISK_TYPE_KEY, buf, DESKTOP_FILE);
-                    write_profile_string(section, BASE_DISK_DIF_LEVEL_KEY, disk->prefix, DESKTOP_FILE);
-                    sprintf(buf, "%d", disk->dif_level);
-                    write_profile_string(section, BASE_DISK_PREFIX_KEY, buf, DESKTOP_FILE);
-                    sprintf(buf, "%llu", disk->real_size);
-                    write_profile_string(section, BASE_DISK_REAL_SIZE_KEY, buf, DESKTOP_FILE);
-                    sprintf(buf, "%llu", disk->reserve_size);
-                    write_profile_string(section, BASE_DISK_RESERVE_SIZE_KEY, buf, DESKTOP_FILE);
-                    sprintf(buf, "%d", disk->restore_flag);
-                    write_profile_string(section, BASE_RESTORE_FLAG_KEY, buf, DESKTOP_FILE);
-                    break;
-                }
-                case 1:             //数据盘
-                {
-                    write_profile_string(section, DATE_DISK_UUID_KEY, disk->uuid, DESKTOP_FILE);
-                    sprintf(buf, "%d", disk->type);
-                    write_profile_string(section, DATE_DISK_TYPE_KEY, buf, DESKTOP_FILE);
-                    write_profile_string(section, DATE_DISK_DIF_LEVEL_KEY, disk->prefix, DESKTOP_FILE);
-                    sprintf(buf, "%d", disk->dif_level);
-                    write_profile_string(section, DATE_DISK_PREFIX_KEY, buf, DESKTOP_FILE);
-                    sprintf(buf, "%llu", disk->real_size);
-                    write_profile_string(section, DATE_DISK_REAL_SIZE_KEY, buf, DESKTOP_FILE);
-                    sprintf(buf, "%llu", disk->reserve_size);
-                    write_profile_string(section, DATE_DISK_RESERVE_SIZE_KEY, buf, DESKTOP_FILE);
-                    sprintf(buf, "%d", disk->restore_flag);
-                    write_profile_string(section, DATE_RESTORE_FLAG_KEY, buf, DESKTOP_FILE);
-                    break;
-                }
-                case 2:             //共享盘
-                {
-                    write_profile_string(section, SHARE_DISK_UUID_KEY, disk->uuid, DESKTOP_FILE);
-                    sprintf(buf, "%d", disk->type);
-                    write_profile_string(section, SHARE_DISK_TYPE_KEY, buf, DESKTOP_FILE);
-                    write_profile_string(section, SHARE_DISK_DIF_LEVEL_KEY, disk->prefix, DESKTOP_FILE);
-                    sprintf(buf, "%d", disk->dif_level);
-                    write_profile_string(section, SHARE_DISK_PREFIX_KEY, buf, DESKTOP_FILE);
-                    sprintf(buf, "%llu", disk->real_size);
-                    write_profile_string(section, SHARE_DISK_REAL_SIZE_KEY, buf, DESKTOP_FILE);
-                    sprintf(buf, "%llu", disk->reserve_size);
-                    write_profile_string(section, SHARE_DISK_RESERVE_SIZE_KEY, buf, DESKTOP_FILE);
-                    sprintf(buf, "%d", disk->restore_flag);
-                    write_profile_string(section, SHARE_RESTORE_FLAG_KEY, buf, DESKTOP_FILE);
-                    break;
-                }
-                default:
-                    break;
+                write_profile_string(section, BASE_DISK_UUID_KEY, disk->uuid, DESKTOP_FILE);
+                sprintf(buf, "%d", disk->type);
+                write_profile_string(section, BASE_DISK_TYPE_KEY, buf, DESKTOP_FILE);
+                write_profile_string(section, BASE_DISK_DIF_LEVEL_KEY, disk->prefix, DESKTOP_FILE);
+                sprintf(buf, "%d", disk->dif_level);
+                write_profile_string(section, BASE_DISK_PREFIX_KEY, buf, DESKTOP_FILE);
+                sprintf(buf, "%llu", disk->real_size);
+                write_profile_string(section, BASE_DISK_REAL_SIZE_KEY, buf, DESKTOP_FILE);
+                sprintf(buf, "%llu", disk->reserve_size);
+                write_profile_string(section, BASE_DISK_RESERVE_SIZE_KEY, buf, DESKTOP_FILE);
+                sprintf(buf, "%d", disk->restore_flag);
+                write_profile_string(section, BASE_RESTORE_FLAG_KEY, buf, DESKTOP_FILE);
+                break;
             }
+            case 1:             //数据盘
+            {
+                write_profile_string(section, DATE_DISK_UUID_KEY, disk->uuid, DESKTOP_FILE);
+                sprintf(buf, "%d", disk->type);
+                write_profile_string(section, DATE_DISK_TYPE_KEY, buf, DESKTOP_FILE);
+                write_profile_string(section, DATE_DISK_DIF_LEVEL_KEY, disk->prefix, DESKTOP_FILE);
+                sprintf(buf, "%d", disk->dif_level);
+                write_profile_string(section, DATE_DISK_PREFIX_KEY, buf, DESKTOP_FILE);
+                sprintf(buf, "%llu", disk->real_size);
+                write_profile_string(section, DATE_DISK_REAL_SIZE_KEY, buf, DESKTOP_FILE);
+                sprintf(buf, "%llu", disk->reserve_size);
+                write_profile_string(section, DATE_DISK_RESERVE_SIZE_KEY, buf, DESKTOP_FILE);
+                sprintf(buf, "%d", disk->restore_flag);
+                write_profile_string(section, DATE_RESTORE_FLAG_KEY, buf, DESKTOP_FILE);
+                break;
+            }
+            case 2:             //共享盘
+            {
+                write_profile_string(section, SHARE_DISK_UUID_KEY, disk->uuid, DESKTOP_FILE);
+                sprintf(buf, "%d", disk->type);
+                write_profile_string(section, SHARE_DISK_TYPE_KEY, buf, DESKTOP_FILE);
+                write_profile_string(section, SHARE_DISK_DIF_LEVEL_KEY, disk->prefix, DESKTOP_FILE);
+                sprintf(buf, "%d", disk->dif_level);
+                write_profile_string(section, SHARE_DISK_PREFIX_KEY, buf, DESKTOP_FILE);
+                sprintf(buf, "%llu", disk->real_size);
+                write_profile_string(section, SHARE_DISK_REAL_SIZE_KEY, buf, DESKTOP_FILE);
+                sprintf(buf, "%llu", disk->reserve_size);
+                write_profile_string(section, SHARE_DISK_RESERVE_SIZE_KEY, buf, DESKTOP_FILE);
+                sprintf(buf, "%d", disk->restore_flag);
+                write_profile_string(section, SHARE_RESTORE_FLAG_KEY, buf, DESKTOP_FILE);
+                break;
+            }
+            default:
+                break;
         }
-        break;
-    }
-}
 #endif
+ 
+	
+	
+
+
+}

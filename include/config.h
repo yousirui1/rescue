@@ -39,6 +39,49 @@
 #define LOG_DIR  "./log"
 #define LOG_ERR_FILE "./log/virt-p2v_err.log"
 
+#define DESKTOP_FILE "/boot/conf/desktop_config.ini"
+
+#define DESKTOP_SECTION "desktop_"
+#define DESKTOP_GROUP_UUID_KEY "group_uuid"
+#define DESKTOP_VALID_KEY "valid"
+#define DESKTOP_DHCP_KEY "desktop_is_dhcp"
+#define DESKTOP_IP_KEY "desktop_ip"
+#define DESKTOP_MASK_KEY "desktop_mask"
+#define DESKTOP_GATEWAY_KEY "desktop_gateway"
+#define DESKTOP_DNS1_KEY "desktop_dns1"
+#define DESKTOP_DNS2_KEY "desktop_dns2"
+#define DESKTOP_DEFAULT_GROUP_KEY "default_group"
+#define DESKTOP_GROUP_NAME_KEY "group_name"
+#define DESKTOP_OS_TYPE_KEY "os_sys_type"
+#define DESKTOP_DESC_KEY "desktop_desc"
+#define DESKTOP_NAME_KEY "desktop_name"
+
+#define BASE_UUID_KEY "base_uuid"
+#define BASE_DIF_KEY "base_dif"
+#define BASE_PREFIX_KEY "base_prefix"
+#define BASE_REAL_SIZE_KEY "base_real"
+#define BASE_RESERVE_SIZE_KEY "base_resver"
+
+#define DATA_UUID_KEY "data_uuid"
+#define DATA_DIF_KEY "data_dif"
+#define DATA_PREFIX_KEY "data_prefix"
+#define DATA_REAL_SIZE_KEY "data_real"
+#define DATA_RESERVE_SIZE_KEY "data_resver"
+
+#define SHARE_UUID_KEY "share_uuid"
+#define SHARE_DIF_KEY "share_dif"
+#define SHARE_PREFIX_KEY "share_prefix"
+#define SHARE_REAL_SIZE_KEY "share_real"
+#define SHARE_RESERVE_SIZE_KEY "share_resver"
+
+
+
+
+
+
+
+
+
 
 struct terminal_info{
     unsigned int id;

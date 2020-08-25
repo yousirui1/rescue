@@ -1,10 +1,15 @@
 #include "base.h"
 #include "device.h"
 #include "StoreConfig.h"
+#include "queue.h"
+#include "task.h"
 #include "torrent.h"
 
 struct device_info dev_info;
 #define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
+
+
+extern QUEUE task_queue;
 
 /**
  * Get parent device of a partition.
@@ -404,6 +409,7 @@ int install_programe()
 	char buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};
 	progress_info *info = (progress_info *)&buf[HEAD_LEN];
 	struct server_info *server = &(conf.server);
+	int ret;
 
 #if 0
 	if(!dev_info.usb_disk)
@@ -429,7 +435,7 @@ int install_programe()
 		return ERROR;
 	}
 
-	info->progress = 5;
+	info->progress = 2;
 	info->type = 2;		
 	char version[32] = {0};
 	sprintf(version, "V%d.0.0.%d", conf.major_ver, conf.minor_ver);
@@ -444,33 +450,59 @@ int install_programe()
 		send_error_msg(INSTALL_ERR);
 		return ERROR;
 	}
+	struct tftp_task task = {0};
+	
+    exec_cmd("mkdir -p /boot/linux", result);
+	strcpy(task.server_ip, server->ip);
+	strcpy(task.remote_file, "vmlinuz-5.2.8-lfs-9.0");
+	strcpy(task.local_file, "/boot/linux/vmlinuz-5.2.8-lfs-9.0");
+	task.type = 1;	
 
+	en_queue(&task_queue, (char *)&task, sizeof(struct tftp_task) , 0x3);
+
+	strcpy(task.server_ip, server->ip);
+	strcpy(task.remote_file, "voi.zip");
+	strcpy(task.local_file, "/root/voi.zip");
+	task.type = 2;	
+	en_queue(&task_queue, (char *)&task, sizeof(struct tftp_task) , 0x3);
+
+#if 0
+	//if(SUCCESS == tftp_get(server->ip, "vmlinuz-5.2.8-lfs-9.0", "/boot/linux/vmlinuz-5.2.8-lfs-9.0", buf , 1))
+	{
+		if(SUCCESS == tftp_get(server->ip, "voi.zip", "/root/voi.zip", buf, 2))
+		{
+			DEBUG("install programe ok");
+			conf.install_flag = 1;
+			memset(result, 0, MAX_BUFLEN);
+    		exec_cmd(upgrad_sh, result);
+			if(strstr(result, "successd"))
+			{
+				info->progress = 100;
+				send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
+
+				exec_cmd("mkdir -p /boot/conf", result);
+        		strcpy(config_file, "/boot/conf/config.ini");
+				DEBUG("install_flag %d", conf.install_flag);
+				return SUCCESS;
+			}
+		}
+	}
+	
+	DEBUG("install programe error %s", result);
+	conf.install_flag = 0;
+	umount_boot();
+	send_error_msg(INSTALL_ERR);
+	DEBUG("install_flag %d", conf.install_flag);
+	return ERROR;
+#endif
+
+#if 0
+#if 0
 	sprintf(cmd, upgrad_sh, "voi.zip", server->ip);
 	DEBUG("%s", cmd);
     exec_cmd(cmd, result);
+#endif
 
-	if(strstr(result, "successd"))
-	{
-		DEBUG("install programe ok");
-		conf.install_flag = 1;
-
-		info->progress = 100;
-		send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
-
-		exec_cmd("mkdir -p /boot/conf", result);
-        strcpy(config_file, "/boot/conf/config.ini");
-		DEBUG("install_flag %d", conf.install_flag);
-		return SUCCESS;
-	}
-	else
-	{
-		DEBUG("install programe error %s", result);
-		conf.install_flag = 0;
-		umount_boot();
-		DEBUG("install_flag %d", conf.install_flag);
-		return ERROR;
-	}
-#if 0
 	DEBUG("dev_info.mini_disk->name %s", dev_info.mini_disk->name);	
 	DEBUG("dev_info.usb_disk->name %s", dev_info.usb_disk->name);	
     sprintf(cmd, install_sh, dev_info.mini_disk->name, dev_info.usb_disk->name);

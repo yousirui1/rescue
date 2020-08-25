@@ -278,6 +278,7 @@ try
 	else
 	{
 		strcpy(info->state, "finished");
+		strcpy(info->storage, title.c_str());
 		info->progress = 0;
 		info->download_rate = 0;
 		send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info));

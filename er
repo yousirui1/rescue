@@ -1,0 +1,65 @@
+cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
+In file included from ./src/task.c:4:0:
+./include/device.h:90:1: warning: useless storage class specifier in empty declaration
+ };
+ ^
+In file included from ./src/task.c:1:0:
+./src/task.c: In function ‘task_loop’:
+./include/base.h:46:4: warning: implicit declaration of function ‘log_msg’ [-Wimplicit-function-declaration]
+    log_msg("File: "__FILE__", Line: %05d:  " format"\r\n", __LINE__, ##__VA_ARGS__); \
+    ^
+./src/task.c:29:13: note: in expansion of macro ‘DEBUG’
+             DEBUG("index->torrent_file %s", task->torrent_file);
+             ^
+./include/base.h:45:21: warning: format ‘%d’ expects argument of type ‘int’, but argument 3 has type ‘uint64_t {aka long unsigned int}’ [-Wformat=]
+         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
+                     ^
+./src/task.c:30:13: note: in expansion of macro ‘DEBUG’
+             DEBUG("index->torrent_file %d", task->offset);
+             ^
+./src/task.c:41:20: warning: implicit declaration of function ‘change_back_file_qcow2’ [-Wimplicit-function-declaration]
+                 if(change_back_file_qcow2(dev_info.mini_disk->dev, task->uuid ,task->diff) == SUCCESS)
+                    ^
+./src/task.c:43:6: warning: implicit declaration of function ‘set_boot_qcow2’ [-Wimplicit-function-declaration]
+      set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
+      ^
+./src/task.c:57:17: warning: implicit declaration of function ‘p2v_transform’ [-Wimplicit-function-declaration]
+                 p2v_transform(task->server_ip, task->user, task->passwd, 
+                 ^
+./src/task.c:75:16: error: ‘progress_info {aka struct progress_info}’ has no member named ‘filename’
+    sprintf(info->filename, "V%d.0.0.%d", conf.major_ver, conf.minor_ver);
+                ^
+./src/task.c:77:10: warning: implicit declaration of function ‘tftp_get’ [-Wimplicit-function-declaration]
+    ret = tftp_get(task->server_ip, task->remote_file, task->local_file, buf, task->type);
+          ^
+./src/task.c:91:14: warning: implicit declaration of function ‘exec_cmd’ [-Wimplicit-function-declaration]
+              exec_cmd(upgrad_sh, result);
+              ^
+./src/task.c:95:18: warning: implicit declaration of function ‘send_pipe’ [-Wimplicit-function-declaration]
+                  send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
+                  ^
+./src/task.c:99:6: warning: implicit declaration of function ‘save_config’ [-Wimplicit-function-declaration]
+      save_config();
+      ^
+./src/task.c:103:6: warning: implicit declaration of function ‘send_error_msg’ [-Wimplicit-function-declaration]
+      send_error_msg(INSTALL_ERR);
+      ^
+./src/task.c:71:12: warning: unused variable ‘cmd’ [-Wunused-variable]
+       char cmd[MAX_BUFLEN] = {0};
+            ^
+./src/task.c: In function ‘clear_task’:
+./src/task.c:113:2: warning: implicit declaration of function ‘clear_queue’ [-Wimplicit-function-declaration]
+  clear_queue(&task_queue);
+  ^
+In file included from ./src/task.c:1:0:
+./src/task.c: In function ‘thread_task’:
+./include/base.h:56:4: warning: implicit declaration of function ‘err_msg’ [-Wimplicit-function-declaration]
+    err_msg("File: "__FILE__", Line: %05d:  " format"\r\n", __LINE__, ##__VA_ARGS__); \
+    ^
+./src/task.c:138:3: note: in expansion of macro ‘DIE’
+   DIE("task_buf malloc size: %d error: %s", MAX_VIDSBUFSIZE, strerror(errno) );
+   ^
+./src/task.c:143:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+  return (void *)ret; 
+         ^
+make: *** [task.o] Error 1

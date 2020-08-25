@@ -15,9 +15,9 @@ char install_sh[] = {"#!/bin/sh \n"
 					};
 
 
+					 //"tftp -g -r %s %s	\n"
 char upgrad_sh[] = {"#!/bin/sh \n"
-					 "tftp -g -r %s %s	\n"
-					 "outpu=`unzip -o /voi.zip -d /boot/ `\n"
+					 "outpu=`unzip -o /root/voi.zip -d /boot/ `\n"
 					 "if [ $? -ne 0 ]; then \n"
     					"echo \"failed\" \n"
 					"else \n"

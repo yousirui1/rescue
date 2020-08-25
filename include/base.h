@@ -62,6 +62,8 @@
 #define DIE(format,...) pthread_exit((void *)ERROR)
 #endif      //__DEBUG__
 
+#define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
+
 #define BSWAP_8(x) ((x) & 0xff)
 #define BSWAP_16(x) ((BSWAP_8(x) << 8) | BSWAP_8((x) >> 8))
 #define BSWAP_32(x) ((BSWAP_16(x) << 16) | BSWAP_16((x) >> 16))
@@ -79,5 +81,6 @@
 #define MAX_CONFIGLEN   1024
 
 #define TIME_OUT 10
+
 
 #endif

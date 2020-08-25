@@ -108,7 +108,6 @@ void Global::setPipe(int fd[2])
 void Global::setCurrentIndex(int index)
 {
     current_index = index;
-    DEBUG("global->ip %s", conf.netcard.ip);
     onUpdateTime();
 }
 
@@ -124,7 +123,6 @@ void Global::setInstallFlag(int flag)
 
 void Global::setDownLoadFlag(int flag)
 {
-    //DEBUG("setDownLoadFlag %d", flag);
     this->download_flag = flag;
     DEBUG("setDownLoadFlag %d", this->download_flag);
 }
@@ -197,7 +195,6 @@ void Global::onUpdateTime()
             main_ui->netstate_label->setText(ip_state);
             main_ui->neticon_label->setPixmap(QPixmap::fromImage(icon_img));
             main_ui->netpoint_label->setPixmap(QPixmap::fromImage(point_img));
-            DEBUG("conf.netcard.ip %s", conf.netcard.ip);
             break;
         case CONFIGWINDOW_PAGE:         //ConfigWindow
             config_ui->date_label->setText(QDateTime::currentDateTime().toString(" hh:mm:ss\nyyyy/MM/dd"));

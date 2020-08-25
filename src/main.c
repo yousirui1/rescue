@@ -92,8 +92,6 @@ void close_pipe()
 
 int main(int argc, char *argv[])
 {
-	tftp_get("192.169.27.251", "voi.zip", "/root/voi.zip");
-#if 0
 	int ret;
 	srandom(time(NULL) + getpid());
 	(void)time(&current_time);
@@ -134,6 +132,5 @@ int main(int argc, char *argv[])
 	close_pipe();
 	close_logs();
 	return 0;
-#endif
 }
 

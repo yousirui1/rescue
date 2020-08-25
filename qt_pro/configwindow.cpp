@@ -151,7 +151,7 @@ ConfigWindow::ConfigWindow(QWidget *parent) :
          ui->netmask_edit->setEnabled(true);
          ui->gateway_edit->setEnabled(true);
     }
-
+    auto_cloud_flag = 0;
     DEBUG("global->conf.netcard.is_dhcp %d", global->conf.netcard.is_dhcp);
 }
 
@@ -332,12 +332,12 @@ void ConfigWindow::on_nextButton_clicked()
         if(global->conf.terminal.auto_desktop)
         {
              ui->auto_in_cloud_radio->setChecked(true);
-             auto_cloud_flag = true;
+             //auto_cloud_flag = true;
         }
         else
         {
             ui->auto_in_cloud_radio->setChecked(false);
-            auto_cloud_flag = false;
+            //auto_cloud_flag = false;
         }
     }
 }
@@ -409,6 +409,8 @@ void ConfigWindow::on_formatButton_clicked()
     DEBUG("conf->netcard.dns2 %s", conf->netcard.ip);
     DEBUG("conf->server.ip %s", conf->netcard.ip);
     DEBUG("global->conf.terminal.id %d", global->conf.terminal.id);
+    DEBUG("global->conf.terminal.auto_desktop %d", global->conf.terminal.auto_desktop);
+
     char *buf = (char *)malloc(sizeof(struct config) + HEAD_LEN +1);
 
     if(!buf)
@@ -456,9 +458,14 @@ void ConfigWindow::slots_dhcpable()
               global->conf.netcard.is_dhcp = 0;
               break;
            case 2:
-                auto_cloud_flag = !auto_cloud_flag;
-                qDebug()<<auto_cloud_flag<<endl;
-                ui->dhcp_radio->setChecked(!auto_cloud_flag);
+                global->conf.terminal.auto_desktop = !global->conf.terminal.auto_desktop;
+                DEBUG("global->conf.terminal.auto_desktop %d", global->conf.terminal.auto_desktop);
+                ui->dhcp_radio->setChecked(!global->conf.terminal.auto_desktop);
                 return;
         }
+}
+
+void ConfigWindow::on_num_edit_textChanged(const QString &arg1)
+{
+    ui->hostname_edit->setText(arg1);
 }

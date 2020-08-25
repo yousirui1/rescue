@@ -72,8 +72,6 @@ static int recv_heartbeat(struct client *cli)
 		}			
 	}
     return ERROR;
-
-
 }
 
 int send_heartbeat(struct client *cli)
@@ -232,8 +230,6 @@ static int recv_cancel_send_desktop(struct client *cli)
 	return ERROR;
 }
 
-
-
 static int recv_p2v_progress(struct client *cli)
 {
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
@@ -262,6 +258,17 @@ int send_p2v_progress(struct client *cli, char *buf)
         	cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
         	cJSON_AddNumberToObject(root, "progress", info->progress);
         	cJSON_AddStringToObject(root, "state", info->state);
+
+			if(info->progress == 0 &&  strncmp(info->state,"finished",strlen("finished")) == 0)
+			{
+				DEBUG("del qcow2");
+				int diff = 0;
+				char name[56] = {0};
+				char torrent[32] = {0};
+				sscanf(info->storage, "voi_%d_%s", &diff, name, torrent);
+				DEBUG("name %s", name);
+				del_qcow2(dev_info.mini_disk->dev, name, diff);	
+			}
 
     		cli->data_buf = cJSON_Print(root);
     		cli->data_size = strlen(cli->data_buf);
@@ -496,6 +503,7 @@ static int recv_desktop(struct client *cli)
 	int ret;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
+	update_desktop(buf);
 	if(root)
 	{
 		cJSON* desktop = cJSON_GetObjectItem(root, "desktop");
@@ -1552,7 +1560,7 @@ static int process_msg(struct client *cli)
 			ret = SUCCESS;
 			break;
     }    
-    return SUCCESS;
+    return ret;
 }
 
 static int tcp_loop(int sockfd)

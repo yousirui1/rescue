@@ -120,6 +120,15 @@ uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, 
 	}
 }
 
+void del_qcow2(PedDevice *dev, char *name, int diff)
+{
+	YZYGUID uuid = {0};
+	str2uuid(name, &uuid);
+	
+	storeDrv.del(diff, &uuid);
+   	storeDrv.save(dev);
+}
+
 void del_diff_qcow2(PedDevice *dev, char *name)
 {
 	YZYGUID uuid = {0};

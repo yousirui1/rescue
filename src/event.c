@@ -95,8 +95,7 @@ static void process_qt_msg(char *buf, int len)
 	{
 		case INSTALL_PIPE:
 		{
-			if(install_programe() == SUCCESS)
-				save_config();
+			install_programe();
 			break;
 		}
 		case INIT_PIPE:

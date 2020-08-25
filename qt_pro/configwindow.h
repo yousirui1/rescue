@@ -31,6 +31,8 @@ private slots:
     void slots_dhcpable();
     void install_cacenl_clicked();
     void install_confirm_btn();
+    void on_num_edit_textChanged(const QString &arg1);
+
 
 private:
     Ui::ConfigWindow *ui;

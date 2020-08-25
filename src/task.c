@@ -49,7 +49,7 @@ void task_loop()
 			DEBUG("task->diff %d", task->diff);
 			DEBUG("task->uuid %s", task->uuid);
         }   
-        else
+        else if(index->ucType == 0x02)
         {   
             struct p2v_task * task = (struct p2v_task *)index->pBuf;
             //if(dev_info.boot_disk)
@@ -65,6 +65,45 @@ void task_loop()
 				//DEBUG("no find window boot disk ");
 			}
         }   
+		else if(index->ucType == 0x03)
+		{
+			char result[MAX_BUFLEN] = {0};
+    		char cmd[MAX_BUFLEN] = {0};
+    		char buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};
+    		progress_info *info = (progress_info *)&buf[HEAD_LEN];
+			info->type = 2;
+			sprintf(info->file_name, "V%d.0.0.%d", conf.major_ver, conf.minor_ver);
+			struct tftp_task *task = (struct tftp_task *)index->pBuf;
+			ret = tftp_get(task->server_ip, task->remote_file, task->local_file, buf, task->type);
+			if(ret != SUCCESS)
+			{
+				//send_error_msg();
+				clear_task(&task_queue);		
+				continue;
+			}
+
+			if(task->type == 2)
+			{
+            	DEBUG("install programe ok");
+		
+            	conf.install_flag = 1;
+
+            	exec_cmd(upgrad_sh, result);
+            	if(strstr(result, "successd"))
+            	{
+                	info->progress = 100;
+                	send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
+                	exec_cmd("mkdir -p /boot/conf", result);
+                	strcpy(config_file, "/boot/conf/config.ini");
+                	DEBUG("install_flag %d", conf.install_flag);
+					save_config();
+            	}
+				else
+				{
+					send_error_msg(INSTALL_ERR);
+				}
+			}
+		}
         de_queuePos(&task_queue);
     }  
 }

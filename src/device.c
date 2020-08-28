@@ -366,7 +366,7 @@ int format_disk(const char *path)
 }
 
 
-int upgrad_programe(char *file)
+int upgrad_programe(char *file, char *version, int type)
 {
     char result[MAX_BUFLEN] = {0};
     char cmd[MAX_BUFLEN] = {0};
@@ -383,12 +383,33 @@ int upgrad_programe(char *file)
 		DEBUG("no install program disable upgrad");	
 		return ERROR;
 	}
+#if 0
     sprintf(cmd, upgrad_sh, file, server->ip);
 	DEBUG("%s", cmd);
     exec_cmd(cmd, result);
 
     exec_cmd(upgrad_sh, result);
 	DEBUG("result %s", result);
+#endif
+
+	struct tftp_task task = {0};
+
+	strcpy(task.server_ip, server->ip);
+	strcpy(task.remote_file, file);
+	if(type == 1)
+	{
+		strcpy(task.local_file, "/boot/linux/vmlinuz-5.2.8-lfs-9.0");
+		task.type = type;
+	}
+	else
+	{
+		strcpy(task.local_file, "/root/voi.zip");
+		task.type = 2;	
+	}
+	en_queue(&task_queue, (char *)&task, sizeof(struct tftp_task) , 0x3);
+
+
+#if 0
 	if(strstr(result, "successd"))
 	{
 		DEBUG("upgrad programe ok");
@@ -400,6 +421,7 @@ int upgrad_programe(char *file)
 		DEBUG("upgrad programe error");
 		return ERROR;
 	}	
+#endif
 }
 
 int install_programe()

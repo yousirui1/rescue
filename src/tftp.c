@@ -165,7 +165,6 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
             }   
             if(ret >= 4 && recv_packet.cmd == htons(CMD_DATA) && recv_packet.block == htons(block))
 			{
-				//DEBUG("DATA: block=%d, data_size=%d\n", ntohs(recv_packet.block), ret - 4);
                 send_packet.block = recv_packet.block;
                 sendto(udp.fd, &send_packet, sizeof(struct tftp_packet), 0, (struct sockaddr*)&udp.recv_addr, addr_len);
 				info->total_size += ret - 4;
@@ -173,7 +172,14 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
 				(void)time(&current_time);	
 				if(current_time - last_time > 1)
 				{
-					info->progress = (info->total_size  * 100)/ info->file_size / 2;
+					if(type == 3)
+					{
+						info->progress = (info->total_size  * 100)/ info->file_size;
+					}
+					else
+					{
+						info->progress = (info->total_size  * 100)/ info->file_size / 2;
+					}
 					DEBUG("info->progress %d", info->progress);
 					if(type == 2)
 					{

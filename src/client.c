@@ -116,13 +116,19 @@ static int recv_upgrad(struct client *cli)
 	if(root)
 	{
 		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
-		ret = upgrad_programe("voi.zip");	
+		cJSON *upgrade_package = cJSON_GetObjectItem(root, "upgrade_package");
+		cJSON *version = cJSON_GetObjectItem(root, "version");
+		cJSON *os_name = cJSON_GetObjectItem(root, "os_name");	
 
+		ret = upgrad_programe("", version->valuestring, 1);	
+		ret = upgrad_programe("", version->valuestring, 2);	
+#if 0
 		if(ret == SUCCESS)
 		{
 			char head[HEAD_LEN] = {0};
 			ret = send_pipe(head, REBOOT_PIPE , 0, PIPE_EVENT);
 		}
+#endif
 		//return send_delete(cli, batch_no->valueint);
 	}
 	return ret;
@@ -396,7 +402,7 @@ static int recv_p2v_transform(struct client *cli)
 			DEBUG("user->valuestring %s password->valuestring %s storage->valuestring %s", user->valuestring,
 			password->valuestring, storage->valuestring);
 
-			en_queue(&task_queue, (char *)&task, sizeof(struct p2v_task) , 0x1);
+			en_queue(&task_queue, (char *)&task, sizeof(struct p2v_task) , 0x2);
 			return SUCCESS;
 		}
 		else 
@@ -503,6 +509,7 @@ static int recv_desktop(struct client *cli)
 	int ret;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
+	DEBUG("%s", buf);
 	update_desktop(buf);
 	if(root)
 	{

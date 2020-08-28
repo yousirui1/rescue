@@ -54,6 +54,7 @@ void task_loop()
             struct p2v_task * task = (struct p2v_task *)index->pBuf;
             //if(dev_info.boot_disk)
             {   
+				DEBUG("p2v_transform");
                 p2v_transform(task->server_ip, task->user, task->passwd, 
                             task->storage, task->image_name, 
 							dev_info.mini_disk->dev->path);

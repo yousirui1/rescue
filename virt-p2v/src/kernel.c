@@ -39,6 +39,12 @@
 static void notify_ui_callback (int type, const char *data);
 static void run_command (const char *stage, const char *command);
 
+#define DEBUG(format,...) \
+        do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
+            log_msg("File: "__FILE__", Line: %05d:  " format"\r\n", __LINE__, ##__VA_ARGS__); \
+        }while(0)
+
+
 /* Perform conversion using the kernel method. */
 void
 kernel_conversion (struct config *config, char **cmdline, int cmdline_source)
@@ -56,10 +62,15 @@ kernel_conversion (struct config *config, char **cmdline, int cmdline_source)
     wait_network_online (config);
     if (test_connection (config) == -1) {
       const char *err = get_ssh_error ();
-
+		DEBUG("error opening control connection to %s:%d: %s",
+               config->remote.server, config->remote.port, err);
+		send_error_msg(7);
+		return;
+#if 0
       error (EXIT_FAILURE, 0,
              "error opening control connection to %s:%d: %s",
              config->remote.server, config->remote.port, err);
+#endif
     }
   }
 

@@ -148,7 +148,7 @@ try
     int torrent_upload_limit = 0;  //上传速度限制
     int torrent_download_limit = 0; //下载速度限制 单位是字节
     //BT下载客户端代码
-
+#if 0
 	lt::settings_pack pack;
 	pack.set_int(lt::settings_pack::choking_algorithm, lt::settings_pack::rate_based_choker);	
     pack.set_int(lt::settings_pack::alert_mask
@@ -200,6 +200,14 @@ try
     pack.set_int(lt::settings_pack::suggest_mode, 1); 
     pack.set_bool(lt::settings_pack::use_disk_cache_pool, 1); 
     pack.set_int(lt::settings_pack::write_cache_line_size, 256);
+#else
+	lt::settings_pack pack;
+	pack.set_int(lt::settings_pack::alert_mask,
+				  lt::alert::error_notification 
+				| lt::alert::storage_notification
+				| lt::alert::status_notification);
+	pack.set_str(lt::settings_pack::user_agent, "ltclient/""test");
+#endif
 
 
 	if(file_name)

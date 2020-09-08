@@ -131,6 +131,7 @@ int main(int argc, char *argv[])
 	do_exit();
 	close_pipe();
 	close_logs();
+
 	return 0;
 }
 

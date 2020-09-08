@@ -46,6 +46,8 @@ void task_loop()
             }   
 			else
 				set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
+
+			save_qcow2(dev_info.mini_disk->dev);
 			DEBUG("task->diff %d", task->diff);
 			DEBUG("task->uuid %s", task->uuid);
         }   
@@ -73,12 +75,15 @@ void task_loop()
     		char buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};
     		progress_info *info = (progress_info *)&buf[HEAD_LEN];
 			info->type = 2;
-			sprintf(info->file_name, "V%d.0.0.%d", conf.major_ver, conf.minor_ver);
 			struct tftp_task *task = (struct tftp_task *)index->pBuf;
+
+			if(strlen(task->file_name) > 0)
+				strcpy(info->file_name, task->file_name);
+			
 			ret = tftp_get(task->server_ip, task->remote_file, task->local_file, buf, task->type);
 			if(ret != SUCCESS)
 			{
-				//send_error_msg();
+				send_error_msg(INSTALL_ERR);
 				clear_task(&task_queue);		
 				continue;
 			}
@@ -92,8 +97,6 @@ void task_loop()
             	exec_cmd(upgrad_sh, result);
             	if(strstr(result, "successd"))
             	{
-                	info->progress = 100;
-                	send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
                 	exec_cmd("mkdir -p /boot/conf", result);
                 	strcpy(config_file, "/boot/conf/config.ini");
                 	DEBUG("install_flag %d", conf.install_flag);
@@ -104,6 +107,8 @@ void task_loop()
 					send_error_msg(INSTALL_ERR);
 				}
 			}
+            info->progress = 100;
+            send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
 		}
         de_queuePos(&task_queue);
     }  

@@ -139,6 +139,14 @@ void Uploadwindow::keyPressEvent(QKeyEvent *event)
         Global *global = Global::getGlobal();
         global->pipe->send_pipe(head, REBOOT_PIPE, 0);
     }
+
+	if (event->key() == Qt::Key_F5)
+    {
+        char head[HEAD_LEN] = {0};
+        Global *global = Global::getGlobal();
+        global->pipe->send_pipe(head, INIT_PIPE, 0);
+    }
+#if 0
     if (event->key() == Qt::Key_F1)
     {
         char head[HEAD_LEN] = {0};
@@ -151,13 +159,7 @@ void Uploadwindow::keyPressEvent(QKeyEvent *event)
     {
         qApp->exit();
     }
-	
-	if (event->key() == Qt::Key_F5)
-    {
-        char head[HEAD_LEN] = {0};
-        Global *global = Global::getGlobal();
-        global->pipe->send_pipe(head, INIT_PIPE, 0);
-    }
+#endif
 }
 
 void Uploadwindow::showErrorDialog(char *err_msg)
@@ -220,8 +222,7 @@ void Uploadwindow::setProgressValue(struct progress_info *info)
          }
          if(info->progress == 100)
          {
-            state = tr("安装客户端完成,5秒后重启");
-            QTimer::singleShot(5000, this, SLOT(Reboot()));
+            state = tr("更新客户端完成");
          }
          else {
              state += QString(info->filename);

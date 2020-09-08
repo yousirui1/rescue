@@ -93,7 +93,7 @@ static void find_all_disks()
 	PedDevice *dev;
 	if(stat("/", &statbuf) == 0)
 		root_device = statbuf.st_dev;
-	
+
 	/* The default list of disks is everything in /sys/block which 
 	 * matches the common patterns for disk names */
 	dir = opendir("/sys/block");
@@ -365,9 +365,9 @@ int format_disk(const char *path)
     }  
 }
 
-
 int upgrad_programe(char *file, char *version, int type)
 {
+	
     char result[MAX_BUFLEN] = {0};
     char cmd[MAX_BUFLEN] = {0};
 	struct server_info *server = &(conf.server);
@@ -383,14 +383,6 @@ int upgrad_programe(char *file, char *version, int type)
 		DEBUG("no install program disable upgrad");	
 		return ERROR;
 	}
-#if 0
-    sprintf(cmd, upgrad_sh, file, server->ip);
-	DEBUG("%s", cmd);
-    exec_cmd(cmd, result);
-
-    exec_cmd(upgrad_sh, result);
-	DEBUG("result %s", result);
-#endif
 
 	struct tftp_task task = {0};
 
@@ -398,31 +390,91 @@ int upgrad_programe(char *file, char *version, int type)
 	strcpy(task.remote_file, file);
 	if(type == 1)
 	{
+		sprintf(task.file_name, "Linux V%s", version);
+		exec_cmd("mkdir -p /boot/linux", result);
 		strcpy(task.local_file, "/boot/linux/vmlinuz-5.2.8-lfs-9.0");
-		task.type = type;
+		task.type = 3;
 	}
 	else
 	{
+		sprintf(task.file_name, "UEFI V%s", version);
 		strcpy(task.local_file, "/root/voi.zip");
 		task.type = 2;	
 	}
 	en_queue(&task_queue, (char *)&task, sizeof(struct tftp_task) , 0x3);
-
-
-#if 0
-	if(strstr(result, "successd"))
-	{
-		DEBUG("upgrad programe ok");
-		umount_boot();
-		return SUCCESS;
-	}
-	else
-	{
-		DEBUG("upgrad programe error");
-		return ERROR;
-	}	
-#endif
 }
+
+void test_programe()
+{
+    char result[MAX_BUFLEN] = {0};
+    char cmd[MAX_BUFLEN] = {0};
+    char buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};
+    progress_info *info = (progress_info *)&buf[HEAD_LEN];
+    struct server_info *server = &(conf.server);
+    int ret;
+
+    if(!dev_info.mini_disk)
+    {   
+        DEBUG("no found ready disk");   
+        send_error_msg(DISK_NO_FOUND_ERR);
+        return ERROR;
+    }   
+
+    info->progress = 2;
+    info->type = 2;    
+    char version[32] = {0};
+    sprintf(version, "V%d.0.0.%d", conf.major_ver, conf.minor_ver);
+    strcpy(info->file_name, version);
+
+    send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
+
+    umount_boot();
+    if(mount_boot() != SUCCESS)
+    {   
+        DEBUG("mount error");
+        send_error_msg(INSTALL_ERR);
+        return ERROR;
+    }   
+
+usb:
+    if(!dev_info.usb_disk)
+    {   
+        DEBUG("no found usb flash disk");   
+		sleep(1);		
+		exec_cmd("mdev -s", result);	
+		find_all_disks();
+		goto usb;
+        //send_error_msg(U_DISK_NO_FOUD_ERR);
+    }   
+
+    sprintf(cmd, install_sh_1, dev_info.mini_disk->name, dev_info.usb_disk->name);
+    exec_cmd(cmd, result);
+    if(strstr(result, "successd"))
+    {   
+        DEBUG("install programe ok");
+        conf.install_flag = 1;
+        mount_boot();
+
+        exec_cmd("mkdir -p /boot/conf", result);
+        strcpy(config_file, "/boot/conf/config.ini");
+        DEBUG("install_flag %d", conf.install_flag);
+
+        info->progress = 100;
+        send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
+        save_config();
+        return SUCCESS;
+    }
+    else
+    {
+        DEBUG("install programe error %s", result);
+        conf.install_flag = 0;
+        umount_boot();
+        DEBUG("install_flag %d", conf.install_flag);
+        send_error_msg(INSTALL_ERR);
+        return ERROR;
+    }
+}
+
 
 int install_programe()
 {
@@ -432,15 +484,6 @@ int install_programe()
 	progress_info *info = (progress_info *)&buf[HEAD_LEN];
 	struct server_info *server = &(conf.server);
 	int ret;
-
-#if 0
-	if(!dev_info.usb_disk)
-	{
-		DEBUG("no found usb flash disk");	
-		send_error_msg(U_DISK_NO_FOUD_ERR);
-		return ERROR;
-	}
-#endif
 
 	if(!dev_info.mini_disk)
 	{
@@ -472,12 +515,51 @@ int install_programe()
 		send_error_msg(INSTALL_ERR);
 		return ERROR;
 	}
+	//info->progress = 5;
+	//send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
+
+#if 0//usb 
+	if(!dev_info.usb_disk)
+	{
+		DEBUG("no found usb flash disk");	
+		send_error_msg(U_DISK_NO_FOUD_ERR);
+		return ERROR;
+	}
+
+    sprintf(cmd, install_sh, dev_info.mini_disk->name, dev_info.usb_disk->name);
+    exec_cmd(cmd, result);
+	if(strstr(result, "successd"))
+	{
+		DEBUG("install programe ok");
+		conf.install_flag = 1;
+		mount_boot();
+
+		exec_cmd("mkdir -p /boot/conf", result);
+        strcpy(config_file, "/boot/conf/config.ini");
+		DEBUG("install_flag %d", conf.install_flag);
+
+		info->progress = 100;
+		send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
+		save_config();
+		return SUCCESS;
+	}
+	else
+	{
+		DEBUG("install programe error %s", result);
+		conf.install_flag = 0;
+		umount_boot();
+		DEBUG("install_flag %d", conf.install_flag);
+		send_error_msg(INSTALL_ERR);
+		return ERROR;
+	}	
+#else	//tftp
 	struct tftp_task task = {0};
 	
     exec_cmd("mkdir -p /boot/linux", result);
 	strcpy(task.server_ip, server->ip);
 	strcpy(task.remote_file, "vmlinuz-5.2.8-lfs-9.0");
 	strcpy(task.local_file, "/boot/linux/vmlinuz-5.2.8-lfs-9.0");
+	sprintf(task.file_name, "V%d.0.0.%d", conf.major_ver, conf.minor_ver);	
 	task.type = 1;	
 
 	en_queue(&task_queue, (char *)&task, sizeof(struct tftp_task) , 0x3);
@@ -487,6 +569,19 @@ int install_programe()
 	strcpy(task.local_file, "/root/voi.zip");
 	task.type = 2;	
 	en_queue(&task_queue, (char *)&task, sizeof(struct tftp_task) , 0x3);
+#endif
+
+}
+
+
+
+
+
+
+
+
+
+
 
 #if 0
 	//if(SUCCESS == tftp_get(server->ip, "vmlinuz-5.2.8-lfs-9.0", "/boot/linux/vmlinuz-5.2.8-lfs-9.0", buf , 1))
@@ -519,39 +614,26 @@ int install_programe()
 #endif
 
 #if 0
-#if 0
-	sprintf(cmd, upgrad_sh, "voi.zip", server->ip);
+	sprintf(cmd, upgrad_sh, server->ip);
 	DEBUG("%s", cmd);
     exec_cmd(cmd, result);
-#endif
 
-	DEBUG("dev_info.mini_disk->name %s", dev_info.mini_disk->name);	
-	DEBUG("dev_info.usb_disk->name %s", dev_info.usb_disk->name);	
-    sprintf(cmd, install_sh, dev_info.mini_disk->name, dev_info.usb_disk->name);
-    exec_cmd(cmd, result);
+	info->progress = 50;
+
+	send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
+
+	memset(result, 0, MAX_BUFLEN);
+	sprintf(cmd, upgrad_sh_1, server->ip);
 	DEBUG("%s", cmd);
-
-
-    sprintf(cmd, install_sh, dev_info.mini_disk->name, dev_info.usb_disk->name);
     exec_cmd(cmd, result);
-	if(strstr(result, "successd"))
-	{
-		DEBUG("install programe ok");
-		conf.install_flag = 1;
-		mount_boot();
 
-		exec_cmd("mkdir -p /boot/conf", result);
-        strcpy(config_file, "/boot/conf/config.ini");
-		DEBUG("install_flag %d", conf.install_flag);
-		return SUCCESS;
-	}
-	else
-	{
-		DEBUG("install programe error %s", result);
-		conf.install_flag = 0;
-		umount_boot();
-		DEBUG("install_flag %d", conf.install_flag);
-		return ERROR;
-	}	
-#endif
-}
+
+	//DEBUG("dev_info.mini_disk->name %s", dev_info.mini_disk->name);	
+	//DEBUG("dev_info.usb_disk->name %s", dev_info.usb_disk->name);	
+    //sprintf(cmd, install_sh, dev_info.mini_disk->name, dev_info.usb_disk->name);
+
+    //exec_cmd(cmd, result);
+//	DEBUG("%s", cmd);
+
+#endif 
+

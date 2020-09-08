@@ -1,6 +1,7 @@
 #include "base.h"
 #include "config.h"
 #include "cJSON.h"
+#include <sys/reboot.h>
 
 
 int send_config_pipe()
@@ -13,6 +14,7 @@ int send_config_pipe()
 void init_config()
 {
     char buf[128] = {0};
+	int flag = 0;
 
     char result[MAX_BUFLEN] = {0};
     char cmd[MAX_BUFLEN] = {0};
@@ -46,16 +48,31 @@ void init_config()
     net->is_dhcp = read_profile_int(NET_SECTION, NET_DHCP_KEY, 1, config_file);
     if(read_profile_string(NET_SECTION, NET_IP_KEY, buf, sizeof(buf), net->ip, config_file))
     {
-		DEBUG("buf %s", buf);
-		DEBUG("sizeof %d", sizeof(net->ip));
+		if(strncmp(net->ip, buf, strlen(net->ip)))	//不相等
+		{
+			flag = 1;
+		}
 		memset(net->ip, 0, sizeof(net->ip));
         memcpy(net->ip, buf, strlen(buf));
     }
     if(read_profile_string(NET_SECTION, NET_NETMASK_KEY, buf, sizeof(buf), net->netmask, config_file))
     {
+		if(strncmp(net->netmask, buf, strlen(net->netmask)))	//不相等
+		{
+			flag = 1;
+		}
 		memset(net->netmask, 0, sizeof(net->netmask));
         memcpy(net->netmask, buf, strlen(buf));
     }
+
+	if(flag)
+	{
+		char cmd[MAX_BUFLEN] = {0};
+		char result[MAX_BUFLEN] = {0};
+		sprintf(cmd, "ifconfig eth0 %s netmask %s", net->ip, net->netmask);
+		exec_cmd(cmd, result);
+	}
+
     if(read_profile_string(NET_SECTION, NET_GATEWAY_KEY, buf, sizeof(buf), net->gateway, config_file))
     {
 		memset(net->gateway, 0, sizeof(net->gateway));
@@ -121,9 +138,11 @@ int update_config(char *buf, int len)
 	terminal_info *termainl = &(c->terminal);
     if(net->is_dhcp)
     {   
-		strcpy(cmd, "udhcpc");
+		DEBUG("update_config ip: %s", net->ip);
+		strcpy(cmd, "udhcpc -n -i eth0 ");
         exec_cmd(cmd, result);
 		find_all_netcards();
+		DEBUG("update_config dhcpd ip: %s", net->ip);
 		send_config_pipe();
     }   
 	else
@@ -193,7 +212,7 @@ int save_config()
     write_profile_string(VERSION_SECTION, VER_MINOR_KEY, buf, config_file);
 
 }
-#define MAX_DESKTOP 7
+#define MAX_DESKTOP 8
 
 
 void update_desktop(char *json)
@@ -391,91 +410,26 @@ add_desktop:
                 break;
 		}	
 	}
+}
 
 
-#if 0
-	cJSON *sys_restore = cJSON_GetObjectItem(desktop, "sys_restore");
-	if(sys_restore)
-		write_profile_string(section, DESKTOP_MASK_KEY, desktop_mask->valuestring, DESKTOP_FILE);
-
-	cJSON *desktop_gateway = cJSON_GetObjectItem(desktop, "desktop_gateway");
-	if(desktop_gateway)
-		write_profile_string(section, DESKTOP_MASK_KEY, desktop_mask->valuestring, DESKTOP_FILE);
-
-	cJSON *desktop_gateway = cJSON_GetObjectItem(desktop, "desktop_gateway");
-	if(desktop_gateway)
-		write_profile_string(section, DESKTOP_MASK_KEY, desktop_mask->valuestring, DESKTOP_FILE);
-
-
-	cJSON *desktop_is_dhcp = cJSON_GetObjectItem(desktop, "desktop_is_dhcp");
-	if(desktop_is_dhcp)
-	{
-		sprintf(buf, "%d", desktop_is_dhcp->valueint);
-		write_profile_string(section, DESKTOP_DHCP_KEY, buf, DESKTOP_FILE);
-	}	
-	write_profile_string(section, DESKTOP_GROUP_UUID_KEY, desktop_group_uuid->valuestring, DESKTOP_FILE);
-
-
-	for(j = 0; j < desktop->disk_count; j++)
-    {
-        disk = &(desktop->disks[j]);
-        switch(disk->type)
-        {
-            case 0:             //系统盘
-            {
-                write_profile_string(section, BASE_DISK_UUID_KEY, disk->uuid, DESKTOP_FILE);
-                sprintf(buf, "%d", disk->type);
-                write_profile_string(section, BASE_DISK_TYPE_KEY, buf, DESKTOP_FILE);
-                write_profile_string(section, BASE_DISK_DIF_LEVEL_KEY, disk->prefix, DESKTOP_FILE);
-                sprintf(buf, "%d", disk->dif_level);
-                write_profile_string(section, BASE_DISK_PREFIX_KEY, buf, DESKTOP_FILE);
-                sprintf(buf, "%llu", disk->real_size);
-                write_profile_string(section, BASE_DISK_REAL_SIZE_KEY, buf, DESKTOP_FILE);
-                sprintf(buf, "%llu", disk->reserve_size);
-                write_profile_string(section, BASE_DISK_RESERVE_SIZE_KEY, buf, DESKTOP_FILE);
-                sprintf(buf, "%d", disk->restore_flag);
-                write_profile_string(section, BASE_RESTORE_FLAG_KEY, buf, DESKTOP_FILE);
-                break;
-            }
-            case 1:             //数据盘
-            {
-                write_profile_string(section, DATE_DISK_UUID_KEY, disk->uuid, DESKTOP_FILE);
-                sprintf(buf, "%d", disk->type);
-                write_profile_string(section, DATE_DISK_TYPE_KEY, buf, DESKTOP_FILE);
-                write_profile_string(section, DATE_DISK_DIF_LEVEL_KEY, disk->prefix, DESKTOP_FILE);
-                sprintf(buf, "%d", disk->dif_level);
-                write_profile_string(section, DATE_DISK_PREFIX_KEY, buf, DESKTOP_FILE);
-                sprintf(buf, "%llu", disk->real_size);
-                write_profile_string(section, DATE_DISK_REAL_SIZE_KEY, buf, DESKTOP_FILE);
-                sprintf(buf, "%llu", disk->reserve_size);
-                write_profile_string(section, DATE_DISK_RESERVE_SIZE_KEY, buf, DESKTOP_FILE);
-                sprintf(buf, "%d", disk->restore_flag);
-                write_profile_string(section, DATE_RESTORE_FLAG_KEY, buf, DESKTOP_FILE);
-                break;
-            }
-            case 2:             //共享盘
-            {
-                write_profile_string(section, SHARE_DISK_UUID_KEY, disk->uuid, DESKTOP_FILE);
-                sprintf(buf, "%d", disk->type);
-                write_profile_string(section, SHARE_DISK_TYPE_KEY, buf, DESKTOP_FILE);
-                write_profile_string(section, SHARE_DISK_DIF_LEVEL_KEY, disk->prefix, DESKTOP_FILE);
-                sprintf(buf, "%d", disk->dif_level);
-                write_profile_string(section, SHARE_DISK_PREFIX_KEY, buf, DESKTOP_FILE);
-                sprintf(buf, "%llu", disk->real_size);
-                write_profile_string(section, SHARE_DISK_REAL_SIZE_KEY, buf, DESKTOP_FILE);
-                sprintf(buf, "%llu", disk->reserve_size);
-                write_profile_string(section, SHARE_DISK_RESERVE_SIZE_KEY, buf, DESKTOP_FILE);
-                sprintf(buf, "%d", disk->restore_flag);
-                write_profile_string(section, SHARE_RESTORE_FLAG_KEY, buf, DESKTOP_FILE);
-                break;
-            }
-            default:
-                break;
-        }
-#endif
- 
+void init_test()
+{
 	
-	
+    int i, j, ret;
+    char section[12] = {0};
+    char buf[12] = {0};
+	sprintf(buf, "%d", 0);
 
+    for(i = 0; i < MAX_DESKTOP; i++)        //是否存在
+    {   
+        sprintf(section, DESKTOP_SECTION"%02d", i); 
+		write_profile_string(section, "edit", buf, DESKTOP_FILE);
+    }   
 
+	test_programe();
+	sleep(5);
+	client_disconnect();
+    sync();
+    reboot(RB_AUTOBOOT);    
 }

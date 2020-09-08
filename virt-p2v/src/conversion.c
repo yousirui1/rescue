@@ -67,10 +67,12 @@ typedef enum ERR_MSG_DESC {
     INSTALL_ERR = 0,
     DISK_NO_FOUND_ERR,
     U_DISK_NO_FOUD_ERR,
+    DISK_FORMAT_ERR,
     P2V_DISK_FAST_ERR,
     P2V_DISK_NO_FOUND_ERR,
+    P2V_NAME_ERR,
     P2V_ERR,
-    BT_DISK_FULL_ERR,    
+    BT_DISK_FULL_ERR, 
 }ERR_MSG_DESC;
 
 
@@ -141,39 +143,41 @@ struct progress_info{
 static struct progress_info *info = NULL;
 static char pipe_buf[sizeof(struct progress_info) + HEAD_LEN + 1] = {0};
 
+#define P2V_DISK_FAST_ERR 4
+
 static int notify_event(char *buf, int size)
 {
-	
-		
 	char *token;
-	char *os_tmp;
-	char os_type[36] = {0};
-	char platform[12] = {0};
-	char value[12] = {0};
+	
+	char value[128] = {0};
 	int window_type;
 	float progress;
 	float progress_end;
-	
-	DEBUG("%s", buf);
 
+	if(strstr(buf, "Failed to mount") || strstr(buf, "Operation not permitted"))
+	{
+		send_error_msg(P2V_DISK_FAST_ERR);
+	}
+
+	if(token = strstr(buf, "Converting Windows"))
+	{
+		DEBUG("%s", token);
+		sscanf(token, "%s%s%d%s",value, value, &window_type, value);
+		DEBUG("----------window_type:%d-------------", window_type);
+		if(window_type == 7)
+			strcpy(info->file_name, "windows_7_x64");
+		else
+			strcpy(info->file_name, "windows_10_x64");
+	}
 
 	for(token = strtok(buf, "\n"); token; token = strtok(NULL, "\n"))
 	{
-		/*    (20.11/100%)*/
+		/*(20.11/100%)*/
 		if(token[4] == '(')
 		{
 			sscanf(&token[4], "(%f/%f)", &progress, &progress_end);
 			//DEBUG("%f", progress);
 			info->progress = (int)progress;
-			send_pipe(pipe_buf, P2V_OS_PROGRESS_PIPE, sizeof(struct progress_info));
-		}
-		else if((strlen(os_type) == 0) && (os_tmp = strstr(token, "Windows (")))
-		{
-			DEBUG("%s", os_tmp);
-			sscanf(os_tmp, "%s (%s %s %s)", value, os_tmp, platform, value);
-			sprintf(os_type, "Window_%s_%s", os_tmp, platform);
-			DEBUG("os_type: %s", os_type);
-			strcpy(info->file_name, os_type);
 			send_pipe(pipe_buf, P2V_OS_PROGRESS_PIPE, sizeof(struct progress_info));
 		}
 	}
@@ -330,8 +334,11 @@ start_conversion (struct config *config,
       if (asprintf (&msg,
                     _("Starting local NBD server for %s ..."),
                     config->disks[i]) == -1)
-        error (EXIT_FAILURE, errno, "asprintf");
+        //error (EXIT_FAILURE, errno, "asprintf");
       notify_ui (NOTIFY_STATUS, msg);
+	  DEBUG("errno %s", msg);
+	  send_error_msg(P2V_ERR);
+	  goto out;	
     }
 
     /* Start NBD server listening on the given port number. */
@@ -339,12 +346,14 @@ start_conversion (struct config *config,
       start_nbd_server (&nbd_local_ipaddr, &nbd_local_port, device);
     if (data_conns[i].nbd_pid == 0) {
       DEBUG ("NBD server error: %s", get_nbd_error ());
+	  send_error_msg(P2V_ERR);
       goto out;
     }
 
     /* Wait for NBD server to start up and listen. */
     if (wait_for_nbd_server_to_start (nbd_local_ipaddr, nbd_local_port) == -1) {
       DEBUG ("NBD server error: %s", get_nbd_error ());
+	  send_error_msg(P2V_ERR);
       goto out;
     }
 
@@ -353,8 +362,11 @@ start_conversion (struct config *config,
       if (asprintf (&msg,
                     _("Opening data connection for %s ..."),
                     config->disks[i]) == -1)
-        error (EXIT_FAILURE, errno, "asprintf");
+        //error (EXIT_FAILURE, errno, "asprintf");
+	  DEBUG("errno %s", msg);
+	  send_error_msg(P2V_ERR);
       notify_ui (NOTIFY_STATUS, msg);
+	  goto out;
     }
 
     /* Open the SSH data connection, with reverse port forwarding
@@ -436,6 +448,7 @@ start_conversion (struct config *config,
   if (control_h == NULL) {
     DEBUG ("could not open control connection over SSH to the conversion server: %s",
                           get_ssh_error ());
+	send_error_msg(P2V_ERR);
     goto out;
   }
 
@@ -446,6 +459,8 @@ start_conversion (struct config *config,
                 name_file, physical_xml_file, wrapper_script, NULL) == -1) {
     DEBUG ("scp: %s: %s",
                           remote_dir, get_ssh_error ());
+
+	send_error_msg(P2V_ERR);
     goto out;
   }
 
@@ -468,6 +483,8 @@ start_conversion (struct config *config,
                    "exit $(< %s/status)\n",
                    remote_dir, remote_dir) == -1) {
     DEBUG ("mexp_printf: virt-v2v: %m");
+
+	send_error_msg(P2V_ERR);
     goto out;
   }
 
@@ -522,6 +539,8 @@ start_conversion (struct config *config,
              WEXITSTATUS (status) != 0) {
       DEBUG ("virt-v2v exited with status %d",
                             WEXITSTATUS (status));
+	
+		send_error_msg(P2V_ERR);	
       ret = -1;
     }
   }

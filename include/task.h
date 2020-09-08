@@ -13,6 +13,7 @@ struct p2v_task{
 };
 
 struct tftp_task {
+	char file_name[128];	
     char server_ip[32];
     char remote_file[128];
     char local_file[128];

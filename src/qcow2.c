@@ -109,8 +109,7 @@ uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, 
 		DEBUG("disk_type %d", disk_type);
 		pQe->stype = stype;
 		pQe->flag = 1;
-    	//storeDrv.setBoot(disk_type, pQe);   
-    	storeDrv.save(dev);
+    	//storeDrv.save(dev);
 		return GetQcowLba(pQe);
 	}
 	else
@@ -153,6 +152,11 @@ void del_diff_qcow2(PedDevice *dev, char *name)
 		}
     }
 	storeDrv.rebuild();
+	storeDrv.save(dev);
+}
+
+void save_qcow2(PedDevice *dev)
+{
 	storeDrv.save(dev);
 }
 
@@ -249,6 +253,9 @@ int set_boot_qcow2(PedDevice *dev, uint32_t diff, int disk_type, char *name)
 	storeDrv.setBoot(disk_type, pQe);
 	storeDrv.save(dev);
 }
+
+
+
 
 int change_back_file_qcow2(PedDevice *dev, char *name, uint32_t diff)
 {   

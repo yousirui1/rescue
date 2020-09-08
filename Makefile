@@ -58,7 +58,7 @@ CFLAGS +=
 else ifeq ($(TARGET_ARCH), x86)
 CFLAGS += -lmingw32 -lm -lws2_32 -lpthreadGC2 -lgdi32 
 else ifeq ($(TARGET_ARCH), x64)
-CFLAGS += -lpthread  -lxml2 -lpcre -lglib-2.0 -lboost_system -luuid  -ltorrent -std=c++11 -lqt
+CFLAGS += -lpthread  -lxml2 -lpcre -lglib-2.0 -lboost_system   -ltorrent -std=c++11 -lqt #-luuid
 endif
 
 export CC CXX TOP_DIR OBJ_DIR DEBUG P2V_DIR BT_DIR

@@ -103,7 +103,7 @@ int send_heartbeat(struct client *cli)
 
 static int send_upgrad(struct client *cli)
 {
-
+	return SUCCESS;
 }
 
 
@@ -120,16 +120,20 @@ static int recv_upgrad(struct client *cli)
 		cJSON *version = cJSON_GetObjectItem(root, "version");
 		cJSON *os_name = cJSON_GetObjectItem(root, "os_name");	
 
-		ret = upgrad_programe("", version->valuestring, 1);	
-		ret = upgrad_programe("", version->valuestring, 2);	
-#if 0
-		if(ret == SUCCESS)
+		if(!os_name || !upgrade_package || !version)
 		{
-			char head[HEAD_LEN] = {0};
-			ret = send_pipe(head, REBOOT_PIPE , 0, PIPE_EVENT);
+			return ERROR;
 		}
-#endif
-		//return send_delete(cli, batch_no->valueint);
+
+		if(STRPREFIX(os_name->valuestring, "linux"))
+		{
+			ret = upgrad_programe(upgrade_package->valuestring, version->valuestring, 1);	
+		}
+		else
+		{
+			ret = upgrad_programe(upgrade_package->valuestring, version->valuestring, 2);	
+		}
+		return send_upgrad(cli);
 	}
 	return ret;
 }
@@ -283,7 +287,7 @@ int send_p2v_progress(struct client *cli, char *buf)
 		}
 		else if(info->type == 1)	//p2v 上传
 		{
-			cJSON_AddStringToObject(root, "os_type", "windows_10_x64");
+			cJSON_AddStringToObject(root, "os_type", info->file_name);
         	cJSON_AddStringToObject(root, "image_name", info->image_name);
         	cJSON_AddNumberToObject(root, "progress", info->progress);
         	cJSON_AddNumberToObject(root, "status", 1);
@@ -1005,13 +1009,19 @@ static int send_reboot(struct client *cli, int batch_no, int flag)
 	
 		cli->data_buf = cJSON_Print(root);
 		cli->data_size = strlen(cli->data_buf);
-		set_packet_head(cli->packet, SHUTDONW, cli->data_size, JSON_TYPE, 1);
-		ret = send_packet(cli);
 		char head[HEAD_LEN] = {0};
 		if(flag)
+		{
+			set_packet_head(cli->packet, RESTART, cli->data_size, JSON_TYPE, 1);
+			ret = send_packet(cli);
 			ret = send_pipe(head, REBOOT_PIPE , 0, PIPE_EVENT);
+		}
 		else
+		{
+			set_packet_head(cli->packet, SHUTDONW, cli->data_size, JSON_TYPE, 1);
+			ret = send_packet(cli);
 			ret = send_pipe(head, SHUTDOWN_PIPE , 0, PIPE_EVENT);
+		}
 	}	
 	else
 	{

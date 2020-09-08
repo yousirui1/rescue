@@ -22,6 +22,28 @@
 #define CMD_HEAD (short)7
 
 
+#if 0
+// Without a '/' at the end.
+char *conf_document_root;
+
+#define SERVER_PORT 10220
+// Max request datagram size
+#define MAX_REQUEST_SIZE 1024
+// TFTPX_DATA_SIZE
+#define DATA_SIZE 512
+//
+#define LIST_BUF_SIZE (DATA_SIZE * 8)
+
+
+// Max packet retransmission.
+#define PKT_MAX_RXMT 3
+// usecond
+#define PKT_SEND_TIMEOUT 12*1000*1000
+#define PKT_RECV_TIMEOUT 3*1000*1000
+// usecond
+#define PKT_TIME_INTERVAL 5*1000
+#endif
+
 // Without a '/' at the end.
 char *conf_document_root;
 

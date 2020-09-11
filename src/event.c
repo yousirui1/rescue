@@ -73,6 +73,7 @@ static void process_event_msg(char *buf, int len)
 			DEBUG("server send msg reboot");
 			client_disconnect();
 			sync();
+			upload_logs();	
 			reboot(RB_AUTOBOOT);				
 			break;
 		}
@@ -81,6 +82,7 @@ static void process_event_msg(char *buf, int len)
 			DEBUG("server send msg shutdown");
 			client_disconnect();
 			sync();
+			upload_logs();	
 			reboot(RB_POWER_OFF);				
 			break;
 		}
@@ -191,7 +193,12 @@ void event_loop(int network_fd)
 
 		if(current_time - last_time >= TIME_OUT)
 		{
-			send_heartbeat(&m_client);
+			ret = send_heartbeat(&m_client);
+			if(ret != SUCCESS)
+			{
+				client_disconnect();
+				client_connect();
+			}
 			last_time = current_time;
 		}
 	

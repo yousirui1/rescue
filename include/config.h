@@ -77,12 +77,6 @@
 
 
 
-
-
-
-
-
-
 struct terminal_info{
     unsigned int id;
     unsigned char name[128];
@@ -101,21 +95,21 @@ typedef struct terminal_info terminal_info;
 struct netcard_param{
     char is_dhcp;                   //0 不启动 1 启动
     char name[32];
-    char ip[32];
-    char mac[32];
-    char gateway[32];
-    char boardcast_addr[32];
-    char netmask[32];
-    char dns1[32];
-    char dns2[32];
+    unsigned char ip[32];
+    unsigned char mac[32];
+    unsigned char gateway[32];
+    unsigned char boardcast_addr[32];
+    unsigned char netmask[32];
+    unsigned char dns1[32];
+    unsigned char dns2[32];
     //char desc[128];               //网卡描述 厂商信息
 };
 
 typedef struct netcard_param netcard_param;
 
 struct server_info {
-    char ip[32];
-    int port;
+    unsigned char ip[32];
+    unsigned int port;
 };
 
 typedef struct server_info server_info;

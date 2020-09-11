@@ -273,6 +273,12 @@ int change_back_file_qcow2(PedDevice *dev, char *name, uint32_t diff)
 	YZY_QCOW_ENTRY  *pBase = storeDrv.scan(base, &uuid);
 	YZY_QCOW_ENTRY  *pDiff = storeDrv.scan(diff, &uuid);
 
+	if(base >= diff)
+	{
+		DEBUG("base %d > diff  %d", base, diff);
+		return ERROR;
+	}
+
 	if(pBase == NULL || pDiff == NULL)
 	{
 		DEBUG("scan %s diff %d error", name, diff);

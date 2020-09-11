@@ -146,7 +146,6 @@ void Uploadwindow::keyPressEvent(QKeyEvent *event)
         Global *global = Global::getGlobal();
         global->pipe->send_pipe(head, INIT_PIPE, 0);
     }
-#if 0
     if (event->key() == Qt::Key_F1)
     {
         char head[HEAD_LEN] = {0};
@@ -159,7 +158,6 @@ void Uploadwindow::keyPressEvent(QKeyEvent *event)
     {
         qApp->exit();
     }
-#endif
 }
 
 void Uploadwindow::showErrorDialog(char *err_msg)
@@ -215,18 +213,24 @@ void Uploadwindow::setProgressValue(struct progress_info *info)
          if(global->install_flag)
          {
              state = tr("更新客户端: ");
+             if(info->progress == 100)
+             {
+                state = tr("更新客户端完成, 5秒后重启");
+                QTimer::singleShot(5000, this, SLOT(Reboot()));
+             }
          }
          else
          {
              state = tr("安装客户端: ");
+             if(info->progress == 100)
+             {
+                state = tr("更新客户端完成, 5秒后重启");
+                QTimer::singleShot(5000, this, SLOT(Reboot()));
+             }
          }
-         if(info->progress == 100)
-         {
-            state = tr("更新客户端完成");
-         }
-         else {
-             state += QString(info->filename);
-         }
+        if(info->progress != 100)
+            state += QString(info->filename);
+
         progress->setValue((double)info->progress);
         ui->i_status_label->setText(state);
     }

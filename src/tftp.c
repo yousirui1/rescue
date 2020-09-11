@@ -157,7 +157,7 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
     /* receive data. */
     send_packet.cmd = htons(CMD_ACK);
     do{ 
-        for(time_wait_data = 0; time_wait_data < PKT_RECV_TIMEOUT * PKT_MAX_RXMT; time_wait_data += 10000){
+        for(time_wait_data = 0; time_wait_data < PKT_RECV_TIMEOUT * PKT_MAX_RXMT; time_wait_data += 500){
             ret = recvfrom(udp.fd, &recv_packet, sizeof(struct tftp_packet), MSG_DONTWAIT,
                     (struct sockaddr *)&udp.recv_addr, &addr_len);
 
@@ -209,7 +209,7 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
     			send_packet.cmd = htons(CMD_ACK);
                 sendto(udp.fd, &send_packet, sizeof(struct tftp_packet), 0, (struct sockaddr*)&udp.recv_addr, addr_len);
 			}
-            usleep(5);
+			usleep(500);
         }   
         if(time_wait_data >= PKT_RECV_TIMEOUT * PKT_MAX_RXMT){
             DEBUG("Wait for DATA #%d timeout.", block);
@@ -224,108 +224,88 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
 	return SUCCESS;
 }
 
-
-#if 0
-int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_buf, int type)
+int tftp_put(char *server_ip, char *file_name, char *remote_file)
 {
-	struct tftp_packet send_packet, recv_packet;
+	struct sockaddr_in send_addr;
 	const int blocksize = 512;
-    int ret = 0;
-    int time_wait_data;
-    unsigned short block = 1;
-	char *buf = (char *)&recv_packet;
-	uint64_t file_size = 0;
-	
-	progress_info *info = (progress_info *)&pipe_buf[HEAD_LEN];
+	struct tftp_packet recv_packet, send_packet;
+	int r_size = 0;
+	int s_size = 0;
+	int rxmt = 0;
+	unsigned short block = 1;
+	int time_wait_ack;
+	FILE *fp = NULL;
+	/* send request and wait for ACK #0 */
+	send_packet.cmd = htons(CMD_WRQ);
+	DEBUG("%s", file_name);
+	sprintf(send_packet.file_name , "%s%c%s%c%d%c", file_name, 0, "octet", 0, blocksize, 0);
 
 	struct sock_udp udp = create_udp(server_ip, 69, 0);
 	socklen_t addr_len = sizeof(struct sockaddr_in);
-    
-    /* send request. */
-    send_packet.cmd = htons(CMD_RRQ);
-    sprintf(send_packet.file_name, "%s%c%s%c%s%c%d%c%s%c%d", remote_file, 0, "octet", 0, "tsize", 0, 0, 0, "blksize", 0, blocksize); 
-    sendto(udp.fd, &send_packet, sizeof(struct tftp_packet), 0, (struct sockaddr*)&udp.send_addr, sizeof(struct sockaddr_in));
-	
-    FILE *fp = fopen(local_file, "w");
-    if(fp == NULL){
-        printf("Create file \"%s\" error.\n", local_file);
-        return;
-    }   
-	time_t last_time = current_time;	
-    /* receive data. */
-    send_packet.cmd = htons(CMD_ACK);
-    do{ 
-        for(time_wait_data = 0; time_wait_data < PKT_RECV_TIMEOUT * PKT_MAX_RXMT; time_wait_data += 10000){
-            ret = recvfrom(udp.fd, &recv_packet, sizeof(struct tftp_packet), MSG_DONTWAIT,
-                    (struct sockaddr *)&udp.recv_addr, &addr_len);
 
-            if(ret > 0 && ret < 4)
-			{ 
-                printf("Bad packet: ret=%d\n", ret);
-            }   
-            if(ret >= 4 && recv_packet.cmd == htons(CMD_DATA) && recv_packet.block == htons(block))
+	sendto(udp.fd, &send_packet, sizeof(struct tftp_packet), 0, (struct sockaddr*)&udp.send_addr, sizeof(struct sockaddr_in));
+	for(time_wait_ack = 0; time_wait_ack < PKT_RECV_TIMEOUT; time_wait_ack += 1000)
+	{
+		r_size = recvfrom(udp.fd, &recv_packet, sizeof(struct tftp_packet), MSG_DONTWAIT, (struct sockaddr *)&udp.send_addr,
+					&addr_len);
+		DEBUG("r_size %d", r_size);
+		if(r_size > 0 && r_size < 4)
+		{
+			DEBUG("Bad packet r_size=%d", r_size);
+		}	
+		if(r_size >= 4 && recv_packet.cmd == htons(CMD_ACK) && recv_packet.block == htons(0))
+			break;	
+		usleep(1000);
+	}
+	if(time_wait_ack >= PKT_RECV_TIMEOUT)
+	{
+		DEBUG("Could not receive from server. ");
+		goto run_out;
+	}
+	fp = fopen(file_name, "r");
+	if(fp == NULL)
+	{
+		DEBUG("file not exists !");
+		goto run_out;
+	}	
+	/* send data */
+	send_packet.cmd = htons(CMD_DATA);
+	do{
+		memset(send_packet.data, 0, sizeof(send_packet.data));
+		send_packet.block = htons(block);
+		s_size = fread(send_packet.data, 1, blocksize, fp);
+		for(rxmt = 0; rxmt < PKT_MAX_RXMT; rxmt ++)
+		{
+			sendto(udp.fd, &send_packet, s_size + 4, 0, (struct sockaddr*)&udp.send_addr, addr_len);
+			/* wait for ack */
+			for(time_wait_ack = 0 ;time_wait_ack < PKT_RECV_TIMEOUT; time_wait_ack += 1000)
 			{
-				DEBUG("recv_packet.block %d", recv_packet.block);
-                send_packet.block = recv_packet.block;
-                sendto(udp.fd, &send_packet, sizeof(struct tftp_packet), 0, (struct sockaddr*)&udp.recv_addr, addr_len);
-				info->total_size += ret - 4;
-				
-				(void)time(&current_time);	
-				if(current_time - last_time > 1)
+				r_size = recvfrom(udp.fd, &recv_packet, sizeof(struct tftp_packet), MSG_DONTWAIT,
+								(struct sockadr *)&udp.send_addr, &addr_len);
+				if(r_size > 0 && r_size < 4)
 				{
-					if(type == 3)
-					{
-						info->progress = (info->total_size  * 100)/ info->file_size;
-					}
-					else
-					{
-						info->progress = (info->total_size  * 100)/ info->file_size / 2;
-					}
-					DEBUG("info->progress %d", info->progress);
-					if(type == 2)
-					{
-						info->progress += 50;
-					}
-					
-					if(info->progress < 2)
-						info->progress = 2;
-
-					if(info->progress >= 98)
-						info->progress = 98;
-						
-					send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);	
-					last_time = current_time;
+					DEBUG("Bad packet: r_size=%d", r_size);
 				}
-                fwrite(recv_packet.data, 1, ret - 4, fp);
-                break;
-            }   
-			if(ret >= 4 && recv_packet.cmd == htons(CMD_OACK))
-			{
-				file_size = atol(tftp_get_option("tsize", &buf[2], ret - 2));
-				memset(&send_packet, 0, sizeof(struct tftp_packet));
-				info->file_size = file_size;
-				
-    			send_packet.cmd = htons(CMD_ACK);
-                sendto(udp.fd, &send_packet, sizeof(struct tftp_packet), 0, (struct sockaddr*)&udp.recv_addr, addr_len);
+				if(r_size >= 4 && recv_packet.cmd == htons(CMD_ACK) && recv_packet.block == htons(block))
+					break;
+				usleep(1000);
 			}
-            usleep(5);
-        }   
-        if(time_wait_data >= PKT_RECV_TIMEOUT * PKT_MAX_RXMT){
-            DEBUG("Wait for DATA #%d timeout. time_wait_data %d PKT_RECV_TIMEOUT * PKT_MAX_RXMT %d", block);
-			close_fd(udp.fd);	
-			fclose(fp);
-			return ERROR;
-        }   
-        block ++; 
-    }while(ret == blocksize + 4); 
-	close_fd(udp.fd);	
-    fclose(fp);
+			if(time_wait_ack < PKT_RECV_TIMEOUT)	//send success
+				break;
+			else 		//Retransmission
+				continue;
+		}
+		if(rxmt >= PKT_MAX_RXMT)
+		{
+			DEBUG("Cloud not receive from server");
+			goto run_out;
+		}
+		block ++;	
+	}while(s_size == blocksize);
+	DEBUG("tftp put server %s filename %s ok !!", server_ip, file_name);
+run_out:
+	if(fp)
+		fclose(fp);
+	close_fd(udp.fd);
 	return SUCCESS;
-}
-#endif
-
-int tftp_put()
-{
-
-
 }

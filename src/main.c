@@ -114,24 +114,29 @@ int main(int argc, char *argv[])
 	{
 		DIE("create  tcp thread ret: %d error: %s", ret, strerror(ret));
 	}
-
 	ret = pthread_create(&pthread_qt, NULL, thread_qt, NULL);
 	if(0 != ret)
 	{
 		DIE("create qt thread ret: %d error: %s", ret, strerror(ret));
 	}
-
 	ret = pthread_create(&pthread_task, NULL, thread_task, NULL);
 	if(0 != ret)
 	{
 		DIE("create qt thread ret: %d error: %s", ret, strerror(ret));
 	}	
+#if 0
+	netcard_param *net = &(conf.netcard);	
+	ip_check_arp(net->name, net->ip, net->mac);
+#endif
+	//char buf[1024] = {0};
+	//tftp_get("192.168.253.251", "voi.zip", "/root/voi.zip", buf, 3);
+
+	//upload_logs();
 
 	client_connect();
 	do_exit();
 	close_pipe();
 	close_logs();
-
 	return 0;
 }
 

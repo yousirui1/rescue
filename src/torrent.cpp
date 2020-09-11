@@ -209,7 +209,6 @@ try
 	pack.set_str(lt::settings_pack::user_agent, "ltclient/""test");
 #endif
 
-
 	if(file_name)
 		strcpy(info->file_name, file_name);
 

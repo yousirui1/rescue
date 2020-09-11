@@ -15,6 +15,8 @@ extern QUEUE task_queue;
 
 char m_desktop_group_name[128] = {0};
 
+pthread_mutex_t client_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 void client_connect()
 {
     DEBUG("client_connect");
@@ -49,6 +51,62 @@ static int set_packet_token(struct client *cli)
 	memcpy(cli->token, cli->data_buf, cli->token_size);
 }
 
+#if 0
+static int set_heartbeat(struct client *cli)
+{
+	//if(cli->token)
+	//	free(cli->token);
+	//cli->token = malloc(read_packet_token(cli->packet) + 1);
+	//cli->token_size = read_packet_token(cli->packet);
+	//memcpy(cli->token, cli->data_buf, cli->token_size);
+	if(cli->)
+		free(cli->);
+	cli->
+}
+#endif
+
+
+static int set_heartbeat(struct client *cli)
+{
+	int ret;
+
+	cJSON *root = cJSON_CreateObject();
+	if(root)
+	{
+		int len = 0;
+		char *temp = &cli->heartbeat_buf[0];
+
+		cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
+		char *buf = cJSON_Print(root);
+
+		set_packet_head(cli->packet, HEARTBEAT, strlen(buf), JSON_TYPE, 0);
+		memcpy(temp, cli->packet, PACKET_LEN);
+		temp += PACKET_LEN;
+		len += PACKET_LEN;
+
+		DEBUG("--------------");
+		DEBUG("cli->token %s", cli->token);
+		memcpy(temp, cli->token, cli->token_size);
+		temp += cli->token_size;
+		len += cli->token_size;
+		DEBUG("cli->token_size %d", cli->token_size);
+		
+		DEBUG("buf %s", buf);
+		memcpy(temp, buf, strlen(buf));
+		len += strlen(buf);
+		cli->heartbeat_len = len;	
+		DEBUG("buf %d", strlen(buf));
+		DEBUG("-------------len %d ----------", len);
+	}	
+	else
+	{
+		return ERROR;
+	}
+	if(root)
+		cJSON_Delete(root);
+	return ret;	
+}
+
 static int recv_heartbeat(struct client *cli)
 {
 	int ret;
@@ -79,9 +137,14 @@ int send_heartbeat(struct client *cli)
 	int ret;
 	if(!cli->login_flag)
 		return ERROR;
-	if(cli->data_buf)
-		free(cli->data_buf);
 	
+	DEBUG("---------send_heartbeat-------------");
+	if(cli->heartbeat_len > 0)
+	{
+		send_msg(cli->fd, cli->heartbeat_buf, cli->heartbeat_len);
+	}
+
+#if 0
 	cJSON *root = cJSON_CreateObject();
 	if(root)
 	{
@@ -97,7 +160,9 @@ int send_heartbeat(struct client *cli)
 	}
 	if(root)
 		cJSON_Delete(root);
-	return ret;	
+	return ret;
+#endif
+	return SUCCESS;
 }
 
 
@@ -513,7 +578,7 @@ static int recv_desktop(struct client *cli)
 	int ret;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
-	DEBUG("%s", buf);
+	//DEBUG("%s", buf);
 	update_desktop(buf);
 	if(root)
 	{
@@ -543,15 +608,19 @@ static int recv_desktop(struct client *cli)
 
 				if(uuid && dif_level)
 				{
-					if(!scan_qcow2(uuid->valuestring, dif_level->valueint))
-						return send_desktop(cli, batch_no->valueint, SUCCESS);		
-					else
-						return send_desktop(cli, batch_no->valueint, ERROR);		
+					//if(scan_qcow2(uuid->valuestring, dif_level->valueint))
+					del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);	
+
+					return send_desktop(cli, batch_no->valueint, SUCCESS);		
+					//else
+					//	return send_desktop(cli, batch_no->valueint, ERROR);		
 				}
 			}
 			return SUCCESS;
 		}
-		return SUCCESS;
+
+	//	return send_desktop(cli, batch_no->valueint, SUCCESS);		
+		//return SUCCESS;
 	}
 	return ERROR;
 }
@@ -638,6 +707,9 @@ static int recv_down_torrent(struct client *cli)
 		
 		if(ret == torrent->data_len)
 		{
+			//if(scan_qcow2(torrent->uuid, torrent->dif_level))		
+			//	return send_down_torrent(cli, task_uuid, SUCCESS);
+	
 			uint64_t offset = add_qcow2(dev_info.mini_disk->dev, torrent->uuid, torrent->dif_level,
 								(uint64_t)(torrent->file_size + (uint64_t)(1024 * 1024 * 2 * 2)),   // + 2G冗余
 								torrent->real_size, torrent->sys_type, torrent->type);
@@ -1210,6 +1282,7 @@ static int recv_get_config(struct client *cli)
 	int ret;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
+	DEBUG("%s", buf);
 	if(root)
 	{
 		cJSON *code = cJSON_GetObjectItem(root, "code");
@@ -1252,20 +1325,23 @@ static int recv_get_config(struct client *cli)
 			
 			if(terminal_id)
 				conf.terminal.id = terminal_id->valueint;		
-			if(dns1)
-				strcpy(conf.netcard.dns1, dns1->valuestring);	
-			if(dns2)
-				strcpy(conf.netcard.dns2, dns2->valuestring);	
-			if(gateway)
-				strcpy(conf.netcard.gateway, gateway->valuestring);	
-			if(ip)
-				strcpy(conf.netcard.ip, ip->valuestring);	
+	
 			if(is_dhcp)
 				conf.netcard.is_dhcp = is_dhcp->valueint;	
-			if(mac)
-				strcpy(conf.netcard.mac, mac->valuestring);	
-			if(mask)
-				strcpy(conf.netcard.netmask, mask->valuestring);	
+
+			if(!conf.netcard.is_dhcp)
+			{
+				if(ip)
+					strcpy(conf.netcard.ip, ip->valuestring);	
+				if(dns1)
+					strcpy(conf.netcard.dns1, dns1->valuestring);	
+				if(dns2)
+					strcpy(conf.netcard.dns2, dns2->valuestring);	
+				if(gateway)
+					strcpy(conf.netcard.gateway, gateway->valuestring);	
+				if(mask)
+					strcpy(conf.netcard.netmask, mask->valuestring);	
+			}
 			if(name)
 				strcpy(conf.terminal.name, name->valuestring);
 			if(platform)
@@ -1277,8 +1353,14 @@ static int recv_get_config(struct client *cli)
 			if(server_ip)
 				strcpy(conf.server.ip, server_ip->valuestring);
 				
-			save_config();	
+			DEBUG("is_dhcp->valueint %d", is_dhcp->valueint);
+			DEBUG("conf.terminal.name %s", conf.terminal.name);
+			DEBUG("conf.netcard.ip %s", conf.netcard.ip);
+			DEBUG("conf.terminal.name %s", conf.terminal.name);
+			save_config();
+			//update_config();
 			send_config_pipe();
+			DEBUG("conf.terminal.name %s", conf.terminal.name);
 			DEBUG("conf.install_flag %d", conf.install_flag);
 			if(conf.install_flag)
 				return send_get_desktop_group_list(cli);
@@ -1403,6 +1485,7 @@ static int recv_config_version(struct client *cli)
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	
 	cJSON *root = cJSON_Parse((char*)(buf));
+	DEBUG("%s", buf);
 	if(root)
 	{
 		cJSON* code = cJSON_GetObjectItem(root, "code");
@@ -1466,8 +1549,8 @@ static int recv_login(struct client *cli)
 		{
 			DEBUG("login ok !!!");
 			cli->login_flag = 1;
-			
 			set_packet_token(cli);
+			set_heartbeat(cli);
 			return send_config_version(cli);
 		}
 	}
@@ -1646,7 +1729,10 @@ static int tcp_loop(int sockfd)
                     if(ret < 0) 
                     {    
                         if(errno == EINTR || errno == EAGAIN)
+						{
+							pthread_mutex_unlock(&client_mutex);
                             continue;
+						}
                     }    
                     DEBUG("close fd %d", sockfd);   
                     break;
@@ -1654,7 +1740,9 @@ static int tcp_loop(int sockfd)
 
 				current->pos += ret; 
                 if(current->pos != PACKET_LEN)  
+				{
                     continue;
+				}
 				
                 current->has_read_head = 1; 
                 current->data_size = read_packet_size(current->packet) + read_packet_token(current->packet);
@@ -1690,7 +1778,10 @@ static int tcp_loop(int sockfd)
                         if(ret < 0)
                         {
                             if(errno == EINTR || errno == EAGAIN)
+							{
+								pthread_mutex_unlock(&client_mutex);
                                 continue;
+							}
                         }
                         DEBUG("close fd %d", sockfd);
                         break;

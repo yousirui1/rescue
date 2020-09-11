@@ -28,6 +28,9 @@ struct client
     
     unsigned char *data_buf;
 
+	unsigned char heartbeat_buf[1024];
+	unsigned int heartbeat_len;
+
     /** current data position **/
     int pos;
     /** curreant data size **/

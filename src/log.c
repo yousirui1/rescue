@@ -6,6 +6,7 @@ FILE *fp_log = NULL;
 
 extern char program_name[];
 extern time_t current_time;
+static char c_dir[MAX_FILENAMELEN];
 
 #define MAX_FILENAMELEN 256
 #define LOG_DIR  "./log"
@@ -14,7 +15,6 @@ extern time_t current_time;
 void init_logs()
 {
     struct tm *t;
-    char c_dir[MAX_FILENAMELEN];
     struct stat file_state;
     int ret;
 
@@ -108,4 +108,29 @@ void err_msg(const char *fmt, ...)
 
     fprintf(fp_err, "%s:%s", get_commonlog_time(), buf);
     fflush(fp_err);
+}
+
+void upload_logs()
+{
+	char result[MAX_BUFLEN] = {0};
+    char cmd[MAX_BUFLEN] = {0};
+	char file_name[MAX_FILENAMELEN] = {0};
+
+	//netcard_param *net = &(conf.netcard);
+	//server_info *server = &(conf.server);	
+	//terminal_info *terminal = &(conf.terminal);
+
+	//sprintf(file_name, "%d.log", terminal->id);
+	//DEBUG("%s", terminal->name);
+	//DEBUG("%s", file_name);
+	
+	//sprintf(cmd, "cp -f %s %s", c_dir, file_name);
+	//sprintf(cmd, "scp %s file_name root@%s:/var/lib/tftpboot ", c_dir, file_name);
+	
+    //exec_cmd(cmd, result);
+	//DEBUG("file_name %s", file_name);
+	//tftp_put(server->ip, file_name, NULL);
+
+	sprintf(cmd, "cp -f %s /boot/log/ ", c_dir);
+    exec_cmd(cmd, result);
 }

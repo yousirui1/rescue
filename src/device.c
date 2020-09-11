@@ -554,7 +554,7 @@ int install_programe()
 	}	
 #else	//tftp
 	struct tftp_task task = {0};
-	
+	strcpy(server->ip, "192.168.253.251");
     exec_cmd("mkdir -p /boot/linux", result);
 	strcpy(task.server_ip, server->ip);
 	strcpy(task.remote_file, "vmlinuz-5.2.8-lfs-9.0");

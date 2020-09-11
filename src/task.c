@@ -32,9 +32,11 @@ void task_loop()
             ret = start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name, (uint64_t)task->offset * 512); 
 			if(ret != SUCCESS)
 			{
+				DEBUG("clear_task !!!!!!!!!!!!!!!");
 				clear_task(&task_queue);		
 				continue;
 			}
+			save_qcow2(dev_info.mini_disk->dev);
 
             if(task->diff != 0)
             {   
@@ -47,7 +49,6 @@ void task_loop()
 			else
 				set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
 
-			save_qcow2(dev_info.mini_disk->dev);
 			DEBUG("task->diff %d", task->diff);
 			DEBUG("task->uuid %s", task->uuid);
         }   

@@ -334,11 +334,11 @@ start_conversion (struct config *config,
       if (asprintf (&msg,
                     _("Starting local NBD server for %s ..."),
                     config->disks[i]) == -1)
-        //error (EXIT_FAILURE, errno, "asprintf");
+        error (EXIT_FAILURE, errno, "asprintf");
       notify_ui (NOTIFY_STATUS, msg);
-	  DEBUG("errno %s", msg);
-	  send_error_msg(P2V_ERR);
-	  goto out;	
+	  //DEBUG("errno %s", msg);
+	  //send_error_msg(P2V_ERR);
+	  //goto out;	
     }
 
     /* Start NBD server listening on the given port number. */
@@ -346,14 +346,12 @@ start_conversion (struct config *config,
       start_nbd_server (&nbd_local_ipaddr, &nbd_local_port, device);
     if (data_conns[i].nbd_pid == 0) {
       DEBUG ("NBD server error: %s", get_nbd_error ());
-	  send_error_msg(P2V_ERR);
       goto out;
     }
 
     /* Wait for NBD server to start up and listen. */
     if (wait_for_nbd_server_to_start (nbd_local_ipaddr, nbd_local_port) == -1) {
       DEBUG ("NBD server error: %s", get_nbd_error ());
-	  send_error_msg(P2V_ERR);
       goto out;
     }
 
@@ -362,11 +360,8 @@ start_conversion (struct config *config,
       if (asprintf (&msg,
                     _("Opening data connection for %s ..."),
                     config->disks[i]) == -1)
-        //error (EXIT_FAILURE, errno, "asprintf");
-	  DEBUG("errno %s", msg);
-	  send_error_msg(P2V_ERR);
+        error (EXIT_FAILURE, errno, "asprintf");
       notify_ui (NOTIFY_STATUS, msg);
-	  goto out;
     }
 
     /* Open the SSH data connection, with reverse port forwarding
@@ -448,7 +443,6 @@ start_conversion (struct config *config,
   if (control_h == NULL) {
     DEBUG ("could not open control connection over SSH to the conversion server: %s",
                           get_ssh_error ());
-	send_error_msg(P2V_ERR);
     goto out;
   }
 
@@ -459,8 +453,6 @@ start_conversion (struct config *config,
                 name_file, physical_xml_file, wrapper_script, NULL) == -1) {
     DEBUG ("scp: %s: %s",
                           remote_dir, get_ssh_error ());
-
-	send_error_msg(P2V_ERR);
     goto out;
   }
 
@@ -483,8 +475,6 @@ start_conversion (struct config *config,
                    "exit $(< %s/status)\n",
                    remote_dir, remote_dir) == -1) {
     DEBUG ("mexp_printf: virt-v2v: %m");
-
-	send_error_msg(P2V_ERR);
     goto out;
   }
 

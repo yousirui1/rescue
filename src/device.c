@@ -182,6 +182,8 @@ void find_all_netcards()
         dev_info.netcard_count = ret;       //网卡数
     }   
 
+	DEBUG("dev_info.netcard_count %d", dev_info.netcard_count);
+
     int i;
     netcard_param *net = &(conf.netcard);
     for(i = 0; i < dev_info.netcard_count; i++)
@@ -518,7 +520,7 @@ int install_programe()
 	//info->progress = 5;
 	//send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
 
-#if 0//usb 
+#if 1//usb 
 	if(!dev_info.usb_disk)
 	{
 		DEBUG("no found usb flash disk");	

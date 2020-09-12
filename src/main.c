@@ -109,6 +109,7 @@ int main(int argc, char *argv[])
 	init_device();
 	init_config();
 
+
 	ret = pthread_create(&pthread_event, NULL, thread_event, NULL);
 	if(0 != ret)
 	{
@@ -130,8 +131,6 @@ int main(int argc, char *argv[])
 #endif
 	//char buf[1024] = {0};
 	//tftp_get("192.168.253.251", "voi.zip", "/root/voi.zip", buf, 3);
-
-	//upload_logs();
 
 	client_connect();
 	do_exit();

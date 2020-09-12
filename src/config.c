@@ -73,6 +73,7 @@ void init_config()
     	}
 		char cmd[MAX_BUFLEN] = {0};
 		char result[MAX_BUFLEN] = {0};
+		exec_cmd("udhcpc -t 1 -R -q -n ", result);
 		sprintf(cmd, "ifconfig eth0 %s netmask %s", net->ip, net->netmask);
 		exec_cmd(cmd, result);
 	}
@@ -137,6 +138,8 @@ void init_config()
 		DEBUG("net->is_dhcp %d net->ip %s net->netmask %s", net->is_dhcp, net->ip, net->netmask);
 		if(strlen(net->ip) != 0 && strlen(net->netmask) != 0 )
 		{
+			exec_cmd("udhcpc -t 1 -R -q -n ", result);
+			
         	sprintf(cmd, "ifconfig eth0 %s netmask %s", net->ip, net->netmask);
 			DEBUG("ifconfig");
         	exec_cmd(cmd, result);

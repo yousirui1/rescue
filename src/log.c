@@ -130,7 +130,9 @@ void upload_logs()
     //exec_cmd(cmd, result);
 	//DEBUG("file_name %s", file_name);
 	//tftp_put(server->ip, file_name, NULL);
-
-	sprintf(cmd, "cp -f %s /boot/log/ ", c_dir);
+	//DEBUG("");
+	sprintf(cmd, "cp -f /log/%s /boot/log/ ", c_dir);
+	DEBUG("cmd: %s", cmd);
     exec_cmd(cmd, result);
+	DEBUG("result: %s", result);
 }

@@ -25,6 +25,8 @@ void task_loop()
         index = de_queue(&task_queue);
         if(index->ucType == 0x00)
         {   
+    		char buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};
+    		progress_info *info = (progress_info *)&buf[HEAD_LEN];
             struct torrent_task * task = (struct torrent_task *)index->pBuf;
             DEBUG("index->torrent_file %s", task->torrent_file);
             DEBUG("index->torrent_file %d", task->offset);
@@ -48,7 +50,10 @@ void task_loop()
             }   
 			else
 				set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
-
+			
+			strcpy(info->state, "finished");
+            info->progress = 100;
+            send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
 			DEBUG("task->diff %d", task->diff);
 			DEBUG("task->uuid %s", task->uuid);
         }   
@@ -88,6 +93,17 @@ void task_loop()
 				clear_task(&task_queue);		
 				continue;
 			}
+			if(STRPREFIX (task->remote_file, "vmlinuz-5.2.8-lfs-9.0"))
+			{
+				
+				DEBUG("/boot/linux/vmlinuz-5.2.8-lfs-9.0_new /boot/linux/vmlinuz-5.2.8-lfs-9.0");
+				exec_cmd("mv /boot/linux/vmlinuz-5.2.8-lfs-9.0_new /boot/linux/vmlinuz-5.2.8-lfs-9.0",result);
+				if(task->type == 3)
+				{
+            		info->progress = 100;
+            		send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
+				}
+			}
 
 			if(task->type == 2)
 			{
@@ -107,9 +123,10 @@ void task_loop()
 				{
 					send_error_msg(INSTALL_ERR);
 				}
+
+            	info->progress = 100;
+            	send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
 			}
-            info->progress = 100;
-            send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
 		}
         de_queuePos(&task_queue);
     }  

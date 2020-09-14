@@ -172,19 +172,26 @@ static void find_all_disks()
 
 void find_all_netcards()
 {
-	int ret;
+	int ret = 0;
+    int i;
     char buf[MAX_BUFLEN] = {0};
     char result[MAX_BUFLEN] = {0};
     ret = get_netcard_info(&dev_info.net);
 
-    if(ret != -1) 
+    if(ret == 1) 		//未获取ip 只扫描到loop网卡 
     {   
-        dev_info.netcard_count = ret;       //网卡数
+		DEBUG("only find loop network");
+		exec_cmd("ifconfig eth0 169.254.1.1 netmask 255.255.0.0", result);	//设置默认地址
+    	ret = get_netcard_info(&dev_info.net);
     }   
+
+	if(ret > 1)
+	{
+        dev_info.netcard_count = ret;       //网卡数
+	}
 
 	DEBUG("dev_info.netcard_count %d", dev_info.netcard_count);
 
-    int i;
     netcard_param *net = &(conf.netcard);
     for(i = 0; i < dev_info.netcard_count; i++)
     {   
@@ -201,6 +208,7 @@ void find_all_netcards()
 			DEBUG("mac %s", dev_info.net[i].mac);
 			memcpy(net->mac, dev_info.net[i].mac, 32);
 			
+			memset(result, 0, MAX_BUFLEN);
     		exec_cmd("cat /sys/class/net/eth0/carrier ", result);
 			if(result[0] == '0')
 			{
@@ -280,11 +288,11 @@ void init_device()
                 strcpy(config_file, "/boot/conf/config.ini");
 			}
         }
+		print_qcow2(dev_info.mini_disk->dev);
 	}
 	else
 		send_error_msg(DISK_NO_FOUND_ERR);
 	
-	print_qcow2(dev_info.mini_disk->dev);
 }
 
 int mount_boot()
@@ -394,7 +402,7 @@ int upgrad_programe(char *file, char *version, int type)
 	{
 		sprintf(task.file_name, "Linux V%s", version);
 		exec_cmd("mkdir -p /boot/linux", result);
-		strcpy(task.local_file, "/boot/linux/vmlinuz-5.2.8-lfs-9.0");
+		strcpy(task.local_file, "/boot/linux/vmlinuz-5.2.8-lfs-9.0_new");
 		task.type = 3;
 	}
 	else
@@ -520,7 +528,7 @@ int install_programe()
 	//info->progress = 5;
 	//send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
 
-#if 1//usb 
+#if 0//usb 
 	if(!dev_info.usb_disk)
 	{
 		DEBUG("no found usb flash disk");	

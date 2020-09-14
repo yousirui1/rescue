@@ -109,7 +109,6 @@ int main(int argc, char *argv[])
 	init_device();
 	init_config();
 
-
 	ret = pthread_create(&pthread_event, NULL, thread_event, NULL);
 	if(0 != ret)
 	{

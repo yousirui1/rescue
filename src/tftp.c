@@ -157,7 +157,7 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
     /* receive data. */
     send_packet.cmd = htons(CMD_ACK);
     do{ 
-        for(time_wait_data = 0; time_wait_data < PKT_RECV_TIMEOUT * PKT_MAX_RXMT; time_wait_data += 1000){
+        for(time_wait_data = 0; time_wait_data < PKT_RECV_TIMEOUT * PKT_MAX_RXMT; time_wait_data += 200){
             ret = recvfrom(udp.fd, &recv_packet, sizeof(struct tftp_packet), MSG_DONTWAIT,
                     (struct sockaddr *)&udp.recv_addr, &addr_len);
 
@@ -181,7 +181,6 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
 					else
 					{
 						info->progress = (info->total_size  * 100)/ info->file_size / 2;
-						DEBUG("info->progress %d", info->progress);
 						if(type == 2)
 						{
 							info->progress += 50;
@@ -193,10 +192,10 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
 						if(info->progress >= 98)
 							info->progress = 98;
 					}
+					DEBUG("info->progress %d", info->progress);
 					send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);	
 					last_time = current_time;
 				}
-			
                 fwrite(recv_packet.data, 1, ret - 4, fp);
                 break;
             }   
@@ -209,7 +208,7 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
     			send_packet.cmd = htons(CMD_ACK);
                 sendto(udp.fd, &send_packet, sizeof(struct tftp_packet), 0, (struct sockaddr*)&udp.recv_addr, addr_len);
 			}
-			usleep(1000);
+			usleep(200);
         }   
         if(time_wait_data >= PKT_RECV_TIMEOUT * PKT_MAX_RXMT){
             DEBUG("Wait for DATA #%d timeout.", block);

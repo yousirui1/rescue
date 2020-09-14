@@ -276,8 +276,8 @@ try
     cout << "download "<<title<<" cost " << double(duration.count())*microseconds::period::num / microseconds::period::den<<"s"<<endl;
 	if(complete)
 	{
-		strcpy(info->state, "finished");
-		info->progress = 100;
+		strcpy(info->state, "downloading");
+		info->progress = 99;
 		info->download_rate = 0;
 		send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info));
 		return 0;

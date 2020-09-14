@@ -74,7 +74,7 @@ static void process_event_msg(char *buf, int len)
 			client_disconnect();
 			sync();
 			upload_logs();	
-			reboot(RB_AUTOBOOT);				
+			//reboot(RB_AUTOBOOT);				
 			break;
 		}
 		case SHUTDOWN_PIPE:
@@ -83,7 +83,7 @@ static void process_event_msg(char *buf, int len)
 			client_disconnect();
 			sync();
 			upload_logs();	
-			reboot(RB_POWER_OFF);				
+			//reboot(RB_POWER_OFF);				
 			break;
 		}
 	}	

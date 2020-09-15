@@ -6,7 +6,7 @@ int pipe_tcp[2];
 int pipe_udp[2];
 int pipe_qt[2];
 
-struct config conf;
+struct config conf = {0};
 time_t current_time;
 const char program_name[] = "rescue";
 char config_file[128] = "config.ini";
@@ -33,6 +33,27 @@ static void sig_quit_listen(int e)
     write(pipe_event[1], &s, sizeof(s));
     DEBUG("kill use signal end !");
 }
+
+void parse_options(int argc, char *argv[])
+{
+	int ch;
+	while((ch = getopt(argc, argv, "t:h")) != -1)
+	{
+		switch(ch)
+		{
+			case 't':
+				DEBUG("tftp server:%s", optarg);
+				strcpy(conf.tftp_ip, optarg);
+				break;
+			case 'h':
+				DEBUG("help");
+				break;
+			default:
+				break;
+		}
+	}
+}
+
 
 int init_pipe()
 {
@@ -96,15 +117,18 @@ int main(int argc, char *argv[])
 	srandom(time(NULL) + getpid());
 	(void)time(&current_time);
 	signal(SIGPIPE, SIG_IGN);
-	//signal(SIGINT, SIG_IGN);
+	signal(SIGINT, SIG_IGN);
 		
 	struct sigaction act;
 	act.sa_handler = sig_quit_listen;
 	sigemptyset(&act.sa_mask);
 	act.sa_flags = 0;
 	sigaction(SIGUSR1, &act, 0);
-	
+
 	init_logs();	
+
+	parse_options(argc, argv);
+
 	init_pipe();
 	init_device();
 	init_config();
@@ -124,12 +148,6 @@ int main(int argc, char *argv[])
 	{
 		DIE("create qt thread ret: %d error: %s", ret, strerror(ret));
 	}	
-#if 0
-	netcard_param *net = &(conf.netcard);	
-	ip_check_arp(net->name, net->ip, net->mac);
-#endif
-	//char buf[1024] = {0};
-	//tftp_get("192.168.253.251", "voi.zip", "/root/voi.zip", buf, 3);
 
 	client_connect();
 	do_exit();

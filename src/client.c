@@ -334,6 +334,7 @@ int send_p2v_progress(struct client *cli, char *buf)
         	cJSON_AddNumberToObject(root, "progress", info->progress);
         	cJSON_AddStringToObject(root, "state", info->state);
 
+#if 0
 			if(info->progress == 0 &&  strncmp(info->state,"finished",strlen("finished")) == 0)
 			{
 				DEBUG("del qcow2");
@@ -344,6 +345,7 @@ int send_p2v_progress(struct client *cli, char *buf)
 				DEBUG("name %s", name);
 				del_qcow2(dev_info.mini_disk->dev, name, diff);	
 			}
+#endif
 
     		cli->data_buf = cJSON_Print(root);
     		cli->data_size = strlen(cli->data_buf);
@@ -707,9 +709,6 @@ static int recv_down_torrent(struct client *cli)
 		
 		if(ret == torrent->data_len)
 		{
-			//if(scan_qcow2(torrent->uuid, torrent->dif_level))		
-			//	return send_down_torrent(cli, task_uuid, SUCCESS);
-	
 			uint64_t offset = add_qcow2(dev_info.mini_disk->dev, torrent->uuid, torrent->dif_level,
 								(uint64_t)(torrent->file_size + (uint64_t)(1024 * 1024 * 2 * 2)),   // + 2G冗余
 								torrent->real_size, torrent->sys_type, torrent->type);

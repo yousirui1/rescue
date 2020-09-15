@@ -115,6 +115,7 @@ void upload_logs()
 	char result[MAX_BUFLEN] = {0};
     char cmd[MAX_BUFLEN] = {0};
 	char file_name[MAX_FILENAMELEN] = {0};
+	DEBUG("--------!!!!!!!!!!!!!------------------");
 
 	//netcard_param *net = &(conf.netcard);
 	//server_info *server = &(conf.server);	
@@ -131,7 +132,9 @@ void upload_logs()
 	//DEBUG("file_name %s", file_name);
 	//tftp_put(server->ip, file_name, NULL);
 	//DEBUG("");
-	sprintf(cmd, "cp -f /log/%s /boot/log/ ", c_dir);
+	close_logs();
+
+	sprintf(cmd, "cp %s /boot/log/", c_dir);
 	DEBUG("cmd: %s", cmd);
     exec_cmd(cmd, result);
 	DEBUG("result: %s", result);

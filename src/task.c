@@ -8,8 +8,6 @@ QUEUE task_queue;
 
 extern struct device_info dev_info;
 
-
-
 void task_loop()
 {
     QUEUE_INDEX *index = NULL;
@@ -32,13 +30,16 @@ void task_loop()
             DEBUG("index->torrent_file %d", task->offset);
             DEBUG("dev_info.mini_disk->dev->path %s", dev_info.mini_disk->dev->path);
             ret = start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name, (uint64_t)task->offset * 512); 
-			if(ret != SUCCESS)
+			if(ret != SUCCESS)			//下载失败
 			{
+				DEBUG("del qcow2 uuid %s diff %d", task->uuid, task->diff);	
+				del_qcow2(dev_info.mini_disk->dev, task->uuid, 0);
+				del_diff_qcow2(dev_info.mini_disk->dev, task->uuid);
 				DEBUG("clear_task !!!!!!!!!!!!!!!");
 				clear_task(&task_queue);		
 				continue;
 			}
-			save_qcow2(dev_info.mini_disk->dev);
+			//save_qcow2(dev_info.mini_disk->dev);
 
             if(task->diff != 0)
             {   
@@ -47,11 +48,20 @@ void task_loop()
 					set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
 					DEBUG("change_back_file_qcow2 ok !!!");
                 }   
+				else
+				{
+					DEBUG("change_back_file error del_qcow2 uuid %s diff %d", task->uuid, task->diff);
+					del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
+				}
             }   
 			else
 				set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
 			
 			strcpy(info->state, "finished");
+			info->type = 0;
+
+			strcpy(info->file_name, task->file_name);
+			sscanf(task->torrent_file, "/root/%s", info->image_name);
             info->progress = 100;
             send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
 			DEBUG("task->diff %d", task->diff);

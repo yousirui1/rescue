@@ -109,7 +109,7 @@ uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, 
 		DEBUG("disk_type %d", disk_type);
 		pQe->stype = stype;
 		pQe->flag = 1;
-    	//storeDrv.save(dev);
+    	storeDrv.save(dev);
 		return GetQcowLba(pQe);
 	}
 	else
@@ -127,6 +127,7 @@ void del_qcow2(PedDevice *dev, char *name, int diff)
 	storeDrv.del(diff, &uuid);
    	storeDrv.save(dev);
 }
+
 
 void del_diff_qcow2(PedDevice *dev, char *name)
 {
@@ -255,8 +256,6 @@ int set_boot_qcow2(PedDevice *dev, uint32_t diff, int disk_type, char *name)
 }
 
 
-
-
 int change_back_file_qcow2(PedDevice *dev, char *name, uint32_t diff)
 {   
     int ret;
@@ -266,18 +265,18 @@ int change_back_file_qcow2(PedDevice *dev, char *name, uint32_t diff)
 	YZYGUID uuid = {0};
 	str2uuid(name, &uuid);
 
+#if 0
 	uint32_t base = get_minor_max_diff_qcow2(name, diff);
-	
 	DEBUG("minor max diff %d", base);
-	
-	YZY_QCOW_ENTRY  *pBase = storeDrv.scan(base, &uuid);
-	YZY_QCOW_ENTRY  *pDiff = storeDrv.scan(diff, &uuid);
-
 	if(base >= diff)
 	{
-		DEBUG("base %d > diff  %d", base, diff);
+		DEBUG("base %d > diff error %d", base, diff);
 		return ERROR;
 	}
+#endif
+	
+	YZY_QCOW_ENTRY  *pBase = storeDrv.scan(diff - 1, &uuid);
+	YZY_QCOW_ENTRY  *pDiff = storeDrv.scan(diff, &uuid);
 
 	if(pBase == NULL || pDiff == NULL)
 	{

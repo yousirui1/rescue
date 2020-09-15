@@ -72,18 +72,18 @@ static void process_event_msg(char *buf, int len)
 		{
 			DEBUG("server send msg reboot");
 			client_disconnect();
-			sync();
 			upload_logs();	
-			//reboot(RB_AUTOBOOT);				
+			sync();
+			reboot(RB_AUTOBOOT);				
 			break;
 		}
 		case SHUTDOWN_PIPE:
 		{
 			DEBUG("server send msg shutdown");
 			client_disconnect();
-			sync();
 			upload_logs();	
-			//reboot(RB_POWER_OFF);				
+			sync();
+			reboot(RB_POWER_OFF);				
 			break;
 		}
 	}	
@@ -131,6 +131,7 @@ static void process_qt_msg(char *buf, int len)
 			DEBUG("qt send pipe reboot msg");
 			client_disconnect();
 			sync();
+			upload_logs();	
 			reboot(RB_AUTOBOOT);				
 		}
 		default:

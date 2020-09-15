@@ -138,11 +138,13 @@ int main(int argc, char *argv[])
 	{
 		DIE("create  tcp thread ret: %d error: %s", ret, strerror(ret));
 	}
+#if 0
 	ret = pthread_create(&pthread_qt, NULL, thread_qt, NULL);
 	if(0 != ret)
 	{
 		DIE("create qt thread ret: %d error: %s", ret, strerror(ret));
 	}
+#endif
 	ret = pthread_create(&pthread_task, NULL, thread_task, NULL);
 	if(0 != ret)
 	{

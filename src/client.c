@@ -1747,7 +1747,7 @@ static int tcp_loop(int sockfd)
                     {    
                         if(errno == EINTR || errno == EAGAIN)
 						{
-							pthread_mutex_unlock(&client_mutex);
+							//pthread_mutex_unlock(&client_mutex);
                             continue;
 						}
                     }    
@@ -1795,7 +1795,7 @@ static int tcp_loop(int sockfd)
                         {
                             if(errno == EINTR || errno == EAGAIN)
 							{
-								pthread_mutex_unlock(&client_mutex);
+								//pthread_mutex_unlock(&client_mutex);
                                 continue;
 							}
                         }

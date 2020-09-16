@@ -1,0 +1,326 @@
+parted.o: In function `snap':
+/home/ysr/project/parted/./src/parted.c:275: undefined reference to `PED_ASSERT'
+parted.o: In function `prefer_snap':
+/home/ysr/project/parted/./src/parted.c:311: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/parted.c:343: undefined reference to `PED_ASSERT'
+parted.o: In function `snap_to_boundaries':
+/home/ysr/project/parted/./src/parted.c:404: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/parted.c:415: undefined reference to `PED_ASSERT'
+parted.o:/home/ysr/project/parted/./src/parted.c:421: more undefined references to `PED_ASSERT' follow
+parted.o: In function `constraint_from_start_end':
+/home/ysr/project/parted/./src/parted.c:442: undefined reference to `ped_alignment_any'
+/home/ysr/project/parted/./src/parted.c:442: undefined reference to `ped_alignment_any'
+/home/ysr/project/parted/./src/parted.c:442: undefined reference to `ped_constraint_new'
+parted.o: In function `_strip_trailing_spaces':
+/home/ysr/project/parted/./src/parted.c:542: undefined reference to `c_isblank'
+parted.o: In function `_string_ends_with_iec_unit':
+/home/ysr/project/parted/./src/parted.c:555: undefined reference to `c_strcasecmp'
+parted.o: In function `_adjust_end_if_iec':
+/home/ysr/project/parted/./src/parted.c:588: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/parted.c:589: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/parted.c:590: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/parted.c:597: undefined reference to `ped_unit_get_default'
+parted.o: In function `do_mkpart':
+/home/ysr/project/parted/./src/parted.c:614: undefined reference to `ped_file_system_type_get'
+/home/ysr/project/parted/./src/parted.c:688: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/parted.c:698: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/parted.c:700: undefined reference to `ped_constraint_intersect'
+/home/ysr/project/parted/./src/parted.c:702: undefined reference to `ped_constraint_destroy'
+/home/ysr/project/parted/./src/parted.c:703: undefined reference to `ped_constraint_destroy'
+/home/ysr/project/parted/./src/parted.c:710: undefined reference to `ped_constraint_destroy'
+/home/ysr/project/parted/./src/parted.c:714: undefined reference to `ped_constraint_any'
+/home/ysr/project/parted/./src/parted.c:717: undefined reference to `ped_constraint_destroy'
+/home/ysr/project/parted/./src/parted.c:724: undefined reference to `ped_unit_format'
+/home/ysr/project/parted/./src/parted.c:725: undefined reference to `ped_unit_format'
+/home/ysr/project/parted/./src/parted.c:726: undefined reference to `ped_unit_format'
+/home/ysr/project/parted/./src/parted.c:727: undefined reference to `ped_unit_format'
+/home/ysr/project/parted/./src/parted.c:785: undefined reference to `PED_ASSERT'
+parted.o: In function `_print_disk_geometry':
+/home/ysr/project/parted/./src/parted.c:933: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/parted.c:935: undefined reference to `ped_unit_format_custom'
+parted.o: In function `_print_disk_info':
+/home/ysr/project/parted/./src/parted.c:960: undefined reference to `ped_unit_format'
+/home/ysr/project/parted/./src/parted.c:961: undefined reference to `ped_unit_get_default'
+/home/ysr/project/parted/./src/parted.c:962: undefined reference to `ped_unit_format_byte'
+/home/ysr/project/parted/./src/parted.c:994: undefined reference to `ped_unit_get_default'
+/home/ysr/project/parted/./src/parted.c:995: undefined reference to `ped_unit_get_default'
+parted.o: In function `do_print':
+/home/ysr/project/parted/./src/parted.c:1074: undefined reference to `ped_unit_format_byte'
+/home/ysr/project/parted/./src/parted.c:1122: undefined reference to `ped_unit_get_default'
+/home/ysr/project/parted/./src/parted.c:1141: undefined reference to `table_new'
+/home/ysr/project/parted/./src/parted.c:1143: undefined reference to `table_add_row_from_strlist'
+/home/ysr/project/parted/./src/parted.c:1152: undefined reference to `ped_malloc'
+/home/ysr/project/parted/./src/parted.c:1161: undefined reference to `ped_unit_format'
+/home/ysr/project/parted/./src/parted.c:1162: undefined reference to `ped_unit_format_byte'
+/home/ysr/project/parted/./src/parted.c:1165: undefined reference to `ped_unit_format'
+/home/ysr/project/parted/./src/parted.c:1166: undefined reference to `ped_unit_get_default'
+/home/ysr/project/parted/./src/parted.c:1202: undefined reference to `table_add_row_from_strlist'
+/home/ysr/project/parted/./src/parted.c:1209: undefined reference to `table_render'
+/home/ysr/project/parted/./src/parted.c:1216: undefined reference to `table_destroy'
+/home/ysr/project/parted/./src/parted.c:1233: undefined reference to `ped_unit_format'
+/home/ysr/project/parted/./src/parted.c:1236: undefined reference to `ped_unit_format_byte'
+/home/ysr/project/parted/./src/parted.c:1242: undefined reference to `ped_unit_get_default'
+/home/ysr/project/parted/./src/parted.c:1243: undefined reference to `ped_unit_format'
+parted.o: In function `_rescue_add_partition':
+/home/ysr/project/parted/./src/parted.c:1331: undefined reference to `ped_file_system_probe'
+/home/ysr/project/parted/./src/parted.c:1334: undefined reference to `ped_file_system_probe_specific'
+/home/ysr/project/parted/./src/parted.c:1343: undefined reference to `ped_constraint_exact'
+/home/ysr/project/parted/./src/parted.c:1346: undefined reference to `ped_constraint_destroy'
+/home/ysr/project/parted/./src/parted.c:1349: undefined reference to `ped_constraint_destroy'
+/home/ysr/project/parted/./src/parted.c:1351: undefined reference to `ped_unit_format'
+/home/ysr/project/parted/./src/parted.c:1352: undefined reference to `ped_unit_format'
+parted.o: In function `_rescue_pass':
+/home/ysr/project/parted/./src/parted.c:1394: undefined reference to `ped_timer_reset'
+/home/ysr/project/parted/./src/parted.c:1395: undefined reference to `ped_timer_set_state_name'
+/home/ysr/project/parted/./src/parted.c:1397: undefined reference to `ped_timer_update'
+/home/ysr/project/parted/./src/parted.c:1401: undefined reference to `ped_alignment_any'
+/home/ysr/project/parted/./src/parted.c:1401: undefined reference to `ped_alignment_any'
+/home/ysr/project/parted/./src/parted.c:1401: undefined reference to `ped_constraint_init'
+/home/ysr/project/parted/./src/parted.c:1408: undefined reference to `ped_constraint_done'
+/home/ysr/project/parted/./src/parted.c:1417: undefined reference to `ped_constraint_done'
+/home/ysr/project/parted/./src/parted.c:1431: undefined reference to `ped_constraint_done'
+/home/ysr/project/parted/./src/parted.c:1433: undefined reference to `ped_timer_update'
+/home/ysr/project/parted/./src/parted.c:1440: undefined reference to `ped_constraint_done'
+parted.o: In function `partition_align_check':
+/home/ysr/project/parted/./src/parted.c:1543: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/parted.c:1552: undefined reference to `PED_ASSERT'
+parted.o: In function `do_unit':
+/home/ysr/project/parted/./src/parted.c:1696: undefined reference to `ped_unit_get_default'
+/home/ysr/project/parted/./src/parted.c:1699: undefined reference to `ped_unit_set_default'
+parted.o: In function `_init_messages':
+/home/ysr/project/parted/./src/parted.c:1748: undefined reference to `ped_unit_get_name'
+/home/ysr/project/parted/./src/parted.c:1779: undefined reference to `ped_file_system_type_get_next'
+/home/ysr/project/parted/./src/parted.c:1780: undefined reference to `ped_file_system_type_get_next'
+/home/ysr/project/parted/./src/parted.c:1787: undefined reference to `ped_file_system_alias_get_next'
+/home/ysr/project/parted/./src/parted.c:1788: undefined reference to `ped_file_system_alias_get_next'
+parted.o: In function `_parse_options':
+/home/ysr/project/parted/./src/parted.c:2022: undefined reference to `argmatch_die'
+/home/ysr/project/parted/./src/parted.c:2022: undefined reference to `__xargmatch_internal'
+parted.o: In function `_init':
+/home/ysr/project/parted/./src/parted.c:2126: undefined reference to `ped_timer_new'
+parted.o: In function `_done':
+/home/ysr/project/parted/./src/parted.c:2160: undefined reference to `ped_timer_destroy'
+parted.o: In function `main':
+/home/ysr/project/parted/./src/parted.c:2172: undefined reference to `set_program_name'
+ui.o: In function `sa_sigsegv_handler':
+/home/ysr/project/parted/./src/ui.c:358: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/ui.c:369: undefined reference to `PED_ASSERT'
+ui.o: In function `command_line_pop_word':
+/home/ysr/project/parted/./src/ui.c:677: undefined reference to `PED_ASSERT'
+ui.o: In function `_construct_prompt':
+/home/ysr/project/parted/./src/ui.c:789: undefined reference to `PED_ASSERT'
+ui.o: In function `command_line_get_sector':
+/home/ysr/project/parted/./src/ui.c:934: undefined reference to `ped_unit_format'
+/home/ysr/project/parted/./src/ui.c:962: undefined reference to `ped_unit_parse'
+ui.o: In function `command_line_get_fs_type':
+/home/ysr/project/parted/./src/ui.c:1085: undefined reference to `ped_file_system_type_get'
+ui.o: In function `command_line_get_disk_type':
+/home/ysr/project/parted/./src/ui.c:1115: undefined reference to `PED_ASSERT'
+ui.o: In function `command_line_get_unit':
+/home/ysr/project/parted/./src/ui.c:1331: undefined reference to `ped_unit_get_name'
+/home/ysr/project/parted/./src/ui.c:1333: undefined reference to `ped_unit_get_default'
+/home/ysr/project/parted/./src/ui.c:1333: undefined reference to `ped_unit_get_name'
+/home/ysr/project/parted/./src/ui.c:1338: undefined reference to `ped_unit_get_by_name'
+ui.o: In function `init_fs_type_str':
+/home/ysr/project/parted/./src/ui.c:1435: undefined reference to `ped_file_system_type_get_next'
+/home/ysr/project/parted/./src/ui.c:1436: undefined reference to `ped_file_system_type_get_next'
+/home/ysr/project/parted/./src/ui.c:1442: undefined reference to `ped_file_system_alias_get_next'
+/home/ysr/project/parted/./src/ui.c:1443: undefined reference to `ped_file_system_alias_get_next'
+xmalloc.o: In function `xnmalloc':
+/home/ysr/project/parted/./include/xalloc.h:111: undefined reference to `xalloc_oversized'
+/home/ysr/project/parted/./include/xalloc.h:112: undefined reference to `xalloc_die'
+xmalloc.o: In function `xnrealloc':
+/home/ysr/project/parted/./include/xalloc.h:124: undefined reference to `xalloc_oversized'
+/home/ysr/project/parted/./include/xalloc.h:125: undefined reference to `xalloc_die'
+xmalloc.o: In function `x2nrealloc':
+/home/ysr/project/parted/./include/xalloc.h:210: undefined reference to `xalloc_die'
+xmalloc.o: In function `xmalloc':
+/home/ysr/project/parted/./src/xmalloc.c:44: undefined reference to `xalloc_die'
+xmalloc.o: In function `xrealloc':
+/home/ysr/project/parted/./src/xmalloc.c:64: undefined reference to `xalloc_die'
+xmalloc.o: In function `xcalloc':
+/home/ysr/project/parted/./src/xmalloc.c:103: undefined reference to `xalloc_die'
+exception.o: In function `ped_log2':
+/home/ysr/project/parted/./src/exception.c:107: undefined reference to `PED_ASSERT'
+exception.o: In function `ped_exception_leave_all':
+/home/ysr/project/parted/./src/exception.c:303: undefined reference to `PED_ASSERT'
+device.o: In function `_ped_device_probe':
+/home/ysr/project/parted/./src/device.c:110: undefined reference to `PED_ASSERT'
+device.o: In function `ped_device_get':
+/home/ysr/project/parted/./src/device.c:151: undefined reference to `PED_ASSERT'
+device.o: In function `ped_device_open':
+/home/ysr/project/parted/./src/device.c:224: undefined reference to `PED_ASSERT'
+device.o:/home/ysr/project/parted/./src/device.c:225: more undefined references to `PED_ASSERT' follow
+device.o: In function `ped_device_get_constraint':
+/home/ysr/project/parted/./src/device.c:416: undefined reference to `ped_alignment_any'
+/home/ysr/project/parted/./src/device.c:416: undefined reference to `ped_alignment_any'
+/home/ysr/project/parted/./src/device.c:416: undefined reference to `ped_constraint_new'
+device.o: In function `_ped_device_get_aligned_constraint':
+/home/ysr/project/parted/./src/device.c:436: undefined reference to `ped_alignment_new'
+/home/ysr/project/parted/./src/device.c:445: undefined reference to `ped_constraint_new'
+/home/ysr/project/parted/./src/device.c:449: undefined reference to `ped_alignment_any'
+/home/ysr/project/parted/./src/device.c:449: undefined reference to `ped_alignment_any'
+/home/ysr/project/parted/./src/device.c:449: undefined reference to `ped_constraint_new'
+device.o: In function `ped_device_get_minimum_alignment':
+/home/ysr/project/parted/./src/device.c:519: undefined reference to `ped_alignment_new'
+device.o: In function `ped_device_get_optimum_alignment':
+/home/ysr/project/parted/./src/device.c:553: undefined reference to `ped_alignment_new'
+architecture.o: In function `ped_set_architecture':
+/home/ysr/project/parted/./src/architecture.c:32: undefined reference to `ped_linux_arch'
+disk.o: In function `ped_disk_type_register':
+/home/ysr/project/parted/./src/disk.c:69: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:70: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:71: undefined reference to `PED_ASSERT'
+disk.o: In function `ped_disk_type_unregister':
+/home/ysr/project/parted/./src/disk.c:83: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:84: undefined reference to `PED_ASSERT'
+disk.o:/home/ysr/project/parted/./src/disk.c:89: more undefined references to `PED_ASSERT' follow
+disk.o: In function `ped_disk_clobber':
+/home/ysr/project/parted/./src/disk.c:334: undefined reference to `ptt_clear_sectors'
+/home/ysr/project/parted/./src/disk.c:344: undefined reference to `ptt_clear_sectors'
+disk.o: In function `ped_disk_new_fresh':
+/home/ysr/project/parted/./src/disk.c:370: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:371: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:372: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:374: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:375: undefined reference to `PED_ASSERT'
+disk.o:/home/ysr/project/parted/./src/disk.c:382: more undefined references to `PED_ASSERT' follow
+disk.o: In function `_ped_disk_alloc':
+/home/ysr/project/parted/./src/disk.c:398: undefined reference to `ped_malloc'
+disk.o: In function `ped_disk_destroy':
+/home/ysr/project/parted/./src/disk.c:430: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:431: undefined reference to `PED_ASSERT'
+disk.o: In function `ped_disk_commit_to_os':
+/home/ysr/project/parted/./src/disk.c:452: undefined reference to `PED_ASSERT'
+disk.o: In function `ped_disk_commit_to_dev':
+/home/ysr/project/parted/./src/disk.c:476: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:477: undefined reference to `PED_ASSERT'
+disk.o:/home/ysr/project/parted/./src/disk.c:558: more undefined references to `PED_ASSERT' follow
+disk.o: In function `ped_disk_check':
+/home/ysr/project/parted/./src/disk.c:611: undefined reference to `ped_file_system_probe_specific'
+/home/ysr/project/parted/./src/disk.c:619: undefined reference to `ped_unit_format'
+/home/ysr/project/parted/./src/disk.c:622: undefined reference to `ped_unit_format'
+disk.o: In function `ped_disk_get_primary_partition_count':
+/home/ysr/project/parted/./src/disk.c:668: undefined reference to `PED_ASSERT'
+disk.o: In function `ped_disk_get_last_partition_num':
+/home/ysr/project/parted/./src/disk.c:689: undefined reference to `PED_ASSERT'
+disk.o: In function `ped_disk_get_max_supported_partition_count':
+/home/ysr/project/parted/./src/disk.c:708: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:709: undefined reference to `PED_ASSERT'
+disk.o: In function `ped_disk_get_partition_alignment':
+/home/ysr/project/parted/./src/disk.c:729: undefined reference to `ped_alignment_any'
+/home/ysr/project/parted/./src/disk.c:729: undefined reference to `ped_alignment_duplicate'
+disk.o: In function `ped_disk_get_max_primary_partition_count':
+/home/ysr/project/parted/./src/disk.c:743: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:744: undefined reference to `PED_ASSERT'
+disk.o: In function `ped_disk_set_flag':
+/home/ysr/project/parted/./src/disk.c:764: undefined reference to `PED_ASSERT'
+disk.o: In function `ped_disk_get_flag':
+/home/ysr/project/parted/./src/disk.c:796: undefined reference to `PED_ASSERT'
+disk.o: In function `ped_disk_is_flag_available':
+/home/ysr/project/parted/./src/disk.c:814: undefined reference to `PED_ASSERT'
+disk.o:/home/ysr/project/parted/./src/disk.c:911: more undefined references to `PED_ASSERT' follow
+disk.o: In function `_ped_partition_alloc':
+/home/ysr/project/parted/./src/disk.c:1191: undefined reference to `ped_malloc'
+disk.o: In function `_ped_partition_attempt_align':
+/home/ysr/project/parted/./src/disk.c:1229: undefined reference to `ped_constraint_intersect'
+/home/ysr/project/parted/./src/disk.c:1230: undefined reference to `ped_constraint_destroy'
+/home/ysr/project/parted/./src/disk.c:1234: undefined reference to `ped_constraint_solve_nearest'
+/home/ysr/project/parted/./src/disk.c:1239: undefined reference to `ped_constraint_destroy'
+/home/ysr/project/parted/./src/disk.c:1243: undefined reference to `ped_constraint_destroy'
+disk.o: In function `ped_partition_new':
+/home/ysr/project/parted/./src/disk.c:1271: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:1272: undefined reference to `PED_ASSERT'
+disk.o: In function `ped_partition_destroy':
+/home/ysr/project/parted/./src/disk.c:1314: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:1315: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:1316: undefined reference to `PED_ASSERT'
+disk.o:/home/ysr/project/parted/./src/disk.c:1331: more undefined references to `PED_ASSERT' follow
+disk.o: In function `_partition_get_overlap_constraint':
+/home/ysr/project/parted/./src/disk.c:1796: undefined reference to `ped_constraint_new_from_max'
+disk.o: In function `_disk_check_part_overlaps':
+/home/ysr/project/parted/./src/disk.c:1815: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:1816: undefined reference to `PED_ASSERT'
+disk.o: In function `_partition_check_basic_sanity':
+/home/ysr/project/parted/./src/disk.c:1846: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:1848: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:1849: undefined reference to `PED_ASSERT'
+disk.o:/home/ysr/project/parted/./src/disk.c:1850: more undefined references to `PED_ASSERT' follow
+disk.o: In function `ped_disk_add_partition':
+/home/ysr/project/parted/./src/disk.c:2001: undefined reference to `ped_constraint_intersect'
+/home/ysr/project/parted/./src/disk.c:2028: undefined reference to `ped_constraint_destroy'
+/home/ysr/project/parted/./src/disk.c:2029: undefined reference to `ped_constraint_destroy'
+/home/ysr/project/parted/./src/disk.c:2039: undefined reference to `ped_constraint_destroy'
+/home/ysr/project/parted/./src/disk.c:2040: undefined reference to `ped_constraint_destroy'
+disk.o: In function `ped_disk_remove_partition':
+/home/ysr/project/parted/./src/disk.c:2057: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:2058: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:2062: undefined reference to `PED_ASSERT'
+disk.o: In function `ped_disk_delete_partition':
+/home/ysr/project/parted/./src/disk.c:2081: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:2082: undefined reference to `PED_ASSERT'
+disk.o:/home/ysr/project/parted/./src/disk.c:2103: more undefined references to `PED_ASSERT' follow
+disk.o: In function `ped_disk_set_partition_geom':
+/home/ysr/project/parted/./src/disk.c:2182: undefined reference to `ped_constraint_intersect'
+/home/ysr/project/parted/./src/disk.c:2204: undefined reference to `ped_constraint_destroy'
+/home/ysr/project/parted/./src/disk.c:2205: undefined reference to `ped_constraint_destroy'
+/home/ysr/project/parted/./src/disk.c:2211: undefined reference to `ped_constraint_destroy'
+/home/ysr/project/parted/./src/disk.c:2212: undefined reference to `ped_constraint_destroy'
+disk.o: In function `ped_disk_maximize_partition':
+/home/ysr/project/parted/./src/disk.c:2235: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:2236: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:2239: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:2271: undefined reference to `ped_constraint_any'
+/home/ysr/project/parted/./src/disk.c:2274: undefined reference to `ped_constraint_destroy'
+disk.o: In function `ped_disk_get_max_partition_geometry':
+/home/ysr/project/parted/./src/disk.c:2293: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:2294: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:2295: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:2302: undefined reference to `ped_constraint_exact'
+/home/ysr/project/parted/./src/disk.c:2305: undefined reference to `ped_constraint_destroy'
+/home/ysr/project/parted/./src/disk.c:2310: undefined reference to `PED_ASSERT'
+disk.o: In function `ped_disk_minimize_extended_partition':
+/home/ysr/project/parted/./src/disk.c:2332: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/disk.c:2351: undefined reference to `ped_constraint_any'
+/home/ysr/project/parted/./src/disk.c:2355: undefined reference to `ped_constraint_destroy'
+disk.o: In function `ped_partition_print':
+/home/ysr/project/parted/./src/disk.c:2491: undefined reference to `PED_ASSERT'
+disk.o: In function `ped_disk_print':
+/home/ysr/project/parted/./src/disk.c:2515: undefined reference to `PED_ASSERT'
+geom.o: In function `ped_geometry_init':
+/home/ysr/project/parted/./src/geom.c:58: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/geom.c:59: undefined reference to `PED_ASSERT'
+geom.o: In function `ped_geometry_new':
+/home/ysr/project/parted/./src/geom.c:76: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/geom.c:78: undefined reference to `ped_malloc'
+geom.o: In function `ped_geometry_duplicate':
+/home/ysr/project/parted/./src/geom.c:104: undefined reference to `PED_ASSERT'
+geom.o: In function `ped_geometry_destroy':
+/home/ysr/project/parted/./src/geom.c:140: undefined reference to `PED_ASSERT'
+geom.o: In function `ped_geometry_set':
+/home/ysr/project/parted/./src/geom.c:153: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/geom.c:154: undefined reference to `PED_ASSERT'
+geom.o: In function `ped_geometry_test_overlap':
+/home/ysr/project/parted/./src/geom.c:211: undefined reference to `PED_ASSERT'
+geom.o:/home/ysr/project/parted/./src/geom.c:212: more undefined references to `PED_ASSERT' follow
+geom.o: In function `ped_geometry_read_alloc':
+/home/ysr/project/parted/./src/geom.c:312: undefined reference to `ped_malloc'
+geom.o: In function `ped_geometry_sync':
+/home/ysr/project/parted/./src/geom.c:337: undefined reference to `PED_ASSERT'
+geom.o: In function `ped_geometry_sync_fast':
+/home/ysr/project/parted/./src/geom.c:354: undefined reference to `PED_ASSERT'
+geom.o: In function `ped_geometry_write':
+/home/ysr/project/parted/./src/geom.c:372: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/geom.c:373: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/geom.c:374: undefined reference to `PED_ASSERT'
+geom.o:/home/ysr/project/parted/./src/geom.c:375: more undefined references to `PED_ASSERT' follow
+geom.o: In function `ped_geometry_check':
+/home/ysr/project/parted/./src/geom.c:422: undefined reference to `ped_timer_reset'
+/home/ysr/project/parted/./src/geom.c:423: undefined reference to `ped_timer_set_state_name'
+/home/ysr/project/parted/./src/geom.c:428: undefined reference to `ped_timer_update'
+/home/ysr/project/parted/./src/geom.c:434: undefined reference to `ped_timer_update'
+geom.o: In function `ped_geometry_map':
+/home/ysr/project/parted/./src/geom.c:476: undefined reference to `PED_ASSERT'
+/home/ysr/project/parted/./src/geom.c:477: undefined reference to `PED_ASSERT'
+collect2: error: ld returned 1 exit status
+make: *** [parted] Error 1

@@ -253,6 +253,7 @@ static int UpdateStoreEntry(PYZY_QCOW_ENTRY qe, uint32_t difLevel, PYZYGUID name
     qe->isDel = 0;
 	qe->flag = 0;
     qe->realLba = realLba;
+	qe->operate_id = 0;
     return 0;
 }
 

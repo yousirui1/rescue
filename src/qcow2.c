@@ -80,7 +80,8 @@ int init_qcow2(PedDevice *dev, int flag)
     return storeDrv.save(dev);
 }
 
-uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, uint64_t realLba, uint32_t stype, uint32_t disk_type)
+uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, uint64_t realLba, uint32_t stype, 
+					uint32_t disk_type, uint32_t operate_id)
 {
 	int ret;
     YZY_QCOW_ENTRY  *pQe;
@@ -109,6 +110,7 @@ uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, 
 		DEBUG("disk_type %d", disk_type);
 		pQe->stype = stype;
 		pQe->flag = 1;
+		pQe->operate_id = operate_id;
     	storeDrv.save(dev);
 		return GetQcowLba(pQe);
 	}
@@ -180,6 +182,7 @@ void print_qcow2(PedDevice *dev)
         DEBUG("pQe->realLba %lu", pQe->realLba); 
 
 	    DEBUG("pQe->diffLevel %lu", pQe->difLevel);
+	    DEBUG("pQe->operate_id %lu", pQe->operate_id);
 		DEBUG("--------------------------------------------");
 		//if(pQe->difLevel == 1)
     }
@@ -223,6 +226,8 @@ int get_minor_max_diff_qcow2(char *name, uint32_t diff)
 	}
 }
 
+
+
 PYZY_QCOW_ENTRY scan_qcow2(char *name, uint32_t difLevel)
 {
     uint32_t i;
@@ -240,6 +245,16 @@ PYZY_QCOW_ENTRY scan_qcow2(char *name, uint32_t difLevel)
         }   
     }   
     return NULL;
+}
+
+
+int get_operate_qcow2(char *name, uint32_t diff)
+{
+	PYZY_QCOW_ENTRY pQe = scan_qcow2(name, diff);
+	if(pQe)
+		return pQe->operate_id;
+	else
+		return -1;
 }
 
 int set_boot_qcow2(PedDevice *dev, uint32_t diff, int disk_type, char *name)

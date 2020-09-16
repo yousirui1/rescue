@@ -692,6 +692,7 @@ static int recv_down_torrent(struct client *cli)
     DEBUG("torrent->space_size %lld", torrent->space_size);
     DEBUG("torrent->file_size %lld", torrent->file_size);
     DEBUG("torrent->data_len %lld", torrent->data_len);
+	DEBUG("torrent->operate_id %d", torrent->operate_id);
 
     memcpy(task_uuid, torrent->task_uuid, 36);
 	DEBUG("task_uuid %s", task_uuid);
@@ -711,7 +712,7 @@ static int recv_down_torrent(struct client *cli)
 		{
 			uint64_t offset = add_qcow2(dev_info.mini_disk->dev, torrent->uuid, torrent->dif_level,
 								(uint64_t)(torrent->file_size + (uint64_t)(1024 * 1024 * 2 * 2)),   // + 2G冗余
-								torrent->real_size, torrent->sys_type, torrent->type);
+								torrent->real_size, torrent->sys_type, torrent->type, torrent->operate_id);
 			if(offset != -1)
 			{
             	struct torrent_task task = {0}; 
@@ -1178,7 +1179,7 @@ static int recv_get_desktop_group_list(struct client *cli)
 					*desktop_group_uuid, *desktop_ip, *desktop_is_dhcp, *desktop_mask,*desktop_name, *disks,
 					*os_sys_type, *show_desktop_info;
 			
-			cJSON *dif_level, *prefix, *real_size, *reserve_size, *type, *uuid, *max_diff;
+			cJSON *dif_level, *prefix, *real_size, *reserve_size, *type, *uuid, *max_diff, *operate_id;
 				
 			char current_uuid[32] = {0};
 			int update_flag = 0;
@@ -1205,10 +1206,26 @@ static int recv_get_desktop_group_list(struct client *cli)
 						real_size = cJSON_GetObjectItem(item, "real_size");
 						reserve_size = cJSON_GetObjectItem(item, "reserve_size");
 						type = cJSON_GetObjectItem(item, "type");
+						operate_id = cJSON_GetObjectItem(item, "operate_id");
 
-						if(!max_diff || !uuid || !dif_level || !prefix || !real_size || !reserve_size || !type)
+						if(!max_diff || !uuid || !dif_level || !prefix || !real_size || !reserve_size || !type || !operate_id)
 							continue;
 
+						DEBUG("uuid %s", uuid->valuestring);
+						DEBUG("dif_level %d", dif_level->valueint);
+						DEBUG("operate_id %d", operate_id->valueint);	
+						if(dif_level->valueint == 1 && operate_id->valueint != get_operate_qcow2(uuid->valuestring, 1))
+						{
+							if(scan_qcow2(uuid->valuestring, 0))
+							{
+								DEBUG("update qcow2");
+								del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
+								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
+								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
+							}
+						}
+						
+#if 0
 						if(update_flag)
 						{
 							if(!strcmp(uuid->valuestring, current_uuid))
@@ -1240,6 +1257,7 @@ static int recv_get_desktop_group_list(struct client *cli)
 							strcpy(current_uuid, uuid->valuestring);
 							update_flag = 1;
 						}
+#endif
 					}
 				}
 			}
@@ -1747,7 +1765,6 @@ static int tcp_loop(int sockfd)
                 current->data_size = read_packet_size(current->packet) + read_packet_token(current->packet);
                 current->pos = 0;
 
-                //DEBUG("current->data_size %d", current->data_size);     
                 if(current->data_size < 0 || current->data_size > CLIENT_BUF)
                 {    
                     current->pos = 0; 
@@ -1787,6 +1804,8 @@ static int tcp_loop(int sockfd)
                     }
                     current->pos += ret;
                 }
+
+                DEBUG("current->data_size %d", current->data_size);     
 				if(current->pos == current->data_size)
                 {
                     if(process_msg(current))

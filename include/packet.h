@@ -126,6 +126,7 @@ struct yzy_torrent{
 	unsigned long long file_size;
     unsigned long long data_len;
 	char task_uuid[36];
+	int operate_id;
 };
 
 typedef struct yzy_torrent yzy_torrent;

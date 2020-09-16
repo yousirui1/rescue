@@ -45,9 +45,9 @@ typedef struct _YZY_QCOW_ENTRY
     uint64_t    endLba;  //qcow 按保留的空间结束位置，正常按容量，也可以指定大小
     uint64_t    realLba;  //qcow容量
 	uint8_t 	flag;
+	uint32_t	operate_id;
 	uint8_t		R1;
 	uint16_t	R2;
-	uint32_t	R3;
     uint64_t    R4;          //保留
 } YZY_QCOW_ENTRY, *PYZY_QCOW_ENTRY;
 

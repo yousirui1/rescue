@@ -29,7 +29,6 @@ CP = cp
 
 CONFIG_COMPILER = gnu
 
-
 exeobj = rescue
 
 dllobj =
@@ -97,9 +96,7 @@ pack:
 	sudo $(CP) $(outdir)/$(exeobj) /mnt/initrd/root
 	sudo $(CP) $(libdir)/libqt.so.1 /mnt/initrd/root/lib
 	sudo $(CP) $(libdir)/libtorrent.so /mnt/initrd/root/lib
-	
 
 clean:
 	rm -f *.o $(outdir)/$(exeobj) $(outdir)/*.dll $(outdir)/*.a $(OBJ_DIR)/*.o 
 	$(MAKE) -C $(QT_DIR) clean
-

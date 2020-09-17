@@ -225,7 +225,7 @@ static int send_delete(struct client *cli, int batch_no)
 	
 		cli->data_buf = cJSON_Print(root);
 		cli->data_size = strlen(cli->data_buf);
-		set_packet_head(cli->packet, SHUTDONW, cli->data_size, JSON_TYPE, 1);
+		set_packet_head(cli->packet, DELETE, cli->data_size, JSON_TYPE, 1);
 		ret = send_packet(cli);
 		client_disconnect();		
 		client_connect();
@@ -276,7 +276,7 @@ static int send_cancel_send_desktop(struct client *cli, int batch_no)
 	
 		cli->data_buf = cJSON_Print(root);
 		cli->data_size = strlen(cli->data_buf);
-		set_packet_head(cli->packet, SHUTDONW, cli->data_size, JSON_TYPE, 1);
+		set_packet_head(cli->packet, CANCEL_SEND_DESKTOP, cli->data_size, JSON_TYPE, 1);
 		ret = send_packet(cli);
 		stop_torrent();
 	}	
@@ -722,6 +722,7 @@ static int recv_down_torrent(struct client *cli)
             	task.diff = torrent->dif_level;
 				task.disk_type = torrent->type;
             	task.offset = offset;
+            	//en_queue(&task_queue, (char *)&task, sizeof(struct torrent_task) , 0x0);
             	en_queue(&task_queue, (char *)&task, sizeof(struct torrent_task) , 0x0);
 				return send_down_torrent(cli, task_uuid, SUCCESS);
 			}
@@ -762,7 +763,7 @@ static int send_clear_all_desktop(struct client *cli, int batch_no, int flag)
     
         cli->data_buf = cJSON_Print(root);
         cli->data_size = strlen(cli->data_buf);
-        set_packet_head(cli->packet, SHUTDONW, cli->data_size, JSON_TYPE, 1); 
+        set_packet_head(cli->packet, CLEAR_ALL_DESKTOP, cli->data_size, JSON_TYPE, 1); 
         ret = send_packet(cli);
     }   
     else
@@ -813,7 +814,7 @@ static int send_update_diff_disk(struct client *cli, int batch_no)
     
         cli->data_buf = cJSON_Print(root);
         cli->data_size = strlen(cli->data_buf);
-        set_packet_head(cli->packet, SHUTDONW, cli->data_size, JSON_TYPE, 1); 
+        set_packet_head(cli->packet, UPDATE_DIFF_DISK, cli->data_size, JSON_TYPE, 1); 
         ret = send_packet(cli);
     }   
     else
@@ -878,7 +879,7 @@ static int send_update_config(struct client *cli, int batch_no)
     
         cli->data_buf = cJSON_Print(root);
         cli->data_size = strlen(cli->data_buf);
-        set_packet_head(cli->packet, SHUTDONW, cli->data_size, JSON_TYPE, 1); 
+        set_packet_head(cli->packet, UPDATE_CONFIG, cli->data_size, JSON_TYPE, 1); 
         ret = send_packet(cli);
 		client_disconnect();			
     }   
@@ -950,7 +951,7 @@ static int send_update_ip(struct client *cli, int batch_no)
     
         cli->data_buf = cJSON_Print(root);
         cli->data_size = strlen(cli->data_buf);
-        set_packet_head(cli->packet, SHUTDONW, cli->data_size, JSON_TYPE, 1); 
+        set_packet_head(cli->packet, UPDATE_IP, cli->data_size, JSON_TYPE, 1); 
 		ret = send_packet(cli);
     }   
     else
@@ -1021,7 +1022,7 @@ static int send_update_name(struct client *cli, int batch_no)
 	
 		cli->data_buf = cJSON_Print(root);
 		cli->data_size = strlen(cli->data_buf);
-		set_packet_head(cli->packet, SHUTDONW, cli->data_size, JSON_TYPE, 1);
+		set_packet_head(cli->packet, UPDATE_NAME, cli->data_size, JSON_TYPE, 1);
 		ret =  send_packet(cli);
 	}	
 	else
@@ -1865,7 +1866,7 @@ int init_client()
     memset(&m_client, 0, sizeof(struct client));
     m_client.fd = server_s;
     m_client.head_buf = malloc(HEAD_LEN + 1);
-    m_client.packet = malloc(PACKET_LEN);
+    m_client.packet = malloc(PACKET_LEN + 1);
     memset(m_client.packet, 0 , PACKET_LEN);
     
     ret = send_login(&m_client);

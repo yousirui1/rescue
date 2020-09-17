@@ -354,6 +354,15 @@ int format_disk(const char *path)
         return ERROR;
     }   
 
+    sprintf(cmd, "parted %s set 1 boot on", path);
+    exec_cmd(cmd, result);  
+    DEBUG("cmd: %s", cmd);
+    if(strstr(result, "Error"))
+    {   
+        DEBUG("%s", result);
+        return ERROR;
+    }   
+
     sleep(1);
     exec_cmd("mdev -s", result); 
 

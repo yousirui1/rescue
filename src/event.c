@@ -72,6 +72,7 @@ static void process_event_msg(char *buf, int len)
 		{
 			DEBUG("server send msg reboot");
 			client_disconnect();
+			stop_torrent();
 			upload_logs();	
 			sync();
 			reboot(RB_AUTOBOOT);				
@@ -81,6 +82,7 @@ static void process_event_msg(char *buf, int len)
 		{
 			DEBUG("server send msg shutdown");
 			client_disconnect();
+			stop_torrent();
 			upload_logs();	
 			sync();
 			reboot(RB_POWER_OFF);				

@@ -145,6 +145,8 @@ static uint32_t GetDiskList(PYZYGUID diskName, PYZY_QCOW_ENTRY *diskList)
 uint64_t GetDiskSizeLba(PYZYGUID diskName)
 {
 	int i;
+	if (diskName == NULL)
+        return storeDrv.pStoreCfg->diskItem[0].diskSizeLba;
     for (i = 0; i < YZY_MAX_DISK_COUNT; i++)
     {
         if (yzy_CompareGuid(diskName, &storeDrv.pStoreCfg->diskItem[i].diskName) == 0)
@@ -393,7 +395,7 @@ static void ScanSpaceFormInterval(uint64_t sizeLba, PYZYGUID diskName, int64_t *
 }
 
 // 如果中间空出来40G，可以放入两个20G
-int AllocStoreSpace(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint64_t sizeLba, uint64_t realLba, int type, PYZY_QCOW_ENTRY *ppQe)
+static int AllocStore(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint64_t sizeLba, uint64_t realLba, uint8_t type, PYZY_QCOW_ENTRY* ppQe)
 {
     uint64_t iStart, iEnd;
     int ret;
@@ -437,6 +439,18 @@ int AllocStoreSpace(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint64_
     return 0;
 }
 
+// sizeLba: 保留大小
+// realLba: 实际大小
+static int AllocStoreSpace(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint64_t sizeLba, uint64_t realLba, uint8_t type, PYZY_QCOW_ENTRY* ppQe)
+{
+    int ret = AllocStore(difLevel, name, diskName, sizeLba, realLba, type, ppQe);
+    if (ret == 0)
+    {
+        RebuildStoreConfig();
+        *ppQe = ScanStoreEntry(difLevel, name);
+    }
+    return ret;
+}
 uint64_t GetBackLba()
 {
     return storeDrv.storeLba + 28;

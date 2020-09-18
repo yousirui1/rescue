@@ -334,19 +334,6 @@ int send_p2v_progress(struct client *cli, char *buf)
         	cJSON_AddNumberToObject(root, "progress", info->progress);
         	cJSON_AddStringToObject(root, "state", info->state);
 
-#if 0
-			if(info->progress == 0 &&  strncmp(info->state,"finished",strlen("finished")) == 0)
-			{
-				DEBUG("del qcow2");
-				int diff = 0;
-				char name[56] = {0};
-				char torrent[32] = {0};
-				sscanf(info->storage, "voi_%d_%s", &diff, name, torrent);
-				DEBUG("name %s", name);
-				del_qcow2(dev_info.mini_disk->dev, name, diff);	
-			}
-#endif
-
     		cli->data_buf = cJSON_Print(root);
     		cli->data_size = strlen(cli->data_buf);
     		set_packet_head(cli->packet, BT_TASK_STATE, cli->data_size, JSON_TYPE, 0);
@@ -620,9 +607,6 @@ static int recv_desktop(struct client *cli)
 			}
 			return SUCCESS;
 		}
-
-	//	return send_desktop(cli, batch_no->valueint, SUCCESS);		
-		//return SUCCESS;
 	}
 	return ERROR;
 }
@@ -1142,6 +1126,8 @@ static int send_get_diff_torrent(struct client *cli, char *group_uuid, char *dif
 		cJSON_AddStringToObject(root, "desktop_group_uuid", group_uuid);
 		cJSON_AddStringToObject(root, "diff_disk_uuid", diff_uuid);
 		cJSON_AddNumberToObject(root, "diff_level", diff);
+	
+		
 
 		cli->data_buf = cJSON_Print(root);
 		cli->data_size = strlen(cli->data_buf);
@@ -1192,6 +1178,7 @@ static int recv_get_desktop_group_list(struct client *cli)
 					continue;
 				auto_update_desktop = cJSON_GetObjectItem(item, "auto_update_desktop");
 				desktop_group_uuid = cJSON_GetObjectItem(item, "desktop_group_uuid");
+				desktop_group_name = cJSON_GetObjectItem(item, "desktop_group_name");
 				disks = cJSON_GetObjectItem(item, "disks");
 				if(disks && desktop_group_uuid && auto_update_desktop->valueint)
 				{
@@ -1223,6 +1210,8 @@ static int recv_get_desktop_group_list(struct client *cli)
 								del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
 								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
 								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
+								if(desktop_group_name)
+									strcpy(m_desktop_group_name, desktop_group_name->valuestring);
 							}
 						}
 						

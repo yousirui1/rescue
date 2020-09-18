@@ -174,6 +174,12 @@ void DialogWindow::setErrorText(QString msg)
 
 void DialogWindow::on_cacel_btn_clicked()
 {
+    ui->ip_result_label->hide();
+    ui->dns_result_label->hide();
+    ui->dns2_result_label->hide();
+    ui->netmask_result_label->hide();
+    ui->gateway_result_label->hide();
+    ui->server_ip_result_label->hide();
     this->hide();
 }
 
@@ -334,6 +340,12 @@ void DialogWindow::slots_dhcpable()
         default:
                 return;
         }
+        ui->ip_result_label->hide();
+        ui->dns_result_label->hide();
+        ui->dns2_result_label->hide();
+        ui->netmask_result_label->hide();
+        ui->gateway_result_label->hide();
+        ui->server_ip_result_label->hide();
        //ui->server_ip_edit->setText("");
 }
 

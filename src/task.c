@@ -32,9 +32,9 @@ void task_loop()
             ret = start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name, (uint64_t)task->offset * 512); 
 			if(ret != SUCCESS)			//下载失败
 			{
-				DEBUG("del qcow2 uuid %s diff %d", task->uuid, task->diff);	
-				del_qcow2(dev_info.mini_disk->dev, task->uuid, 0);
-				del_diff_qcow2(dev_info.mini_disk->dev, task->uuid);
+				//DEBUG("del qcow2 uuid %s diff %d", task->uuid, task->diff);	
+				del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
+				//del_diff_qcow2(dev_info.mini_disk->dev, task->uuid);
 				DEBUG("clear_task !!!!!!!!!!!!!!!");
 				clear_task(&task_queue);		
 				continue;

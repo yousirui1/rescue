@@ -111,7 +111,7 @@ uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, 
 		pQe->stype = stype;
 		pQe->flag = 1;
 		pQe->operate_id = operate_id;
-    	storeDrv.save(dev);
+    	//storeDrv.save(dev);
 		return GetQcowLba(pQe);
 	}
 	else

@@ -84,19 +84,13 @@ static int set_heartbeat(struct client *cli)
 		temp += PACKET_LEN;
 		len += PACKET_LEN;
 
-		DEBUG("--------------");
-		DEBUG("cli->token %s", cli->token);
 		memcpy(temp, cli->token, cli->token_size);
 		temp += cli->token_size;
 		len += cli->token_size;
-		DEBUG("cli->token_size %d", cli->token_size);
 		
-		DEBUG("buf %s", buf);
 		memcpy(temp, buf, strlen(buf));
 		len += strlen(buf);
 		cli->heartbeat_len = len;	
-		DEBUG("buf %d", strlen(buf));
-		DEBUG("-------------len %d ----------", len);
 	}	
 	else
 	{
@@ -576,6 +570,7 @@ static int recv_desktop(struct client *cli)
 		if(desktop)
 		{
         	cJSON *desktop_group_name = cJSON_GetObjectItem(desktop, "desktop_group_name");
+			memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
 			if(desktop_group_name)
 				strcpy(m_desktop_group_name, desktop_group_name->valuestring);
 
@@ -598,14 +593,14 @@ static int recv_desktop(struct client *cli)
 				if(uuid && dif_level)
 				{
 					//if(scan_qcow2(uuid->valuestring, dif_level->valueint))
+					DEBUG("uuid->valuestring %s", uuid->valuestring);
 					del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);	
 
-					return send_desktop(cli, batch_no->valueint, SUCCESS);		
 					//else
 					//	return send_desktop(cli, batch_no->valueint, ERROR);		
 				}
 			}
-			return SUCCESS;
+			return send_desktop(cli, batch_no->valueint, SUCCESS);		
 		}
 	}
 	return ERROR;
@@ -706,7 +701,6 @@ static int recv_down_torrent(struct client *cli)
             	task.diff = torrent->dif_level;
 				task.disk_type = torrent->type;
             	task.offset = offset;
-            	//en_queue(&task_queue, (char *)&task, sizeof(struct torrent_task) , 0x0);
             	en_queue(&task_queue, (char *)&task, sizeof(struct torrent_task) , 0x0);
 				return send_down_torrent(cli, task_uuid, SUCCESS);
 			}
@@ -1128,7 +1122,6 @@ static int send_get_diff_torrent(struct client *cli, char *group_uuid, char *dif
 		cJSON_AddNumberToObject(root, "diff_level", diff);
 	
 		
-
 		cli->data_buf = cJSON_Print(root);
 		cli->data_size = strlen(cli->data_buf);
 		
@@ -1199,17 +1192,18 @@ static int recv_get_desktop_group_list(struct client *cli)
 						if(!max_diff || !uuid || !dif_level || !prefix || !real_size || !reserve_size || !type || !operate_id)
 							continue;
 
-						DEBUG("uuid %s", uuid->valuestring);
-						DEBUG("dif_level %d", dif_level->valueint);
-						DEBUG("operate_id %d", operate_id->valueint);	
+						//DEBUG("uuid %s", uuid->valuestring);
+						//DEBUG("dif_level %d", dif_level->valueint);
+						//DEBUG("operate_id %d", operate_id->valueint);	
 						if(dif_level->valueint == 1 && operate_id->valueint != get_operate_qcow2(uuid->valuestring, 1))
 						{
 							if(scan_qcow2(uuid->valuestring, 0))
 							{
-								DEBUG("update qcow2");
+								DEBUG("update qcow2 %s", uuid->valuestring);
 								del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
 								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
 								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
+								memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
 								if(desktop_group_name)
 									strcpy(m_desktop_group_name, desktop_group_name->valuestring);
 							}
@@ -1795,7 +1789,6 @@ static int tcp_loop(int sockfd)
                     current->pos += ret;
                 }
 
-                DEBUG("current->data_size %d", current->data_size);     
 				if(current->pos == current->data_size)
                 {
                     if(process_msg(current))

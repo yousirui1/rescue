@@ -399,15 +399,12 @@ static int AllocStore(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint6
 {
     uint64_t iStart, iEnd;
     int ret;
-	DEBUG("---------- realLba %lld", realLba);
-	DEBUG("---------- sizeLba %lld", sizeLba);
 
     PYZY_QCOW_ENTRY pQe = ScanStoreEntry(difLevel, name);
     if (pQe)
     {
         *ppQe = pQe;
 		
-		DEBUG("---------- realLba %lld", realLba);
         return 0;
     }
 
@@ -417,7 +414,6 @@ static int AllocStore(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint6
     ScanSpaceFormInterval(sizeLba, diskName, &iStart, &iEnd, diskList, j);
     if (iEnd - iStart == 0) //没有删除或间隙
     {
-		DEBUG("---------- realLba %lld", realLba);
         ret = AddStoreEntry(difLevel, name, diskName, sizeLba, realLba, type, diskList, j);
         if (ret < 0)
             return ret;
@@ -426,7 +422,6 @@ static int AllocStore(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint6
     }
     if (storeDrv.pStoreCfg->qcowCount >= YZY_MAX_STORE_QCOW_ENTRY)
     {
-		DEBUG("---------- realLba %lld", realLba);
         return -1;
     }
     *ppQe = &storeDrv.pStoreCfg->entry[storeDrv.pStoreCfg->qcowCount];

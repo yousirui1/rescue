@@ -148,13 +148,17 @@ void init_config()
 		}
     }   
 	DEBUG("dhcp %d set static ip: %s netmask: %s gw: %s mac: %s", net->is_dhcp, net->ip, net->netmask, net->gateway, net->mac);
+	DEBUG("version: v%d.%d", conf.major_ver, conf.minor_ver);	
 }
 
 int update_config(char *buf, int len)
 {
     char *data = &buf[HEAD_LEN];
     struct config *c = (struct config *)&data[0];
+
+	DEBUG("version: v%d.%d", conf.major_ver, conf.minor_ver);	
     memcpy(&conf, c, sizeof(struct config));    
+	DEBUG("version: v%d.%d", conf.major_ver, conf.minor_ver);	
     
     char result[MAX_BUFLEN] = {0};
     char cmd[MAX_BUFLEN] = {0};
@@ -234,9 +238,10 @@ int save_config()
     sprintf(buf, "%d", conf.minor_ver);
     write_profile_string(VERSION_SECTION, VER_MINOR_KEY, buf, config_file);
 
+    sprintf(buf, "v%d.%d", conf.major_ver, conf.minor_ver);
+    write_profile_string(VERSION_SECTION, VER_LINUX_KEY, buf, config_file);
 }
 #define MAX_DESKTOP 8
-
 
 void update_desktop(char *json)
 {

@@ -39,7 +39,7 @@ void task_loop()
 				clear_task(&task_queue);		
 				continue;
 			}
-			//save_qcow2(dev_info.mini_disk->dev);
+			save_qcow2(dev_info.mini_disk->dev);
 
             if(task->diff != 0)
             {   

@@ -54,6 +54,8 @@ struct config{
 
     server_info server;
 
+	unsigned char tftp_ip[32];
+
     int major_ver;
     int minor_ver;
     int config_ver;

@@ -30,6 +30,7 @@
 #define VERSION_SECTION "version"
 #define VER_MAJOR_KEY "major_ver"
 #define VER_MINOR_KEY "minor_ver"
+#define VER_LINUX_KEY "linux"
 
 #define DEFAULT_IP_VALUE "127.0.0.1"
 #define DEFAULT_PORT_VALUE 50007

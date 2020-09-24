@@ -1,6 +1,8 @@
 extern "C"
 {
-#include "base.h"
+	#include "base.h"
+	void log_msg(const char *fmt, ...);
+	void err_msg(const char *fmt, ...);
 }
 #include "torrent.h"
 #include <iostream>
@@ -98,28 +100,29 @@ bool handle_alter(lt::session& ses, lt::alert* a, lt::torrent_handle &th)
     }
     else if (state_update_alert *p = alert_cast<state_update_alert>(a))
     {
-        char cinfo[1024] = { 0x00 };
+        //char cinfo[1024] = { 0x00 };
         std::vector<std::int64_t> file_progress;
         th.file_progress(file_progress); // 获取文件下载进度
-        int const idx = static_cast<int>(0);
+        //int const idx = static_cast<int>(0);
         if(!p->status.empty())
         {
 			(void *)time(&current_time);
 			if(current_time - last_time >= 1)
 			{
 				last_time = current_time ;
-
             	lt::torrent_status s = th.status(lt::torrent_handle::query_save_path);   
-				cout << state(s.state) << " download rate " << s.download_payload_rate / 1000 << "KB /s, total_download " << s.total_done / 1000 << "KB, uprate " << s.upload_rate / 1000 << "KB /s, total_up " << s.total_upload / 1000
-                << "KB, progress " << s.progress << " progress_ppm " << s.progress_ppm << " progress " << s.progress_ppm / 10000 << "  " << file_progress[0] * 100 / downloadsize << endl;
+				DEBUG("%s download rate %ul KB/s, total_download %ul KB, uprate %ul KB/s, total_up %ul KB, progress %lf %lf %lf",
+					state(s.state), s.download_payload_rate / 1000, s.total_done / 1000, s.upload_rate/1000, s.total_upload / 1000, s.progress, s.progress_ppm / 10000,
+					file_progress[0] * 100 / downloadsize);
+				//cout << state(s.state) << " download rate " << s.download_payload_rate / 1000 << "KB /s, total_download " << s.total_done / 1000 << "KB, uprate " << s.upload_rate / 1000 << "KB /s, total_up " << s.total_upload / 1000
+                //<< "KB, progress " << s.progress << " progress_ppm " << s.progress_ppm << " progress " << s.progress_ppm / 10000 << "  " << file_progress[0] * 100 / downloadsize << endl;
 				strcpy(info->state, state(s.state));
 				info->progress = s.progress_ppm / 10000;
 				info->download_rate = s.download_payload_rate;
 				info->upload_rate = s.upload_rate;
 				info->total_size = s.total_done;
 				send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info));
-					
-            	std::cout.flush();
+        		//std::cout.flush();
 			}
         }
     }
@@ -135,7 +138,6 @@ void stop_torrent()
 int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t physical_offset)
 try
 {
-
 	int complete = 0;
 	memset(pipe_buf, 0, HEAD_LEN + sizeof(progress_info) + 1);
 	info = (progress_info *)&pipe_buf[HEAD_LEN];
@@ -243,7 +245,7 @@ try
             //{
             //  continue;
             //}
-            handle_alter(ses, a, th);
+            ::handle_alter(ses, a, th);
         }
         std::vector<std::int64_t> file_progress;
         th.file_progress(file_progress); // 获取文件下载进度
@@ -252,34 +254,46 @@ try
         if (complete)
         {
             ses.post_torrent_updates();
-            cout << "\ndownload is complete" << endl;
+			DEBUG("file_name:%s download is complete !!", file_name);
             break;
         }
         end = system_clock::now();
         duration = duration_cast<microseconds>(end - start);
-#if 0
         if ((double(duration.count())*microseconds::period::num / microseconds::period::den) > 100 && file_progress[idx] == 0)
         {
-            cout << "download failed,check" << endl;
-            break;
+			DEBUG("download failed,check");
+			strcpy(info->state, "finished");
+			info->progress = 0;
+			info->download_rate = 0;
+			DEBUG("down fail send pipe");
+			send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info));
+			DEBUG("down fail ret");
+			return 2;
         }
         if ((double(duration.count())*microseconds::period::num / microseconds::period::den) > nTimedOut)//判断是否超时
         {
-            cout << "download timed out" << endl;
-            break;
+			DEBUG("download timed out");
+			strcpy(info->state, "finished");
+			info->progress = 0;
+			info->download_rate = 0;
+			DEBUG("time out send pipe");
+			send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info));
+			DEBUG("time out ret");
+			return 2;
         }
-#endif
-        //std::this_thread::sleep_for(std::chrono::microseconds(3000));
+        std::this_thread::sleep_for(std::chrono::microseconds(3000));
         ses.post_torrent_updates();
     }
     std::string title = params.ti->files().file_name(0).to_string();
-    cout << "download "<<title<<" cost " << double(duration.count())*microseconds::period::num / microseconds::period::den<<"s"<<endl;
+	DEBUG("download:%s cost: %lf s", title.c_str(), double(duration.count())*microseconds::period::num / microseconds::period::den);
 	if(complete)
 	{
 		strcpy(info->state, "downloading");
 		info->progress = 99;
 		info->download_rate = 0;
+		DEBUG("complete send pipe begin");
 		send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info));
+		DEBUG("complete send pipe end");
 		return 0;
 	}
 	else
@@ -289,12 +303,11 @@ try
 		info->progress = 0;
 		info->download_rate = 0;
 		send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info));
+		DEBUG("complete else");
     	return 1;
 	}
 }
 catch (std::exception const &e) {
-    std::cerr << "ERROR: " << e.what() << "\n";
+	FAIL("download bt error %s", e.what());
+	return 2;
 }
-
-
-

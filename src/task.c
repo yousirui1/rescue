@@ -30,13 +30,20 @@ void task_loop()
             DEBUG("index->torrent_file %d", task->offset);
             DEBUG("dev_info.mini_disk->dev->path %s", dev_info.mini_disk->dev->path);
             ret = start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name, (uint64_t)task->offset * 512); 
+			DEBUG("task bt %s ret: %d", task->torrent_file, ret);
 			if(ret != SUCCESS)			//下载失败
 			{
-				//DEBUG("del qcow2 uuid %s diff %d", task->uuid, task->diff);	
-				del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
-				//del_diff_qcow2(dev_info.mini_disk->dev, task->uuid);
+				DEBUG("del qcow2 uuid %s diff %d", task->uuid, task->diff);	
+				//del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
+				del_diff_qcow2(dev_info.mini_disk->dev, task->uuid);
 				DEBUG("clear_task !!!!!!!!!!!!!!!");
 				clear_task(&task_queue);		
+				if(ret == 2)	//timeout 
+				{
+					DEBUG("Timeout redown m_desktop_group_uuid %s task->uuid %s", m_desktop_group_uuid, task->uuid);
+					send_get_diff_torrent(&m_client, m_desktop_group_uuid, task->uuid, 1);
+                    send_get_diff_torrent(&m_client, m_desktop_group_uuid, task->uuid, 2);
+				}
 				continue;
 			}
 			save_qcow2(dev_info.mini_disk->dev);

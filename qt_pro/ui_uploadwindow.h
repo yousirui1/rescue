@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'uploadwindow.ui'
 **
-** Created: Sat Sep 19 06:18:17 2020
+** Created: Mon Sep 21 19:13:03 2020
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!

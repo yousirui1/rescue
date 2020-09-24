@@ -14,6 +14,7 @@ extern struct device_info dev_info;
 extern QUEUE task_queue;
 
 char m_desktop_group_name[128] = {0};
+char m_desktop_group_uuid[128] = {0};
 
 pthread_mutex_t client_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -1107,7 +1108,7 @@ static int recv_get_diff_torrent(struct client *cli)
 	return SUCCESS;
 }
 
-static int send_get_diff_torrent(struct client *cli, char *group_uuid, char *diff_uuid, int diff)
+int send_get_diff_torrent(struct client *cli, char *group_uuid, char *diff_uuid, int diff)
 {
 	int ret;
 	if(cli->data_buf)
@@ -1206,6 +1207,8 @@ static int recv_get_desktop_group_list(struct client *cli)
 								memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
 								if(desktop_group_name)
 									strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+								memset(m_desktop_group_uuid, 0, sizeof(m_desktop_group_uuid));
+								strcpy(m_desktop_group_uuid, desktop_group_uuid->valuestring);
 							}
 						}
 						

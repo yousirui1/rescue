@@ -14,6 +14,8 @@ void *thread_event(void *param);
 
 /* client.c */
 void *thread_client(void *param);
+extern char m_desktop_group_uuid[128];
+extern struct client m_client;
 
 /* task.c */
 void *thread_task(void *param);

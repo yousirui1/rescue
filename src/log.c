@@ -115,6 +115,7 @@ void upload_logs()
 	char result[MAX_BUFLEN] = {0};
     char cmd[MAX_BUFLEN] = {0};
 	char file_name[MAX_FILENAMELEN] = {0};
+	return;
 	DEBUG("--------!!!!!!!!!!!!!------------------");
 
 	//netcard_param *net = &(conf.netcard);

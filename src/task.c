@@ -27,8 +27,6 @@ void task_loop()
     		progress_info *info = (progress_info *)&buf[HEAD_LEN];
             struct torrent_task * task = (struct torrent_task *)index->pBuf;
             DEBUG("index->torrent_file %s", task->torrent_file);
-            DEBUG("index->torrent_file %d", task->offset);
-            DEBUG("dev_info.mini_disk->dev->path %s", dev_info.mini_disk->dev->path);
             ret = start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name, (uint64_t)task->offset * 512); 
 			DEBUG("task bt %s ret: %d", task->torrent_file, ret);
 			if(ret != SUCCESS)			//下载失败

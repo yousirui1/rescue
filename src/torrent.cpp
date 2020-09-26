@@ -65,7 +65,7 @@ std::string add_suffix_float(double val, char const* suffix)
         return ret;
     }   
 
-    const char* prefix[] = {"kB", "MB", "GB", "TB", "PB"};
+    const char* prefix[] = {"KB", "MB", "GB", "TB", "PB"};
     const int num_prefix = sizeof(prefix) / sizeof(const char*);
     int i = 0;
     for (; i < num_prefix - 1; ++i)

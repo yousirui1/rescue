@@ -182,7 +182,7 @@ void event_loop(int network_fd)
 			{
 				DEBUG("send heart beat error reconnect");
 				client_disconnect();
-				client_connect();
+				//client_connect();
 			}
 			last_time = current_time;
 		}

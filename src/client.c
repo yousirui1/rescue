@@ -155,9 +155,9 @@ int send_heartbeat(struct client *cli)
 
 	if(cli->heartbeat_len > 0)
 	{
-		send_msg(cli->fd, cli->heartbeat_buf, cli->heartbeat_len);
+		ret = send_msg(cli->fd, cli->heartbeat_buf, cli->heartbeat_len);
 	}
-	return SUCCESS;
+	return ret;
 }
 
 
@@ -707,8 +707,8 @@ static int recv_down_torrent(struct client *cli)
 			if(offset != -1)
 			{
             	struct torrent_task task = {0}; 
-            	memcpy(task.uuid, torrent->uuid, strlen(torrent->uuid));
-            	memcpy(task.group_uuid, torrent->group_uuid, strlen(torrent->group_uuid));
+            	memcpy(task.uuid, torrent->uuid, 36);
+            	memcpy(task.group_uuid, torrent->group_uuid, 36);
             	memcpy(task.torrent_file, torrent_file, strlen(torrent_file));
 		
 				sprintf(task.file_name, "%s_%d", m_desktop_group_name, torrent->dif_level);

@@ -34,15 +34,24 @@ void task_loop()
 			if(ret != SUCCESS)			//下载失败
 			{
 				DEBUG("del qcow2 uuid %s diff %d", task->uuid, task->diff);	
-				//del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
-				del_diff_qcow2(dev_info.mini_disk->dev, task->uuid);
+				del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
+				//del_diff_qcow2(dev_info.mini_disk->dev, task->uuid);
 				DEBUG("clear_task !!!!!!!!!!!!!!!");
 				clear_task(&task_queue);		
 				if(ret == 2)	//timeout 
 				{
-					DEBUG("Timeout redown m_desktop_group_uuid %s task->uuid %s", m_desktop_group_uuid, task->uuid);
-					send_get_diff_torrent(&m_client, m_desktop_group_uuid, task->uuid, 1);
-                    send_get_diff_torrent(&m_client, m_desktop_group_uuid, task->uuid, 2);
+					DEBUG("Timeout redown group_uuid %s task->uuid %s", task->group_uuid, task->uuid);
+					switch(task->diff)
+					{
+						case 0:
+							send_get_diff_torrent(&m_client, task->group_uuid, task->uuid, 0);
+						case 1:
+                    		send_get_diff_torrent(&m_client, task->group_uuid, task->uuid, 1);
+						case 2:
+                    		send_get_diff_torrent(&m_client, task->group_uuid, task->uuid, 2);
+						default:
+							break;
+					}
 				}
 				continue;
 			}
@@ -147,6 +156,7 @@ void task_loop()
 		}
         de_queuePos(&task_queue);
     }  
+	free(task_queue.pBuf);
 }
 
 void clear_task()

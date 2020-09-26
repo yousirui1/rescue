@@ -14,7 +14,6 @@ extern struct device_info dev_info;
 
 #define IFF_LOWER_UP    0x10000
 
-
 static void process_event_msg(char *buf, int len)
 {
 	switch(read_msg_order(buf))
@@ -22,7 +21,7 @@ static void process_event_msg(char *buf, int len)
 		case CLIENT_CONNECT_PIPE:
 		{
 			void *tret = NULL;
-			pthread_cancel(pthread_client);
+			//pthread_cancel(pthread_client);
 			pthread_join(pthread_client, &tret);
 			DEBUG("pthread_exit client ret:%d", (int *)tret);
 			pthread_create(&pthread_client, NULL, thread_client, NULL);
@@ -42,50 +41,30 @@ static void process_event_msg(char *buf, int len)
 			send_pipe(buf, PROGRESS_PIPE, len, PIPE_QT);
 			break;
 		}
-#if 0
-		case ERROR_PIPE:
-		{
-			char *msg = malloc(HEAD_LEN + strlen(err_msg_desc[INSTALL_ERR] + 1));			
-			if(msg)
-			{
-				memcpy(&msg[HEAD_LEN], err_msg_desc[INSTALL_ERR], strlen(err_msg_desc[INSTALL_ERR]));
-				//send_pipe(msg, INSTALL_ERROR_PIPE, strlen(err_msg_desc[INSTALL_ERR], PIPE_QT);
-				free(msg);
-			}
-		}
-		case BT_OS_PROGRESS_PIPE:
-		{
-
-		}
-		case BT_OS_ERROR_PIPE:
-		{
-			char *msg = malloc(HEAD_LEN + strlen(err_msg_desc[INSTALL_ERR] + 1));			
-			if(msg)
-			{
-				memcpy(&msg[HEAD_LEN], err_msg_desc[INSTALL_ERR], strlen(err_msg_desc[INSTALL_ERR]));
-				//send_pipe(msg, INSTALL_ERROR_PIPE, strlen(err_msg_desc[INSTALL_ERR], PIPE_QT);
-				free(msg);
-			}
-		}
-#endif
 		case REBOOT_PIPE:
 		{
 			DEBUG("server send msg reboot");
-			client_disconnect();
 			stop_torrent();
-			upload_logs();	
+			send_upload_log(&m_client);
+			client_disconnect();
 			sync();
-			reboot(RB_AUTOBOOT);				
+			//reboot(RB_AUTOBOOT);				
+			char s = 'S';
+			write(pipe_event[1], &s, sizeof(s));	
 			break;
 		}
 		case SHUTDOWN_PIPE:
 		{
 			DEBUG("server send msg shutdown");
-			client_disconnect();
 			stop_torrent();
-			upload_logs();	
+			send_upload_log(&m_client);
+			client_disconnect();
 			sync();
-			reboot(RB_POWER_OFF);				
+
+			char s = 'S';
+			write(pipe_event[1], &s, sizeof(s));	
+
+			//reboot(RB_POWER_OFF);				
 			break;
 		}
 	}	
@@ -130,11 +109,13 @@ static void process_qt_msg(char *buf, int len)
 		}
 		case REBOOT_PIPE:
 		{
-			DEBUG("qt send pipe reboot msg");
+			char s = 'S';
+			write(pipe_event[1], &s, sizeof(s));	
+			stop_torrent();
+			send_upload_log(&m_client);
 			client_disconnect();
 			sync();
-			upload_logs();	
-			reboot(RB_AUTOBOOT);				
+			//reboot(RB_AUTOBOOT);				
 		}
 		default:
 			break;
@@ -199,6 +180,7 @@ void event_loop(int network_fd)
 			ret = send_heartbeat(&m_client);
 			if(ret != SUCCESS)
 			{
+				DEBUG("send heart beat error reconnect");
 				client_disconnect();
 				client_connect();
 			}
@@ -216,7 +198,7 @@ void event_loop(int network_fd)
             {   
                 if(buf[0] == 'S')
                 {   
-                    DEBUG("event thread pipe msg exit");
+                    DEBUG("event thread pipe recv msg exit");
                     break;
                 }    
             }   
@@ -271,6 +253,7 @@ void event_loop(int network_fd)
                 continue;
 		}
 	}
+	close_fd(network_fd);
 }
 
 void *thread_event(void *param)

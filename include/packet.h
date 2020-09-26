@@ -112,6 +112,8 @@ typedef enum yzy_cmd
 	P2V_PROGRESS = 9021,
 	DIFF_DOWN_TORRENT = 9023,
 	BT_TASK_STATE = 9025,
+
+	UPLOAD_LOG = 9999,
 }yzy_cmd;
 
 
@@ -126,6 +128,7 @@ struct yzy_torrent{
 	unsigned long long file_size;
     unsigned long long data_len;
 	char task_uuid[36];
+	char group_uuid[36];
 	int operate_id;
 };
 

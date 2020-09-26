@@ -15,6 +15,7 @@ struct torrent_task{
 	char file_name[128];
 	char uuid[36];
 	int diff;
+	char group_uuid[36];
 	int disk_type;
 	uint64_t offset;
 };

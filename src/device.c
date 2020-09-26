@@ -168,6 +168,7 @@ static void find_all_disks()
 			dev_info.disk_count++;
 		}
 	}
+	closedir(dir);
 }
 
 void find_all_netcards()
@@ -220,6 +221,12 @@ void find_all_netcards()
         } 	
     }   
 	DEBUG("net->ip %s net->netmask %s net->mac %s", net->ip, net->netmask, net->mac);
+}
+
+
+void close_device()
+{
+	//dev_info
 }
 
 

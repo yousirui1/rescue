@@ -1,8 +1,6 @@
 extern "C"
 {
 	#include "base.h"
-	void log_msg(const char *fmt, ...);
-	void err_msg(const char *fmt, ...);
 }
 #include "torrent.h"
 #include <iostream>
@@ -111,9 +109,9 @@ bool handle_alter(lt::session& ses, lt::alert* a, lt::torrent_handle &th)
 			{
 				last_time = current_time ;
             	lt::torrent_status s = th.status(lt::torrent_handle::query_save_path);   
-				DEBUG("%s download rate %ul KB/s, total_download %ul KB, uprate %ul KB/s, total_up %ul KB, progress %lf %lf %lf",
-					state(s.state), s.download_payload_rate / 1000, s.total_done / 1000, s.upload_rate/1000, s.total_upload / 1000, s.progress, s.progress_ppm / 10000,
-					file_progress[0] * 100 / downloadsize);
+				DEBUG("%s download rate %lu KB/s, total_download %lu KB, uprate %lu KB/s, total_up %lu KB, progress %d %d ",
+					state(s.state), s.download_payload_rate / 1000, s.total_done / 1000, s.upload_rate/1000, 
+					s.total_upload / 1000, s.progress_ppm / 10000,file_progress[0] * 100 / downloadsize);
 				//cout << state(s.state) << " download rate " << s.download_payload_rate / 1000 << "KB /s, total_download " << s.total_done / 1000 << "KB, uprate " << s.upload_rate / 1000 << "KB /s, total_up " << s.total_upload / 1000
                 //<< "KB, progress " << s.progress << " progress_ppm " << s.progress_ppm << " progress " << s.progress_ppm / 10000 << "  " << file_progress[0] * 100 / downloadsize << endl;
 				strcpy(info->state, state(s.state));
@@ -131,7 +129,8 @@ bool handle_alter(lt::session& ses, lt::alert* a, lt::torrent_handle &th)
 
 void stop_torrent()
 {
-	cout<<"stop_torrent"<<endl;
+	//cout<<"stop_torrent"<<endl;
+	DEBUG("stop_torrent");
 	run_flag = 1;
 }
 
@@ -142,7 +141,7 @@ try
 	memset(pipe_buf, 0, HEAD_LEN + sizeof(progress_info) + 1);
 	info = (progress_info *)&pipe_buf[HEAD_LEN];
 
-    int nTimedOut = 2000; //设置下载超时时间
+    int nTimedOut = 2; //设置下载超时时间
     //std::string save_path("/dev/vdc/");//保存文件路径
     //int torrent_upload_limit = 1024 * 1024  * 5; //上传速度限制
     //int torrent_download_limit = 100000*1000; //下载速度限制 单位是字节
@@ -194,7 +193,6 @@ try
     pack.set_int(lt::settings_pack::mixed_mode_algorithm, 10);
     pack.set_int(lt::settings_pack::peer_timeout, 20);
     pack.set_int(lt::settings_pack::recv_socket_buffer_size, 1048576);
-    pack.set_int(lt::settings_pack::request_timeout, 10);
     pack.set_int(lt::settings_pack::send_buffer_low_watermark, 1048576);
     pack.set_int(lt::settings_pack::send_buffer_watermark, 3145728);
     pack.set_int(lt::settings_pack::send_buffer_watermark_factor, 150);
@@ -208,6 +206,8 @@ try
 				  lt::alert::error_notification 
 				| lt::alert::storage_notification
 				| lt::alert::status_notification);
+    //pack.set_int(lt::settings_pack::request_timeout, 10);
+    //pack.set_int(lt::settings_pack::inactivity_timeout, 20);
 	pack.set_str(lt::settings_pack::user_agent, "ltclient/""test");
 #endif
 
@@ -259,6 +259,7 @@ try
         }
         end = system_clock::now();
         duration = duration_cast<microseconds>(end - start);
+#if 0
         if ((double(duration.count())*microseconds::period::num / microseconds::period::den) > 100 && file_progress[idx] == 0)
         {
 			DEBUG("download failed,check");
@@ -281,7 +282,8 @@ try
 			DEBUG("time out ret");
 			return 2;
         }
-        std::this_thread::sleep_for(std::chrono::microseconds(3000));
+#endif
+		std::this_thread::sleep_for(std::chrono::milliseconds(200));
         ses.post_torrent_updates();
     }
     std::string title = params.ti->files().file_name(0).to_string();

@@ -14,7 +14,6 @@ extern struct device_info dev_info;
 extern QUEUE task_queue;
 
 char m_desktop_group_name[128] = {0};
-char m_desktop_group_uuid[128] = {0};
 
 pthread_mutex_t client_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -33,6 +32,8 @@ void client_disconnect()
     char head[HEAD_LEN] = {0};
     set_request_head(head, 0, CLIENT_DISCONNECT_PIPE, 0); 
     write(pipe_qt[1], head, HEAD_LEN);
+	char s = 'S';
+    write(pipe_tcp[1], &s, sizeof(s));
 }
 
 void client_online()
@@ -66,6 +67,21 @@ static int set_heartbeat(struct client *cli)
 }
 #endif
 
+int send_upload_log(struct client *cli)
+{
+	int ret;
+	if(!cli->login_flag)
+		return ERROR;
+		
+	if(cli->data_buf)
+		free(cli->data_buf);
+
+	ret = upload_logs(&cli->data_buf, &cli->data_size);
+
+	set_packet_head(cli->packet, UPLOAD_LOG, cli->data_size, BYTE_TYPE, 0);	
+	return send_packet(cli);
+}
+
 
 static int set_heartbeat(struct client *cli)
 {
@@ -80,7 +96,7 @@ static int set_heartbeat(struct client *cli)
 		cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
 		char *buf = cJSON_Print(root);
 
-		set_packet_head(cli->packet, HEARTBEAT, strlen(buf), JSON_TYPE, 0);
+		ret = set_packet_head(cli->packet, HEARTBEAT, strlen(buf), JSON_TYPE, 0);
 		memcpy(temp, cli->packet, PACKET_LEN);
 		temp += PACKET_LEN;
 		len += PACKET_LEN;
@@ -92,19 +108,20 @@ static int set_heartbeat(struct client *cli)
 		memcpy(temp, buf, strlen(buf));
 		len += strlen(buf);
 		cli->heartbeat_len = len;	
+		
+		free(buf);
+		cJSON_Delete(root);
 	}	
 	else
 	{
 		return ERROR;
 	}
-	if(root)
-		cJSON_Delete(root);
 	return ret;	
 }
 
 static int recv_heartbeat(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 
     cJSON *root = cJSON_Parse((char*)(buf));
@@ -121,42 +138,25 @@ static int recv_heartbeat(struct client *cli)
 			cJSON *date_time = cJSON_GetObjectItem(data, "datetime");
 			DEBUG("data_time: %s", date_time->valuestring);
 			//修改时间
-			return SUCCESS;
+			ret = SUCCESS;
 		}			
+		cJSON_Delete(root);
 	}
-    return ERROR;
+    return ret;
 }
 
 int send_heartbeat(struct client *cli)
 {
 	int ret;
-	if(!cli->login_flag)
-		return ERROR;
-	
 	DEBUG("---------send_heartbeat-------------");
+
+    if (!cli->login_flag)
+        return ERROR;
+
 	if(cli->heartbeat_len > 0)
 	{
 		send_msg(cli->fd, cli->heartbeat_buf, cli->heartbeat_len);
 	}
-
-#if 0
-	cJSON *root = cJSON_CreateObject();
-	if(root)
-	{
-		cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
-		cli->data_buf = cJSON_Print(root);
-		cli->data_size = strlen(cli->data_buf);
-		set_packet_head(cli->packet, HEARTBEAT, cli->data_size, JSON_TYPE, 0);
-		ret = send_packet(cli);
-	}	
-	else
-	{
-		return ERROR;
-	}
-	if(root)
-		cJSON_Delete(root);
-	return ret;
-#endif
 	return SUCCESS;
 }
 
@@ -193,7 +193,8 @@ static int recv_upgrad(struct client *cli)
 		{
 			ret = upgrad_programe(upgrade_package->valuestring, version->valuestring, 2);	
 		}
-		return send_upgrad(cli);
+		cJSON_Delete(root);
+		ret = send_upgrad(cli);
 	}
 	return ret;
 }
@@ -224,16 +225,16 @@ static int send_delete(struct client *cli, int batch_no)
 		ret = send_packet(cli);
 		client_disconnect();		
 		client_connect();
+		cJSON_Delete(root);
 	}	
 	else
 	{
+		if(root)
+			cJSON_Delete(root);
 		if(data)
 			cJSON_Delete(data);
 		ret = ERROR;
 	}	
-	if(root)
-		cJSON_Delete(root);
-
 	return ret;
 }
 
@@ -245,9 +246,10 @@ static int recv_delete(struct client *cli)
 	if(root)
 	{
 		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
-		return send_delete(cli, batch_no->valueint);
+		ret = send_delete(cli, batch_no->valueint);
 	}
-	return ERROR;
+	cJSON_Delete(root);
+	return ret;
 }
 
 static int send_cancel_send_desktop(struct client *cli, int batch_no)
@@ -274,16 +276,17 @@ static int send_cancel_send_desktop(struct client *cli, int batch_no)
 		set_packet_head(cli->packet, CANCEL_SEND_DESKTOP, cli->data_size, JSON_TYPE, 1);
 		ret = send_packet(cli);
 		stop_torrent();
+		cJSON_Delete(root);
 	}	
 	else
 	{
+
+		if(root)
+			cJSON_Delete(root);
 		if(data)
 			cJSON_Delete(data);
 		ret = ERROR;
 	}	
-	if(root)
-		cJSON_Delete(root);
-
 	return ret;
 }
 
@@ -295,9 +298,10 @@ static int recv_cancel_send_desktop(struct client *cli)
 	if(root)
 	{
 		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
-		return send_cancel_send_desktop(cli, batch_no->valueint);
+		ret = send_cancel_send_desktop(cli, batch_no->valueint);
+		cJSON_Delete(root);
 	}
-	return ERROR;
+	return ret;
 }
 
 static int recv_p2v_progress(struct client *cli)
@@ -349,14 +353,13 @@ int send_p2v_progress(struct client *cli, char *buf)
     		set_packet_head(cli->packet, P2V_PROGRESS, cli->data_size, JSON_TYPE, 0);
     		ret = send_packet(cli);
 		}
+        cJSON_Delete(root);
     }
 	else
 	{
 		ret = ERROR;
 	}
 
-    if(root)
-       cJSON_Delete(root);
     return ret;
 }
 
@@ -383,16 +386,18 @@ static int send_cancel_p2v(struct client *cli, int batch_no)
         cli->data_size = strlen(cli->data_buf);
         set_packet_head(cli->packet, CANCEL_P2V, cli->data_size, JSON_TYPE, 1);  
         ret = send_packet(cli);
+        cJSON_Delete(root);
     }    
     else 
     {    
+
+		if(root)
+			cJSON_Delete(root);
+
         if(data)
             cJSON_Delete(data);
         return ERROR;
     }    
-
-    if(root)
-       cJSON_Delete(root);
     return ret; 
 }
 
@@ -406,10 +411,11 @@ static int recv_cancel_p2v(struct client *cli)
 	{
 		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
 		cancel_conversion();
-		return send_cancel_p2v(cli, batch_no->valueint);		
+		ret = send_cancel_p2v(cli, batch_no->valueint);		
+		cJSON_Delete(root);
 	}
 
-	return ERROR;
+	return ret;
 }
 
 static int recv_p2v_transform(struct client *cli)
@@ -462,13 +468,14 @@ static int recv_p2v_transform(struct client *cli)
 		{
 			send_error_msg(P2V_NAME_ERR);			
 		}
+		cJSON_Delete(root);
 	}	
 	return ERROR;
 }
 
 int send_p2v_transform(struct client *cli, char *data)
 {
-     int ret;
+     int ret = ERROR;
     if(!cli->login_flag)
         return ERROR;
 
@@ -498,22 +505,23 @@ int send_p2v_transform(struct client *cli, char *data)
         
     	set_packet_head(cli->packet, P2V_OS_TRANSFORM, cli->data_size, JSON_TYPE, 0);
     	ret = send_packet(cli);
+		cJSON_Delete(root);
 	}
 	else
 	{
+		if(root)
+			cJSON_Delete(root);
 		if(system_disk)
 			cJSON_Delete(system_disk);
 		if(data_disks)
 			cJSON_Delete(data_disks);
 	}
-	if(root)
-		cJSON_Delete(root);
 	return ret;
 }
 
 static int send_desktop(struct client *cli, int batch_no, int flag)
 {
-	int ret;
+	int ret = ERROR;
     if(cli->data_buf)
         free(cli->data_buf);
     
@@ -544,22 +552,23 @@ static int send_desktop(struct client *cli, int batch_no, int flag)
         cli->data_size = strlen(cli->data_buf);
         set_packet_head(cli->packet, SEND_DESKTOP, cli->data_size, JSON_TYPE, 1); 
         ret = send_packet(cli);
+        cJSON_Delete(root);
     }   
     else
     {   
+		if(root)
+			cJSON_Delete(root);
         if(data)
             cJSON_Delete(data);
         return ERROR;
     }
 
-    if(root)
-       cJSON_Delete(root);
 	return ret;
 }
 
 static int recv_desktop(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
 	//DEBUG("%s", buf);
@@ -601,15 +610,16 @@ static int recv_desktop(struct client *cli)
 					//	return send_desktop(cli, batch_no->valueint, ERROR);		
 				}
 			}
-			return send_desktop(cli, batch_no->valueint, SUCCESS);		
+			ret = send_desktop(cli, batch_no->valueint, SUCCESS);		
+			cJSON_Delete(root);
 		}
 	}
-	return ERROR;
+	return ret;
 }
 
 static int send_down_torrent(struct client *cli, char *task_uuid,  int flag)
 {
-	int ret;
+	int ret = ERROR;
 
     if(cli->data_buf)
         free(cli->data_buf);
@@ -642,16 +652,16 @@ static int send_down_torrent(struct client *cli, char *task_uuid,  int flag)
         cli->data_size = strlen(cli->data_buf);
         set_packet_head(cli->packet, SEND_DOWN_TORRENT, cli->data_size, JSON_TYPE, 1); 
         ret = send_packet(cli);
+        cJSON_Delete(root);
     }   
     else
     {   
+		if(root)
+			cJSON_Delete(root);
         if(data)
             cJSON_Delete(data);
         return ERROR;
     }
-
-    if(root)
-       cJSON_Delete(root);
 	return ret;
 }
 
@@ -673,6 +683,7 @@ static int recv_down_torrent(struct client *cli)
     DEBUG("torrent->file_size %lld", torrent->file_size);
     DEBUG("torrent->data_len %lld", torrent->data_len);
 	DEBUG("torrent->operate_id %d", torrent->operate_id);
+	DEBUG("torrent->group_uuid %s", torrent->group_uuid);
 
     memcpy(task_uuid, torrent->task_uuid, 36);
 	DEBUG("task_uuid %s", task_uuid);
@@ -697,7 +708,9 @@ static int recv_down_torrent(struct client *cli)
 			{
             	struct torrent_task task = {0}; 
             	memcpy(task.uuid, torrent->uuid, strlen(torrent->uuid));
+            	memcpy(task.group_uuid, torrent->group_uuid, strlen(torrent->group_uuid));
             	memcpy(task.torrent_file, torrent_file, strlen(torrent_file));
+		
 				sprintf(task.file_name, "%s_%d", m_desktop_group_name, torrent->dif_level);
             	task.diff = torrent->dif_level;
 				task.disk_type = torrent->type;
@@ -724,7 +737,7 @@ static int recv_down_torrent(struct client *cli)
 
 static int send_clear_all_desktop(struct client *cli, int batch_no, int flag)
 {
-	int ret;
+	int ret = ERROR;
         free(cli->data_buf);
     
     cJSON *root = cJSON_CreateObject();
@@ -744,21 +757,23 @@ static int send_clear_all_desktop(struct client *cli, int batch_no, int flag)
         cli->data_size = strlen(cli->data_buf);
         set_packet_head(cli->packet, CLEAR_ALL_DESKTOP, cli->data_size, JSON_TYPE, 1); 
         ret = send_packet(cli);
+		cJSON_Delete(root);
+
     }   
     else
     {   
+		if(root)
+			cJSON_Delete(root);
         if(data)
             cJSON_Delete(data);
 		ret = ERROR;
     } 	
-    if(root)
-       cJSON_Delete(root);
 	return ret;
 }
 
 static int recv_clear_all_desktop(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	DEBUG("clear_all_desktop");
     cJSON *root = cJSON_Parse((char*)(buf));
@@ -766,15 +781,16 @@ static int recv_clear_all_desktop(struct client *cli)
     {
     	cJSON* batch_no = cJSON_GetObjectItem(root, "batch_no");
 		init_qcow2(dev_info.mini_disk->dev, 0);
-   		return send_clear_all_desktop(cli, batch_no->valueint, ret);	
+   		ret = send_clear_all_desktop(cli, batch_no->valueint, ret);	
+		cJSON_Delete(root);
 	}
-    return ERROR;
+    return ret;
 }
 
 
 static int send_update_diff_disk(struct client *cli, int batch_no)
 {
-	 int ret;
+	int ret = ERROR;
     if(cli->data_buf)
         free(cli->data_buf);
     
@@ -795,21 +811,22 @@ static int send_update_diff_disk(struct client *cli, int batch_no)
         cli->data_size = strlen(cli->data_buf);
         set_packet_head(cli->packet, UPDATE_DIFF_DISK, cli->data_size, JSON_TYPE, 1); 
         ret = send_packet(cli);
+        cJSON_Delete(root);
     }   
     else
     {   
+		if(root)
+			cJSON_Delete(root);
     	if(data)
 			cJSON_Delete(data);
 		ret = ERROR;   	 
     }
-	if(root)
-       cJSON_Delete(root);
 	return ret;
 }
 
 static int recv_update_diff_disk(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 
     cJSON *root = cJSON_Parse((char*)(buf));
@@ -831,7 +848,8 @@ static int recv_update_diff_disk(struct client *cli)
 			version = cJSON_GetObjectItem(item, "version");
 			download_url = cJSON_GetObjectItem(item, "download_url");
 		}		
-		return send_update_diff_disk(cli, batch_no->valueint);	
+		ret = send_update_diff_disk(cli, batch_no->valueint);	
+		cJSON_Delete(root);
 	}
     return ERROR;
 
@@ -839,7 +857,7 @@ static int recv_update_diff_disk(struct client *cli)
 
 static int send_update_config(struct client *cli, int batch_no)
 {
-    int ret;
+    int ret = ERROR;
     if(cli->data_buf)
         free(cli->data_buf);
     
@@ -861,15 +879,17 @@ static int send_update_config(struct client *cli, int batch_no)
         set_packet_head(cli->packet, UPDATE_CONFIG, cli->data_size, JSON_TYPE, 1); 
         ret = send_packet(cli);
 		client_disconnect();			
+		client_connect();
+        cJSON_Delete(root);
     }   
     else
     {   
+		if(root)
+			cJSON_Delete(root);
         if(data)
             cJSON_Delete(data);
 		ret = ERROR;
     } 	
-    if(root)
-       cJSON_Delete(root);
 	return ret;
 }
 
@@ -904,14 +924,15 @@ static int recv_update_config(struct client *cli)
 			strcpy(conf.server.ip, server_ip->valuestring);
 		save_config();
 		send_config_pipe();
-		return send_update_config(cli, batch_no->valueint);	
+		ret = send_update_config(cli, batch_no->valueint);	
+        cJSON_Delete(root);
 	}
-    return ERROR;
+    return ret;
 }
 
 static int send_update_ip(struct client *cli, int batch_no)
 {
-    int ret;
+    int ret = ERROR;
     if(cli->data_buf)
         free(cli->data_buf);
     
@@ -932,21 +953,22 @@ static int send_update_ip(struct client *cli, int batch_no)
         cli->data_size = strlen(cli->data_buf);
         set_packet_head(cli->packet, UPDATE_IP, cli->data_size, JSON_TYPE, 1); 
 		ret = send_packet(cli);
+        cJSON_Delete(root);
     }   
     else
     {   
+		if(root)
+			cJSON_Delete(root);
         if(data)
             cJSON_Delete(data);
         return ERROR;
     } 	
-    if(root)
-       cJSON_Delete(root);
 	return ret;
 }
 
 static int recv_update_ip(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 
     cJSON *root = cJSON_Parse((char*)(buf));
@@ -975,14 +997,15 @@ static int recv_update_ip(struct client *cli)
 		save_config();
 		set_network(ip->valuestring, mask->valuestring);
 		send_config_pipe();
-		return send_update_ip(cli, batch_no->valueint);	
+		ret = send_update_ip(cli, batch_no->valueint);	
+		cJSON_Delete(root);
 	}
-    return ERROR;
+    return ret;
 }
 
 static int send_update_name(struct client *cli, int batch_no)
 {
-	int ret;
+	int ret = ERROR;
 	if(cli->data_buf)
 		free(cli->data_buf);
 	
@@ -1003,23 +1026,23 @@ static int send_update_name(struct client *cli, int batch_no)
 		cli->data_size = strlen(cli->data_buf);
 		set_packet_head(cli->packet, UPDATE_NAME, cli->data_size, JSON_TYPE, 1);
 		ret =  send_packet(cli);
+		cJSON_Delete(root);
 	}	
 	else
 	{
+		if(root)
+			cJSON_Delete(root);
 		if(data)
 			cJSON_Delete(data);
 		ret = ERROR;
 	}	
-	
-	if(root)
-		cJSON_Delete(root);
 	return ret;
 	
 }
 
 static int recv_update_name(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
 	if(root)
@@ -1035,9 +1058,10 @@ static int recv_update_name(struct client *cli)
 		
 		save_config();
 		send_config_pipe();
-		return send_update_name(cli, batch_no->valueint);
+		ret = send_update_name(cli, batch_no->valueint);
+		cJSON_Delete(root);
 	}
-	return ERROR;
+	return ret;
 }
 
 static int send_reboot(struct client *cli, int batch_no, int flag)
@@ -1046,6 +1070,7 @@ static int send_reboot(struct client *cli, int batch_no, int flag)
 	if(cli->data_buf)
 		free(cli->data_buf);
 	
+
 	cJSON *root = cJSON_CreateObject();
 	cJSON *data = cJSON_CreateObject();
 	
@@ -1074,15 +1099,17 @@ static int send_reboot(struct client *cli, int batch_no, int flag)
 			ret = send_packet(cli);
 			ret = send_pipe(head, SHUTDOWN_PIPE , 0, PIPE_EVENT);
 		}
+
+		cJSON_Delete(root);
 	}	
 	else
 	{
+		if(root)
+			cJSON_Delete(root);
 		if(data)
 			cJSON_Delete(data);
 		ret = ERROR;
 	}	
-	if(root)
-		cJSON_Delete(root);
 
 	return ret;
 }
@@ -1096,15 +1123,16 @@ static int recv_reboot(struct client *cli, int flag)
 	if(root)
 	{
 		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
-		return send_reboot(cli, batch_no->valueint, flag);
+		ret =  send_reboot(cli, batch_no->valueint, flag);
+		cJSON_Delete(root);	
 	}
-	return ERROR;
+	return ret;
 }
 
 static int recv_get_diff_torrent(struct client *cli)
 {
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
-	//DEBUG("%s", buf);
+	DEBUG("%s", buf);
 	return SUCCESS;
 }
 
@@ -1125,17 +1153,17 @@ int send_get_diff_torrent(struct client *cli, char *group_uuid, char *diff_uuid,
 		
 		cli->data_buf = cJSON_Print(root);
 		cli->data_size = strlen(cli->data_buf);
+		DEBUG("%s", cli->data_buf);
 		
 		set_packet_head(cli->packet, DIFF_DOWN_TORRENT, cli->data_size, JSON_TYPE, 0);
 		ret = send_packet(cli);
+		cJSON_Delete(root);
 	}
 	else
 	{
 		DEBUG("cJSON_CreateObject error");	
 		return ERROR;
 	}
-	if(root)
-		cJSON_Delete(root);
 	return ret;
 }
 
@@ -1207,8 +1235,6 @@ static int recv_get_desktop_group_list(struct client *cli)
 								memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
 								if(desktop_group_name)
 									strcpy(m_desktop_group_name, desktop_group_name->valuestring);
-								memset(m_desktop_group_uuid, 0, sizeof(m_desktop_group_uuid));
-								strcpy(m_desktop_group_uuid, desktop_group_uuid->valuestring);
 							}
 						}
 						
@@ -1249,13 +1275,14 @@ static int recv_get_desktop_group_list(struct client *cli)
 				}
 			}
 		}
+		cJSON_Delete(root);
     }
 	return SUCCESS;
 }
 
 static int send_get_desktop_group_list(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
 	if(cli->data_buf)
 		free(cli->data_buf);
 
@@ -1270,14 +1297,13 @@ static int send_get_desktop_group_list(struct client *cli)
 		
 		set_packet_head(cli->packet, GET_DESKTOP_GROUP_LIST, cli->data_size, JSON_TYPE, 0);
 		ret = send_packet(cli);
+		cJSON_Delete(root);
 	}
 	else
 	{
 		DEBUG("cJSON_CreateObject error");	
 		return ERROR;
 	}
-	if(root)
-		cJSON_Delete(root);
 	return ret;
 }
 
@@ -1286,7 +1312,6 @@ static int recv_get_config(struct client *cli)
 	int ret;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
-	DEBUG("%s", buf);
 	if(root)
 	{
 		cJSON *code = cJSON_GetObjectItem(root, "code");
@@ -1358,26 +1383,25 @@ static int recv_get_config(struct client *cli)
 				strcpy(conf.server.ip, server_ip->valuestring);
 				
 			DEBUG("is_dhcp->valueint %d", is_dhcp->valueint);
-			DEBUG("conf.terminal.name %s", conf.terminal.name);
 			DEBUG("conf.netcard.ip %s", conf.netcard.ip);
 			DEBUG("conf.terminal.name %s", conf.terminal.name);
+			DEBUG("conf.install_flag %d", conf.install_flag);
 			save_config();
 			//update_config();
 			send_config_pipe();
-			DEBUG("conf.terminal.name %s", conf.terminal.name);
-			DEBUG("conf.install_flag %d", conf.install_flag);
 			if(conf.install_flag)
-				return send_get_desktop_group_list(cli);
+				ret = send_get_desktop_group_list(cli);
 			else	
-				return SUCCESS;
+				ret = SUCCESS;
 		}
+		cJSON_Delete(root);
 	}
-	return ERROR;
+	return ret;
 }
 
 static int send_get_config(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
 	if(cli->data_buf)
 		free(cli->data_buf);
 
@@ -1390,20 +1414,19 @@ static int send_get_config(struct client *cli)
 		
 		set_packet_head(cli->packet, GET_CONFIG_INFO, cli->data_size, JSON_TYPE, 0);
 		ret = send_packet(cli);
+		cJSON_Delete(root);
 	}
 	else
 	{
 		DEBUG("cJSON_CreateObject error");	
 		return ERROR;
 	}
-	if(root)
-		cJSON_Delete(root);
 	return ret;
 }
 
 static int recv_set_update_config(struct client *cli)
 {
-    int ret;
+    int ret = ERROR;
     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 
     cJSON *root = cJSON_Parse((char*)(buf));
@@ -1412,10 +1435,11 @@ static int recv_set_update_config(struct client *cli)
     	cJSON* code = cJSON_GetObjectItem(root, "code");
 		if(code && code->valueint == SUCCESS)
 		{
-			return send_get_config(cli);
+			ret = send_get_config(cli);
 		}
+		cJSON_Delete(root);
     }
-    return ERROR;
+    return ret;
 }
 
 static int send_set_update_config(struct client *cli)
@@ -1466,26 +1490,25 @@ static int send_set_update_config(struct client *cli)
 
     	set_packet_head(cli->packet, UPDATE_CONFIG_INTO, cli->data_size, JSON_TYPE, 0);
     	ret = send_packet(cli);
+        cJSON_Delete(root);
 	}
 	else
 	{
-		DEBUG("cJSON_CreateObject error");
+		DEBUG("set_update_config cJSON_CreateObject error");
+		if(root)
+			cJSON_Delete(root);
 		if(setup_info)
 			cJSON_Delete(setup_info);
 		if(mode)
 			cJSON_Delete(mode);
 		ret = ERROR;
 	}
-	
-    if(root)
-       cJSON_Delete(root);
-
     return ret;
 }
 
 static int recv_config_version(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	
 	cJSON *root = cJSON_Parse((char*)(buf));
@@ -1501,16 +1524,22 @@ static int recv_config_version(struct client *cli)
 			if(config_ver->valueint == -1 || config_ver->valueint <= conf.config_ver || conf.config_ver == -1) //没有配置上传配置 
 			{
 				DEBUG("upload config data");
-				return send_set_update_config(cli);
+				ret = send_set_update_config(cli);
 			}
 			else if(config_ver->valueint > conf.config_ver)	//更新本地配置
 			{
 				DEBUG("updata load config data");
-				return send_get_config(cli);
+				ret =  send_get_config(cli);
 			}
 		}
+		cJSON_Delete(root);
 	}
-	return ERROR;
+	else
+	{
+		DEBUG("config_version parse JSON ERROR");	
+		return ERROR;
+	}
+	return ret;
 }
 
 static int send_config_version(struct client *cli)
@@ -1526,28 +1555,25 @@ static int send_config_version(struct client *cli)
 		cli->data_buf = cJSON_Print(root);
 		cli->data_size = strlen(cli->data_buf);
 		set_packet_head(cli->packet, GET_CONFIG_VERSION, cli->data_size, JSON_TYPE, 0);
-		
 		ret = send_packet(cli);
+
+		cJSON_Delete(root);
 	}
 	else
 	{
 		DEBUG("cJSON_CreateObject error");	
 		return ERROR;
 	}
-
-	if(root)
-		cJSON_Delete(root);
 	return ret;
 }
 
 static int recv_login(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
 	if(root)
 	{
-		char *tmp = cJSON_Print(root);
 		cJSON* code = cJSON_GetObjectItem(root, "code");	
 		if(code && code->valueint == SUCCESS)
 		{
@@ -1555,10 +1581,16 @@ static int recv_login(struct client *cli)
 			cli->login_flag = 1;
 			set_packet_token(cli);
 			set_heartbeat(cli);
-			return send_config_version(cli);
+			ret =  send_config_version(cli);
 		}
+		cJSON_Delete(root);
 	}
-	return ERROR;
+	else
+	{
+		DEBUG("login parse JSON ERROR");	
+		return ERROR;
+	}
+	return ret;
 }
 
 static int send_login(struct client *cli)
@@ -1574,16 +1606,13 @@ static int send_login(struct client *cli)
 		cli->data_size = strlen(cli->data_buf);
     	set_packet_head(cli->packet, TERMINAL_LOGIN, cli->data_size, JSON_TYPE, 0);
 		ret = send_packet(cli);
-		DEBUG("%s", cli->data_buf);
+		cJSON_Delete(root);
     }
 	else
 	{
 		DEBUG("cJSON_CreateObject error");	
 		return ERROR;
 	}
-	
-	if(root)
-		cJSON_Delete(root);
 	return ret;
 }
 
@@ -1591,7 +1620,7 @@ static int send_login(struct client *cli)
 static int process_msg(struct client *cli)
 {
     int ret; 
-    DEBUG("read_packet_order(cli->packet) %d", read_packet_order(cli->packet));
+	DEBUG("read_packet_order(cli->packet) %d", read_packet_order(cli->packet));
     switch(read_packet_order(cli->packet))
     {    
         case TERMINAL_LOGIN:
@@ -1717,7 +1746,7 @@ static int tcp_loop(int sockfd)
             {
                 if(buf[0] == 'S')
                 {
-                    DEBUG("event thread pipe msg exit");
+                    DEBUG("tcp thread pipe recv msg exit");
                     break;
                 }
             }
@@ -1825,8 +1854,6 @@ static int tcp_loop(int sockfd)
 	}
 	close_fd(sockfd);
 	current->login_flag = 0;
-	client_disconnect();	
-	client_connect();
 }
 
 int init_client()

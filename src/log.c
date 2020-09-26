@@ -44,12 +44,12 @@ void init_logs()
     {
         if (errno == ENOENT)
         {
-            fp_log = fopen(c_dir, "wb");
+            fp_log = fopen(c_dir, "wb+");
         }
     }
     else
     {
-        fp_log = fopen(c_dir, "ab");
+        fp_log = fopen(c_dir, "ab+");
     }
 
     if (!fp_log)
@@ -110,8 +110,23 @@ void err_msg(const char *fmt, ...)
     fflush(fp_err);
 }
 
-void upload_logs()
+int upload_logs(char **buf, int *buf_len)
 {
+   	fseek(fp_log, 0, SEEK_END);
+	*buf_len = ftell(fp_log);
+	DEBUG("log file len %d", *buf_len);
+    fseek(fp_log, 0, SEEK_SET);
+	char temp[123] = {0};
+
+	*buf = (char *)malloc(*buf_len + 1);
+	if(!(*buf))
+	{
+		DEBUG("log malloc size: %d error: %s", *buf_len, strerror(errno));
+		return ERROR;
+	}	
+	return fread(*buf, 1, *buf_len, fp_log);
+
+#if 0
 	char result[MAX_BUFLEN] = {0};
     char cmd[MAX_BUFLEN] = {0};
 	char file_name[MAX_FILENAMELEN] = {0};
@@ -139,4 +154,5 @@ void upload_logs()
 	DEBUG("cmd: %s", cmd);
     exec_cmd(cmd, result);
 	DEBUG("result: %s", result);
+#endif
 }

@@ -62,7 +62,7 @@ void set_packet_head(char *buf, int cmd, int data_size, char data_type, int req_
     packet->service_code = cmd;
     packet->request_code = 0;
     packet->dataSize = data_size;
-    packet->dataType = 0x01;
+    packet->dataType = data_type;
     packet->encoding = 0x00;
 	if(conf.install_flag)
     	packet->clientType = 0x02;
@@ -98,7 +98,7 @@ int send_packet(struct client *cli)
     if(cli->token && cli->token_size < DATA_SIZE && cli->token_size > 0)
         ret = send_msg(cli->fd, cli->token, cli->token_size);
 
-    if(cli->data_buf && cli->data_size < DATA_SIZE && cli->data_size > 0)
+    if(cli->data_buf && cli->data_size > 0)
         ret = send_msg(cli->fd, cli->data_buf, cli->data_size);
     return ret;
 }

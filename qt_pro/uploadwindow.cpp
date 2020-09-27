@@ -147,8 +147,8 @@ void Uploadwindow::keyPressEvent(QKeyEvent *event)
         global->pipe->send_pipe(head, INIT_PIPE, 0);
     }
 
-#if 0
-    if (event->key() == Qt::Key_F1)
+
+	if((event->modifiers() == Qt::AltModifier) &&  (event->key() == Qt::Key_F1))	
     {
         char head[HEAD_LEN] = {0};
         Global *global = Global::getGlobal();
@@ -156,11 +156,10 @@ void Uploadwindow::keyPressEvent(QKeyEvent *event)
         qApp->exit();
     }
 
-    if (event->key() == Qt::Key_F9)
+	if((event->modifiers() == Qt::AltModifier) &&  (event->key() == Qt::Key_F9))	
     {
         qApp->exit();
     }
-#endif
 }
 
 void Uploadwindow::showErrorDialog(char *err_msg)

@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/upnp_test.dir/upnp_test.o  -o upnp_test -rdynamic -ltorrent-rasterbar 

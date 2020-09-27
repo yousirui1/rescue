@@ -4,8 +4,8 @@
 #include "cJSON.h"
 #include "device.h"
 #include "task.h"
-#include "torrent.h"
 #include "queue.h"
+#include "bt_client.h"
 
 struct client m_client;
 static int server_s = -1;
@@ -14,7 +14,6 @@ extern struct device_info dev_info;
 extern QUEUE task_queue;
 
 char m_desktop_group_name[128] = {0};
-char m_desktop_group_uuid[128] = {0};
 
 pthread_mutex_t client_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -65,6 +64,21 @@ static int set_heartbeat(struct client *cli)
 	cli->
 }
 #endif
+
+int send_upload_log(struct client *cli)
+{
+	int ret;
+	if(!cli->login_flag)
+		return ERROR;
+		
+	if(cli->data_buf)
+		free(cli->data_buf);
+
+	ret = upload_logs(&cli->data_buf, &cli->data_size);
+
+	set_packet_head(cli->packet, UPLOAD_LOG, cli->data_size, BYTE_TYPE, 0);	
+	return send_packet(cli);
+}
 
 
 static int set_heartbeat(struct client *cli)
@@ -130,10 +144,11 @@ static int recv_heartbeat(struct client *cli)
 int send_heartbeat(struct client *cli)
 {
 	int ret;
-	if(!cli->login_flag)
-		return ERROR;
-	
 	DEBUG("---------send_heartbeat-------------");
+
+    if (!cli->login_flag)
+        return ERROR;
+
 	if(cli->heartbeat_len > 0)
 	{
 		send_msg(cli->fd, cli->heartbeat_buf, cli->heartbeat_len);
@@ -594,9 +609,7 @@ static int recv_desktop(struct client *cli)
 				if(uuid && dif_level)
 				{
 					//if(scan_qcow2(uuid->valuestring, dif_level->valueint))
-					DEBUG("uuid->valuestring %s", uuid->valuestring);
 					del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);	
-
 					//else
 					//	return send_desktop(cli, batch_no->valueint, ERROR);		
 				}
@@ -673,6 +686,7 @@ static int recv_down_torrent(struct client *cli)
     DEBUG("torrent->file_size %lld", torrent->file_size);
     DEBUG("torrent->data_len %lld", torrent->data_len);
 	DEBUG("torrent->operate_id %d", torrent->operate_id);
+	//DEBUG("torrent->group_uuid %s", torrent->group_uuid);
 
     memcpy(task_uuid, torrent->task_uuid, 36);
 	DEBUG("task_uuid %s", task_uuid);
@@ -697,7 +711,9 @@ static int recv_down_torrent(struct client *cli)
 			{
             	struct torrent_task task = {0}; 
             	memcpy(task.uuid, torrent->uuid, strlen(torrent->uuid));
+            	//memcpy(task.group_uuid, torrent->group_uuid, strlen(torrent->group_uuid));
             	memcpy(task.torrent_file, torrent_file, strlen(torrent_file));
+		
 				sprintf(task.file_name, "%s_%d", m_desktop_group_name, torrent->dif_level);
             	task.diff = torrent->dif_level;
 				task.disk_type = torrent->type;
@@ -1046,6 +1062,7 @@ static int send_reboot(struct client *cli, int batch_no, int flag)
 	if(cli->data_buf)
 		free(cli->data_buf);
 	
+
 	cJSON *root = cJSON_CreateObject();
 	cJSON *data = cJSON_CreateObject();
 	
@@ -1084,7 +1101,7 @@ static int send_reboot(struct client *cli, int batch_no, int flag)
 	if(root)
 		cJSON_Delete(root);
 
-	return ret;
+	return SUCCESS;
 }
 
 static int recv_reboot(struct client *cli, int flag)
@@ -1104,7 +1121,7 @@ static int recv_reboot(struct client *cli, int flag)
 static int recv_get_diff_torrent(struct client *cli)
 {
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
-	//DEBUG("%s", buf);
+	DEBUG("%s", buf);
 	return SUCCESS;
 }
 
@@ -1125,6 +1142,7 @@ int send_get_diff_torrent(struct client *cli, char *group_uuid, char *diff_uuid,
 		
 		cli->data_buf = cJSON_Print(root);
 		cli->data_size = strlen(cli->data_buf);
+		DEBUG("%s", cli->data_buf);
 		
 		set_packet_head(cli->packet, DIFF_DOWN_TORRENT, cli->data_size, JSON_TYPE, 0);
 		ret = send_packet(cli);
@@ -1207,8 +1225,6 @@ static int recv_get_desktop_group_list(struct client *cli)
 								memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
 								if(desktop_group_name)
 									strcpy(m_desktop_group_name, desktop_group_name->valuestring);
-								memset(m_desktop_group_uuid, 0, sizeof(m_desktop_group_uuid));
-								strcpy(m_desktop_group_uuid, desktop_group_uuid->valuestring);
 							}
 						}
 						
@@ -1286,7 +1302,6 @@ static int recv_get_config(struct client *cli)
 	int ret;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
-	DEBUG("%s", buf);
 	if(root)
 	{
 		cJSON *code = cJSON_GetObjectItem(root, "code");
@@ -1358,14 +1373,12 @@ static int recv_get_config(struct client *cli)
 				strcpy(conf.server.ip, server_ip->valuestring);
 				
 			DEBUG("is_dhcp->valueint %d", is_dhcp->valueint);
-			DEBUG("conf.terminal.name %s", conf.terminal.name);
 			DEBUG("conf.netcard.ip %s", conf.netcard.ip);
 			DEBUG("conf.terminal.name %s", conf.terminal.name);
+			DEBUG("conf.install_flag %d", conf.install_flag);
 			save_config();
 			//update_config();
 			send_config_pipe();
-			DEBUG("conf.terminal.name %s", conf.terminal.name);
-			DEBUG("conf.install_flag %d", conf.install_flag);
 			if(conf.install_flag)
 				return send_get_desktop_group_list(cli);
 			else	
@@ -1591,7 +1604,7 @@ static int send_login(struct client *cli)
 static int process_msg(struct client *cli)
 {
     int ret; 
-    DEBUG("read_packet_order(cli->packet) %d", read_packet_order(cli->packet));
+	DEBUG("read_packet_order(cli->packet) %d", read_packet_order(cli->packet));
     switch(read_packet_order(cli->packet))
     {    
         case TERMINAL_LOGIN:

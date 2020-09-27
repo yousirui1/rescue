@@ -14,7 +14,6 @@ void *thread_event(void *param);
 
 /* client.c */
 void *thread_client(void *param);
-extern char m_desktop_group_uuid[128];
 extern struct client m_client;
 
 /* task.c */
@@ -33,5 +32,11 @@ extern const char err_msg_desc[][128] ;
 void *thread_qt(void *param);
 
 
+/* log.c */
+void log_msg(const char *fmt, ...);
+void err_msg(const char *fmt, ...);
+
+/* socket.c */
+int send_pipe(char *buf, short cmd, int size, int type);
 
 #endif

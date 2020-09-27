@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ysr/project/libtorrent/examples/upnp_test.cpp
+cstdlib
+-
+libtorrent/session.hpp
+/home/ysr/project/libtorrent/examples/libtorrent/session.hpp
+libtorrent/alert_types.hpp
+/home/ysr/project/libtorrent/examples/libtorrent/alert_types.hpp
+

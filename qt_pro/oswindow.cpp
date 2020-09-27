@@ -71,15 +71,13 @@ void OSWindow::keyPressEvent(QKeyEvent *event)
         Global *global = Global::getGlobal();
         global->pipe->send_pipe(head, REBOOT_PIPE, 0);
     }
-#if 0
-    if (event->key() == Qt::Key_F1)
+	if((event->modifiers() == Qt::AltModifier) &&  (event->key() == Qt::Key_F1))
     {
         char head[HEAD_LEN] = {0};
         Global *global = Global::getGlobal();
         global->pipe->send_pipe(head, EXIT_PROGRESS_PIPE, 0);
         qApp->exit();
     }
-#endif
 }
 
 void OSWindow::on_pushButton_12_clicked()

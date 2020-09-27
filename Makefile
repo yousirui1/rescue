@@ -15,7 +15,7 @@ QT_DIR := $(TOP_DIR)/qt_pro
 libdir := $(TOP_DIR)/lib
 
 P2V_DIR := $(TOP_DIR)/virt-p2v
-BT_DIR := $(TOP_DIR)/torrent
+BT_DIR := $(TOP_DIR)/libtorrent
 
 AS = $(CROSS_COMPILE)as
 CC = $(CROSS_COMPILE)gcc
@@ -38,7 +38,7 @@ libobj =
 mainobj = main.o tools.o log.o inirw.o device.o qcow2.o linux.o gpt.o StoreConfig.o event.o socket.o cJSON.o client.o window.o\
 		  queue.o task.o shell.o config.o error.o update.o version.o tftp.o arp.o
 
-cppobj = torrent.o
+cppobj = bt_client.o
 
 p2vobj := p2v
 
@@ -50,7 +50,7 @@ DISPLAY := QT
 
 DEFINES := -D QT
 
-CFLAGS := -I. -I./qt_pro -I./include/ -I./cJSON -L./lib -I./torrent/include
+CFLAGS := -I. -I./qt_pro -I./include/ -I./cJSON -L./lib -I./libtorrent/include
 
 ifeq ($(TARGET_ARCH), arm)
 CFLAGS += 

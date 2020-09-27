@@ -112,6 +112,8 @@ typedef enum yzy_cmd
 	P2V_PROGRESS = 9021,
 	DIFF_DOWN_TORRENT = 9023,
 	BT_TASK_STATE = 9025,
+
+	UPLOAD_LOG = 9999,
 }yzy_cmd;
 
 
@@ -126,11 +128,34 @@ struct yzy_torrent{
 	unsigned long long file_size;
     unsigned long long data_len;
 	char task_uuid[36];
+//	char group_uuid[36];
 	int operate_id;
 };
 
 typedef struct yzy_torrent yzy_torrent;
+
+
+
 #pragma pack()
+
+struct progress_info{
+    char file_name[36];
+    char state[12];
+    unsigned int long progress;
+    unsigned long long download_rate;
+    unsigned long long upload_rate;
+    unsigned long long total_size;      //下载总大小
+    unsigned long long file_size;
+    
+    int type;
+    
+    char image_name[128];
+    char storage[128];
+};
+
+typedef struct progress_info progress_info;
+
+
 
 struct template_info{
     unsigned char template_name[36];

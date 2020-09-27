@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
 	srandom(time(NULL) + getpid());
 	(void)time(&current_time);
 	signal(SIGPIPE, SIG_IGN);
-	signal(SIGINT, SIG_IGN);
+	//signal(SIGINT, SIG_IGN);
 		
 	struct sigaction act;
 	act.sa_handler = sig_quit_listen;

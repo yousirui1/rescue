@@ -71,21 +71,21 @@ static void process_event_msg(char *buf, int len)
 		case REBOOT_PIPE:
 		{
 			DEBUG("server send msg reboot");
-			client_disconnect();
 			stop_torrent();
-			upload_logs();	
+			send_upload_log(&m_client);
+			client_disconnect();
 			sync();
-			reboot(RB_AUTOBOOT);				
+			//reboot(RB_AUTOBOOT);				
 			break;
 		}
 		case SHUTDOWN_PIPE:
 		{
 			DEBUG("server send msg shutdown");
-			client_disconnect();
 			stop_torrent();
-			upload_logs();	
+			send_upload_log(&m_client);
+			client_disconnect();
 			sync();
-			reboot(RB_POWER_OFF);				
+			//reboot(RB_POWER_OFF);				
 			break;
 		}
 	}	
@@ -131,10 +131,12 @@ static void process_qt_msg(char *buf, int len)
 		case REBOOT_PIPE:
 		{
 			DEBUG("qt send pipe reboot msg");
+
+			stop_torrent();
+			send_upload_log(&m_client);
 			client_disconnect();
 			sync();
-			upload_logs();	
-			reboot(RB_AUTOBOOT);				
+			//reboot(RB_AUTOBOOT);				
 		}
 		default:
 			break;

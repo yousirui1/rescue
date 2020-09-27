@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/custom_storage.dir/custom_storage.o  -o custom_storage -rdynamic -ltorrent-rasterbar 

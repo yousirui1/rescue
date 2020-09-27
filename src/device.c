@@ -3,7 +3,7 @@
 #include "StoreConfig.h"
 #include "queue.h"
 #include "task.h"
-#include "torrent.h"
+#include "packet.h"
 
 struct device_info dev_info;
 #define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)

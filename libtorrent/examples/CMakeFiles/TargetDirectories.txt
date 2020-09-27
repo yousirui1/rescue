@@ -1,0 +1,10 @@
+/home/ysr/project/libtorrent/examples/CMakeFiles/upnp_test.dir
+/home/ysr/project/libtorrent/examples/CMakeFiles/connection_tester.dir
+/home/ysr/project/libtorrent/examples/CMakeFiles/make_torrent.dir
+/home/ysr/project/libtorrent/examples/CMakeFiles/simple_client.dir
+/home/ysr/project/libtorrent/examples/CMakeFiles/edit_cache.dir
+/home/ysr/project/libtorrent/examples/CMakeFiles/custom_storage.dir
+/home/ysr/project/libtorrent/examples/CMakeFiles/rebuild_cache.dir
+/home/ysr/project/libtorrent/examples/CMakeFiles/stats_counters.dir
+/home/ysr/project/libtorrent/examples/CMakeFiles/client_test.dir
+/home/ysr/project/libtorrent/examples/CMakeFiles/dump_torrent.dir

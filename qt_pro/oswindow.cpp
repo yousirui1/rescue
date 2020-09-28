@@ -138,3 +138,8 @@ void OSWindow::on_template_size_edit_textChanged(const QString &arg1)
     //if(ui->template_name_edit->text().end() != (QChar *)('G'))
     ui->template_size_edit->setText(arg1);
 }
+
+void OSWindow::on_template_name_edit_editingFinished()
+{
+    ui->template_name_result_label->hide();
+}

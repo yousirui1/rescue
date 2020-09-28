@@ -31,7 +31,7 @@
 #define DIE(format,...) pthread_exit((void *)ERROR)
 #endif      //__DEBUG__
 
-
+#define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
 
 typedef enum WINDOW_PAGE{
     MAINWINDOW_PAGE = 0,

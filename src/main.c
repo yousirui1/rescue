@@ -148,7 +148,6 @@ int main(int argc, char *argv[])
 	{
 		DIE("create qt thread ret: %d error: %s", ret, strerror(ret));
 	}	
-
 	client_connect();
 	do_exit();
 	close_pipe();

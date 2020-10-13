@@ -354,10 +354,21 @@ int send_p2v_progress(struct client *cli, char *buf)
     {
 		if(info->type == 0)		//bt 下载
 		{
+			char buf[128] = {0};
+
 			cJSON_AddStringToObject(root, "torrent_name", info->image_name);
         	cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
         	cJSON_AddNumberToObject(root, "progress", info->progress);
         	cJSON_AddStringToObject(root, "state", info->state);
+
+			sprintf(buf, "%llu", info->download_rate);
+        	cJSON_AddStringToObject(root, "download_rate", info->download_rate);
+			sprintf(buf, "%llu", info->upload_rate);
+        	cJSON_AddStringToObject(root, "upload_rate", info->upload_rate);
+			sprintf(buf, "%llu", info->total_size);
+        	cJSON_AddStringToObject(root, "total_size", info->total_size);
+			sprintf(buf, "%llu", info->file_size);
+        	cJSON_AddStringToObject(root, "file_size", info->file_size);
 
     		cli->data_buf = cJSON_Print(root);
     		cli->data_size = strlen(cli->data_buf);
@@ -1274,6 +1285,8 @@ static int recv_get_desktop_group_list(struct client *cli)
 									if(operate_id->valueint == get_operate_qcow2(uuid->valuestring, 2) + 1)
 									{
 										DEBUG("update qcow2 %s download diff 3 and commit ", uuid->valuestring);
+										del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4);
+										del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5);
 										send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 3);
 										memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
 										if(desktop_group_name)
@@ -1299,6 +1312,8 @@ static int recv_get_desktop_group_list(struct client *cli)
 						{
 							if(scan_qcow2(uuid->valuestring, 0)  && !(scan_qcow2(uuid->valuestring, 2))) 
 							{
+								del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4);
+								del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5);
 								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
 								memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
 								if(desktop_group_name)
@@ -1309,6 +1324,8 @@ static int recv_get_desktop_group_list(struct client *cli)
 							{
 								if(scan_qcow2(uuid->valuestring, 0) && scan_qcow2(uuid->valuestring, 1)) 
 								{
+									del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4);
+									del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5);
 									send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
 									memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
 									if(desktop_group_name)

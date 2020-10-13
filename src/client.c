@@ -17,6 +17,9 @@ char m_desktop_group_name[128] = {0};
 
 pthread_mutex_t client_mutex = PTHREAD_MUTEX_INITIALIZER;
 
+char m_group_diff_mode[8][37] = {0};
+
+
 void client_connect()
 {
     DEBUG("client_connect");
@@ -80,6 +83,18 @@ int send_upload_log(struct client *cli)
 	return send_packet(cli);
 }
 
+static int get_diff_mode(char *group_uuid)
+{
+	int i = 0;
+	for(i = 0; i < MAX_GROUP; i++)
+	{
+		if(m_group_diff_mode[i] && STRPREFIX(group_uuid, m_group_diff_mode[i]))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
 
 static int set_heartbeat(struct client *cli)
 {
@@ -686,7 +701,7 @@ static int recv_down_torrent(struct client *cli)
     DEBUG("torrent->file_size %lld", torrent->file_size);
     DEBUG("torrent->data_len %lld", torrent->data_len);
 	DEBUG("torrent->operate_id %d", torrent->operate_id);
-	//DEBUG("torrent->group_uuid %s", torrent->group_uuid);
+	DEBUG("torrent->group_uuid %s", torrent->group_uuid);
 
     memcpy(task_uuid, torrent->task_uuid, 36);
 	DEBUG("task_uuid %s", task_uuid);
@@ -704,14 +719,30 @@ static int recv_down_torrent(struct client *cli)
 		
 		if(ret == torrent->data_len)
 		{
-			uint64_t offset = add_qcow2(dev_info.mini_disk->dev, torrent->uuid, torrent->dif_level,
-								(uint64_t)(torrent->file_size + (uint64_t)(1024 * 1024 * 2 * 2)),   // + 2G冗余
+			uint64_t offset = -1;
+			if(torrent->dif_level == 1 && get_diff_mode(torrent->group_uuid) == 1)
+			{
+#if 0
+				offset = add_qcow2(dev_info.mini_disk->dev, torrent->uuid, torrent->dif_level,
+								(uint64_t)(torrent->file_size) + 1024 * 1024 * 4,  
 								torrent->real_size, torrent->sys_type, torrent->type, torrent->operate_id);
+#else
+				offset = add_qcow2(dev_info.mini_disk->dev, torrent->uuid, torrent->dif_level,
+								(uint64_t)(torrent->space_size),  
+								torrent->real_size, torrent->sys_type, torrent->type, torrent->operate_id);
+#endif
+			}
+			else
+			{
+				offset = add_qcow2(dev_info.mini_disk->dev, torrent->uuid, torrent->dif_level,
+								(uint64_t)(torrent->file_size),   
+								torrent->real_size, torrent->sys_type, torrent->type, torrent->operate_id);
+			}
 			if(offset != -1)
 			{
             	struct torrent_task task = {0}; 
             	memcpy(task.uuid, torrent->uuid, strlen(torrent->uuid));
-            	//memcpy(task.group_uuid, torrent->group_uuid, strlen(torrent->group_uuid));
+            	memcpy(task.group_uuid, torrent->group_uuid, 36);
             	memcpy(task.torrent_file, torrent_file, strlen(torrent_file));
 		
 				sprintf(task.file_name, "%s_%d", m_desktop_group_name, torrent->dif_level);
@@ -1162,7 +1193,6 @@ static int recv_get_desktop_group_list(struct client *cli)
 {
 	int ret;
     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
-    //DEBUG("recv_config_version buf %s", buf);
     cJSON *root = cJSON_Parse((char*)(buf));
     if(root)
     {
@@ -1176,7 +1206,7 @@ static int recv_get_desktop_group_list(struct client *cli)
 			cJSON *auto_update_desktop, *default_desktop_group, *desktop_dns1, *desktop_dns2, *desktop_gateway,
 				 	*desktop_group_desc, *desktop_group_name, *desktop_group_restore, *desktop_group_status,
 					*desktop_group_uuid, *desktop_ip, *desktop_is_dhcp, *desktop_mask,*desktop_name, *disks,
-					*os_sys_type, *show_desktop_info;
+					*os_sys_type, *show_desktop_info, *diff_mode;
 			
 			cJSON *dif_level, *prefix, *real_size, *reserve_size, *type, *uuid, *max_diff, *operate_id;
 				
@@ -1192,6 +1222,12 @@ static int recv_get_desktop_group_list(struct client *cli)
 				desktop_group_uuid = cJSON_GetObjectItem(item, "desktop_group_uuid");
 				desktop_group_name = cJSON_GetObjectItem(item, "desktop_group_name");
 				disks = cJSON_GetObjectItem(item, "disks");
+				diff_mode = cJSON_GetObjectItem(item, "diff_mode");
+				if(diff_mode && diff_mode->valueint && desktop_group_uuid)
+				{
+					memcpy(m_group_diff_mode[i], desktop_group_uuid->valuestring, strlen(desktop_group_uuid->valuestring));
+				}
+
 				if(disks && desktop_group_uuid && auto_update_desktop->valueint)
 				{
 					for(j = 0; j < cJSON_GetArraySize(disks); j++)
@@ -1211,27 +1247,78 @@ static int recv_get_desktop_group_list(struct client *cli)
 						if(!max_diff || !uuid || !dif_level || !prefix || !real_size || !reserve_size || !type || !operate_id)
 							continue;
 
-						//DEBUG("uuid %s", uuid->valuestring);
-						//DEBUG("dif_level %d", dif_level->valueint);
-						//DEBUG("operate_id %d", operate_id->valueint);	
-						if(dif_level->valueint == 1 && operate_id->valueint != get_operate_qcow2(uuid->valuestring, 1))
+						if(dif_level->valueint == 1)
 						{
-							if(scan_qcow2(uuid->valuestring, 0))
+							if(scan_qcow2(uuid->valuestring, 0) && !scan_qcow2(uuid->valuestring, 1))
 							{
-								DEBUG("update qcow2 %s", uuid->valuestring);
+								DEBUG("update qcow2 %s download diff all", uuid->valuestring);
 								del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
 								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
+								memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
+								if(desktop_group_name)
+									strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+							}
+							else if(operate_id->valueint != get_operate_qcow2(uuid->valuestring, 1))
+							{
+							if(diff_mode->valueint)	//模式1 diff 1 full disk and commit diff 1,2 -> 1
+							{
+								if(operate_id->valueint == get_operate_qcow2(uuid->valuestring, 1) + 1)		
+								{
+									item = cJSON_GetArrayItem(disks, 2);
+									if(!item)
+										continue;
+									dif_level = cJSON_GetObjectItem(item, "dif_level");
+									operate_id = cJSON_GetObjectItem(item, "operate_id");
+									if(!dif_level || !operate_id)
+										continue;
+									if(operate_id->valueint == get_operate_qcow2(uuid->valuestring, 2) + 1)
+									{
+										DEBUG("update qcow2 %s download diff 3 and commit ", uuid->valuestring);
+										send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 3);
+										memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
+										if(desktop_group_name)
+											strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+										//;		下载合并
+										continue;
+									}
+								}							
+							}
+							DEBUG("uuid->valuestring %s ", uuid->valuestring);
+							if(scan_qcow2(uuid->valuestring, 0)) // 模式0  update diff del 1,2 download 1, 2
+							{
+								DEBUG("update qcow2 %s download diff all", uuid->valuestring);
+								del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
+								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
+								memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
+								if(desktop_group_name)
+									strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+							}
+							}
+						}
+						if(dif_level->valueint == 2)
+						{
+							if(scan_qcow2(uuid->valuestring, 0)  && !(scan_qcow2(uuid->valuestring, 2))) 
+							{
 								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
 								memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
 								if(desktop_group_name)
 									strcpy(m_desktop_group_name, desktop_group_name->valuestring);
 							}
-						}
-						
+							
+							if(operate_id->valueint > (get_operate_qcow2(uuid->valuestring, 2) + 1))
+							{
+								if(scan_qcow2(uuid->valuestring, 0) && scan_qcow2(uuid->valuestring, 1)) 
+								{
+									send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
+									memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
+									if(desktop_group_name)
+										strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+								}
+							}
+						}	
 #if 0
 						if(update_flag)
-						{
-							if(!strcmp(uuid->valuestring, current_uuid))
+						{ if(!strcmp(uuid->valuestring, current_uuid))
 							{
 								DEBUG("update qcow2 ");
 								DEBUG("dif_level:%d prefix %s real_size %s reserve_size %s \n"

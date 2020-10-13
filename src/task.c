@@ -38,8 +38,7 @@ void task_loop()
 				clear_task(&task_queue);		
 				if(ret == 2)	//timeout 
 				{
-					DEBUG("Download Timeout");
-#if 0
+					//DEBUG("Download Timeout");
 					DEBUG("Timeout redown group_uuid %s task->uuid %s", task->group_uuid, task->uuid);
 					switch(task->diff)
 					{
@@ -52,7 +51,6 @@ void task_loop()
 						default:
 							break;
 					}
-#endif
 				}
 				continue;
 			}

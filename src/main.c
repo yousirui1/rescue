@@ -154,4 +154,3 @@ int main(int argc, char *argv[])
 	close_logs();
 	return 0;
 }
-

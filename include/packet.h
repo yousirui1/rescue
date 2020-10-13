@@ -23,6 +23,8 @@ typedef unsigned int   u32_t;
 #define Little_u32ToStr(s, n)  do{  (s)[0] = (u8_t)((n)&0xFF);        (s)[1] = (u8_t)(((n)>>8)&0xFF); \
                                     (s)[2] = (u8_t)(((n)>>16)&0xFF);  (s)[3] = (u8_t)(((n)>>24)&0xFF);    }while(0)                               
 
+#define MAX_GROUP 8
+
 //大端序则为 1，小端序为 0
 #if 0
     #define STR_TO_U16(s)    Big_str2u16(s)
@@ -128,7 +130,7 @@ struct yzy_torrent{
 	unsigned long long file_size;
     unsigned long long data_len;
 	char task_uuid[36];
-//	char group_uuid[36];
+	char group_uuid[36];
 	int operate_id;
 };
 
@@ -162,5 +164,6 @@ struct template_info{
     unsigned int template_desc[128];
     //unsigned int template_size;
 };
+
 
 #endif

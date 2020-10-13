@@ -26,6 +26,35 @@ int uuid2str(PYZYGUID GUID, char* uuid)
     return ret;
 }
 
+#if 0
+static uint64_t  ScanSpace(PYZYGUID diskName, uint64_t* maxInterval, uint64_t* last)
+{
+    uint64_t  l,diskSize;
+    YZY_QCOW_ENTRY Qe = { 0 };
+    PYZY_QCOW_ENTRY pQe0;
+    PYZY_QCOW_ENTRY pQe1;
+    PYZY_QCOW_ENTRY diskList[YZY_MAX_STORE_QCOW_ENTRY];
+    uint32_t count = GetDiskList(diskName, diskList);
+    *maxInterval = 0;
+    *last = 0;
+    for (uint32_t i = 0; i < count; i++) //从两个文件间空隙alloc
+    {
+        if (i == 0)  pQe0 = &Qe;//从0开始          
+        else pQe0 = diskList[i - 1];
+
+        pQe1 = diskList[i];
+        l = (pQe1->startLba - pQe0->endLba);
+        if ( *maxInterval < l)          
+            *maxInterval = l;
+        
+        if (*last < pQe1->endLba)
+            *last = pQe1->endLba;
+    }
+    diskSize = GetDiskSizeLba(diskName);
+    *last = diskSize - *last; //磁盘剩余
+    return diskSize;
+}
+#endif
 
 int check_qcow2(PedDevice *dev)
 {

@@ -15,10 +15,9 @@ extern QUEUE task_queue;
 
 char m_desktop_group_name[128] = {0};
 
-pthread_mutex_t client_mutex = PTHREAD_MUTEX_INITIALIZER;
-
 char m_group_diff_mode[8][37] = {0};
 
+pthread_mutex_t client_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void client_connect()
 {
@@ -120,6 +119,7 @@ static int set_heartbeat(struct client *cli)
 		
 		memcpy(temp, buf, strlen(buf));
 		len += strlen(buf);
+		free(buf);
 		cli->heartbeat_len = len;	
 	}	
 	else
@@ -133,7 +133,7 @@ static int set_heartbeat(struct client *cli)
 
 static int recv_heartbeat(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 
     cJSON *root = cJSON_Parse((char*)(buf));
@@ -150,10 +150,11 @@ static int recv_heartbeat(struct client *cli)
 			cJSON *date_time = cJSON_GetObjectItem(data, "datetime");
 			DEBUG("data_time: %s", date_time->valuestring);
 			//修改时间
-			return SUCCESS;
+			ret = SUCCESS;
 		}			
+		cJSON_Delete(root);
 	}
-    return ERROR;
+    return ret;
 }
 
 int send_heartbeat(struct client *cli)
@@ -199,7 +200,7 @@ static int send_upgrad(struct client *cli)
 
 static int recv_upgrad(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
 	DEBUG("%s", buf);
@@ -223,7 +224,8 @@ static int recv_upgrad(struct client *cli)
 		{
 			ret = upgrad_programe(upgrade_package->valuestring, version->valuestring, 2);	
 		}
-		return send_upgrad(cli);
+		ret = send_upgrad(cli);
+		cJSON_Delete(root);
 	}
 	return ret;
 }
@@ -269,15 +271,16 @@ static int send_delete(struct client *cli, int batch_no)
 
 static int recv_delete(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
 	if(root)
 	{
 		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
-		return send_delete(cli, batch_no->valueint);
+		ret = send_delete(cli, batch_no->valueint);
+		cJSON_Delete(root);
 	}
-	return ERROR;
+	return ret;
 }
 
 static int send_cancel_send_desktop(struct client *cli, int batch_no)
@@ -319,15 +322,16 @@ static int send_cancel_send_desktop(struct client *cli, int batch_no)
 
 static int recv_cancel_send_desktop(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
 	if(root)
 	{
 		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
-		return send_cancel_send_desktop(cli, batch_no->valueint);
+		ret = send_cancel_send_desktop(cli, batch_no->valueint);
+		cJSON_Delete(root);
 	}
-	return ERROR;
+	return ret;
 }
 
 static int recv_p2v_progress(struct client *cli)
@@ -362,13 +366,13 @@ int send_p2v_progress(struct client *cli, char *buf)
         	cJSON_AddStringToObject(root, "state", info->state);
 
 			sprintf(buf, "%llu", info->download_rate);
-        	cJSON_AddStringToObject(root, "download_rate", info->download_rate);
+        	cJSON_AddStringToObject(root, "download_rate", buf);
 			sprintf(buf, "%llu", info->upload_rate);
-        	cJSON_AddStringToObject(root, "upload_rate", info->upload_rate);
+        	cJSON_AddStringToObject(root, "upload_rate", buf);
 			sprintf(buf, "%llu", info->total_size);
-        	cJSON_AddStringToObject(root, "total_size", info->total_size);
+        	cJSON_AddStringToObject(root, "total_size", buf);
 			sprintf(buf, "%llu", info->file_size);
-        	cJSON_AddStringToObject(root, "file_size", info->file_size);
+        	cJSON_AddStringToObject(root, "file_size", buf);
 
     		cli->data_buf = cJSON_Print(root);
     		cli->data_size = strlen(cli->data_buf);
@@ -390,6 +394,8 @@ int send_p2v_progress(struct client *cli, char *buf)
     		set_packet_head(cli->packet, P2V_PROGRESS, cli->data_size, JSON_TYPE, 0);
     		ret = send_packet(cli);
 		}
+		free(cli->data_buf);
+		cli->data_buf = NULL;
     }
 	else
 	{
@@ -397,7 +403,8 @@ int send_p2v_progress(struct client *cli, char *buf)
 	}
 
     if(root)
-       cJSON_Delete(root);
+       	cJSON_Delete(root);
+
     return ret;
 }
 
@@ -439,7 +446,7 @@ static int send_cancel_p2v(struct client *cli, int batch_no)
 
 static int recv_cancel_p2v(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
 	
@@ -447,15 +454,16 @@ static int recv_cancel_p2v(struct client *cli)
 	{
 		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
 		cancel_conversion();
-		return send_cancel_p2v(cli, batch_no->valueint);		
+		ret = send_cancel_p2v(cli, batch_no->valueint);		
+		cJSON_Delete(root);
 	}
 
-	return ERROR;
+	return ret;
 }
 
 static int recv_p2v_transform(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
 	DEBUG("%s", buf);
@@ -497,14 +505,15 @@ static int recv_p2v_transform(struct client *cli)
 			password->valuestring, storage->valuestring);
 
 			en_queue(&task_queue, (char *)&task, sizeof(struct p2v_task) , 0x2);
-			return SUCCESS;
+			ret = SUCCESS;
 		}
 		else 
 		{
 			send_error_msg(P2V_NAME_ERR);			
 		}
+		 cJSON_Delete(root);
 	}	
-	return ERROR;
+	return ret;
 }
 
 int send_p2v_transform(struct client *cli, char *data)
@@ -539,6 +548,9 @@ int send_p2v_transform(struct client *cli, char *data)
         
     	set_packet_head(cli->packet, P2V_OS_TRANSFORM, cli->data_size, JSON_TYPE, 0);
     	ret = send_packet(cli);
+
+		free(cli->data_buf);
+		cli->data_buf = NULL;
 	}
 	else
 	{
@@ -600,7 +612,7 @@ static int send_desktop(struct client *cli, int batch_no, int flag)
 
 static int recv_desktop(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
 	//DEBUG("%s", buf);
@@ -640,10 +652,11 @@ static int recv_desktop(struct client *cli)
 					//	return send_desktop(cli, batch_no->valueint, ERROR);		
 				}
 			}
-			return send_desktop(cli, batch_no->valueint, SUCCESS);		
+			ret = send_desktop(cli, batch_no->valueint, SUCCESS);		
 		}
+		cJSON_Delete(root);
 	}
-	return ERROR;
+	return ret;
 }
 
 static int send_down_torrent(struct client *cli, char *task_uuid,  int flag)
@@ -739,7 +752,7 @@ static int recv_down_torrent(struct client *cli)
 								torrent->real_size, torrent->sys_type, torrent->type, torrent->operate_id);
 #else
 				offset = add_qcow2(dev_info.mini_disk->dev, torrent->uuid, torrent->dif_level,
-								(uint64_t)(torrent->space_size),  
+								(uint64_t)(torrent->real_size),  
 								torrent->real_size, torrent->sys_type, torrent->type, torrent->operate_id);
 #endif
 			}
@@ -755,7 +768,10 @@ static int recv_down_torrent(struct client *cli)
             	memcpy(task.uuid, torrent->uuid, strlen(torrent->uuid));
             	memcpy(task.group_uuid, torrent->group_uuid, 36);
             	memcpy(task.torrent_file, torrent_file, strlen(torrent_file));
-		
+
+				if(torrent->dif_level == 3)		
+					torrent->dif_level = 2;
+
 				sprintf(task.file_name, "%s_%d", m_desktop_group_name, torrent->dif_level);
             	task.diff = torrent->dif_level;
 				task.disk_type = torrent->type;
@@ -780,7 +796,7 @@ static int recv_down_torrent(struct client *cli)
 }
 
 
-static int send_clear_all_desktop(struct client *cli, int batch_no, int flag)
+static int send_clear_all_desktop(struct client *cli, int batch_no)
 {
 	int ret;
         free(cli->data_buf);
@@ -824,9 +840,10 @@ static int recv_clear_all_desktop(struct client *cli)
     {
     	cJSON* batch_no = cJSON_GetObjectItem(root, "batch_no");
 		init_qcow2(dev_info.mini_disk->dev, 0);
-   		return send_clear_all_desktop(cli, batch_no->valueint, ret);	
+   		ret =  send_clear_all_desktop(cli, batch_no->valueint);	
+		cJSON_Delete(root);
 	}
-    return ERROR;
+    return ret;
 }
 
 
@@ -867,7 +884,7 @@ static int send_update_diff_disk(struct client *cli, int batch_no)
 
 static int recv_update_diff_disk(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 
     cJSON *root = cJSON_Parse((char*)(buf));
@@ -877,7 +894,7 @@ static int recv_update_diff_disk(struct client *cli)
 		
     	cJSON *disk_info_list = cJSON_GetObjectItem(root, "disk_info_list");
 		if(!disk_info_list)	
-			return ERROR;
+			goto end;
 
 		int i;
 		cJSON *name, *uuid, *version, *download_url;
@@ -889,10 +906,12 @@ static int recv_update_diff_disk(struct client *cli)
 			version = cJSON_GetObjectItem(item, "version");
 			download_url = cJSON_GetObjectItem(item, "download_url");
 		}		
-		return send_update_diff_disk(cli, batch_no->valueint);	
+		ret = send_update_diff_disk(cli, batch_no->valueint);	
 	}
-    return ERROR;
-
+end:
+	if(root)
+		 cJSON_Delete(root);
+    return ret;
 }
 
 static int send_update_config(struct client *cli, int batch_no)
@@ -933,7 +952,7 @@ static int send_update_config(struct client *cli, int batch_no)
 
 static int recv_update_config(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 
     cJSON *root = cJSON_Parse((char*)(buf));
@@ -943,14 +962,14 @@ static int recv_update_config(struct client *cli)
 		
     	cJSON *mode = cJSON_GetObjectItem(root, "mode");
 		if(!mode)	
-			return ERROR;
+			goto end;
 
     	cJSON *show_desktop_type = cJSON_GetObjectItem(mode, "show_desktop_type");
     	cJSON *auto_desktop = cJSON_GetObjectItem(mode, "auto_desktop");
 
 		cJSON *program = cJSON_GetObjectItem(root, "program");
 		if(!program)
-			return ERROR;
+			goto end;
 		
 		cJSON *server_ip = cJSON_GetObjectItem(program, "server_ip");
 	
@@ -962,9 +981,14 @@ static int recv_update_config(struct client *cli)
 			strcpy(conf.server.ip, server_ip->valuestring);
 		save_config();
 		send_config_pipe();
-		return send_update_config(cli, batch_no->valueint);	
+		ret =  send_update_config(cli, batch_no->valueint);
 	}
-    return ERROR;
+
+end:
+	if(root)
+		 cJSON_Delete(root);
+	
+    return ret;
 }
 
 static int send_update_ip(struct client *cli, int batch_no)
@@ -1004,7 +1028,7 @@ static int send_update_ip(struct client *cli, int batch_no)
 
 static int recv_update_ip(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 
     cJSON *root = cJSON_Parse((char*)(buf));
@@ -1033,9 +1057,10 @@ static int recv_update_ip(struct client *cli)
 		save_config();
 		set_network(ip->valuestring, mask->valuestring);
 		send_config_pipe();
-		return send_update_ip(cli, batch_no->valueint);	
+		ret =  send_update_ip(cli, batch_no->valueint);	
+		cJSON_Delete(root);
 	}
-    return ERROR;
+    return ret;
 }
 
 static int send_update_name(struct client *cli, int batch_no)
@@ -1077,7 +1102,7 @@ static int send_update_name(struct client *cli, int batch_no)
 
 static int recv_update_name(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
 	if(root)
@@ -1093,9 +1118,10 @@ static int recv_update_name(struct client *cli)
 		
 		save_config();
 		send_config_pipe();
-		return send_update_name(cli, batch_no->valueint);
+		ret =  send_update_name(cli, batch_no->valueint);
+		cJSON_Delete(root);
 	}
-	return ERROR;
+	return ret;
 }
 
 static int send_reboot(struct client *cli, int batch_no, int flag)
@@ -1148,16 +1174,17 @@ static int send_reboot(struct client *cli, int batch_no, int flag)
 
 static int recv_reboot(struct client *cli, int flag)
 {
-	int ret;
+	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
 	DEBUG("reboot %d", flag);
 	if(root)
 	{
 		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
-		return send_reboot(cli, batch_no->valueint, flag);
+		ret =  send_reboot(cli, batch_no->valueint, flag);
+		cJSON_Delete(root);
 	}
-	return ERROR;
+	return ret;
 }
 
 static int recv_get_diff_torrent(struct client *cli)
@@ -1205,6 +1232,7 @@ static int recv_get_desktop_group_list(struct client *cli)
 	int ret;
     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
     cJSON *root = cJSON_Parse((char*)(buf));
+	//DEBUG("%s", buf);
     if(root)
     {
     	cJSON* code = cJSON_GetObjectItem(root, "code");
@@ -1219,7 +1247,8 @@ static int recv_get_desktop_group_list(struct client *cli)
 					*desktop_group_uuid, *desktop_ip, *desktop_is_dhcp, *desktop_mask,*desktop_name, *disks,
 					*os_sys_type, *show_desktop_info, *diff_mode;
 			
-			cJSON *dif_level, *prefix, *real_size, *reserve_size, *type, *uuid, *max_diff, *operate_id;
+			cJSON *dif_level, *prefix, *real_size, *reserve_size, *type, *uuid, *max_diff, *operate_id, *dif_level_next, 
+					*operate_id_next;
 				
 			char current_uuid[32] = {0};
 			int update_flag = 0;
@@ -1260,116 +1289,97 @@ static int recv_get_desktop_group_list(struct client *cli)
 
 						if(dif_level->valueint == 1)
 						{
-							if(scan_qcow2(uuid->valuestring, 0) && !scan_qcow2(uuid->valuestring, 1))
+							if(scan_qcow2(uuid->valuestring, 0))
 							{
-								DEBUG("update qcow2 %s download diff all", uuid->valuestring);
-								del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
-								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
-								memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
-								if(desktop_group_name)
-									strcpy(m_desktop_group_name, desktop_group_name->valuestring);
-							}
-							else if(operate_id->valueint != get_operate_qcow2(uuid->valuestring, 1))
-							{
-							if(diff_mode->valueint)	//模式1 diff 1 full disk and commit diff 1,2 -> 1
-							{
-								if(operate_id->valueint == get_operate_qcow2(uuid->valuestring, 1) + 1)		
+								if(!scan_qcow2(uuid->valuestring, 1))  //不存在 1
 								{
-									item = cJSON_GetArrayItem(disks, 2);
-									if(!item)
-										continue;
-									dif_level = cJSON_GetObjectItem(item, "dif_level");
-									operate_id = cJSON_GetObjectItem(item, "operate_id");
-									if(!dif_level || !operate_id)
-										continue;
-									if(operate_id->valueint == get_operate_qcow2(uuid->valuestring, 2) + 1)
-									{
-										DEBUG("update qcow2 %s download diff 3 and commit ", uuid->valuestring);
-										del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4);
-										del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5);
-										send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 3);
-										memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
-										if(desktop_group_name)
-											strcpy(m_desktop_group_name, desktop_group_name->valuestring);
-										//;		下载合并
-										continue;
-									}
-								}							
-							}
-							DEBUG("uuid->valuestring %s ", uuid->valuestring);
-							if(scan_qcow2(uuid->valuestring, 0)) // 模式0  update diff del 1,2 download 1, 2
-							{
-								DEBUG("update qcow2 %s download diff all", uuid->valuestring);
-								del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
-								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
-								memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
-								if(desktop_group_name)
-									strcpy(m_desktop_group_name, desktop_group_name->valuestring);
-							}
-							}
-						}
-						if(dif_level->valueint == 2)
-						{
-							if(scan_qcow2(uuid->valuestring, 0)  && !(scan_qcow2(uuid->valuestring, 2))) 
-							{
-								del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4);
-								del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5);
-								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
-								memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
-								if(desktop_group_name)
-									strcpy(m_desktop_group_name, desktop_group_name->valuestring);
-							}
-							
-							if(operate_id->valueint > (get_operate_qcow2(uuid->valuestring, 2) + 1))
-							{
-								if(scan_qcow2(uuid->valuestring, 0) && scan_qcow2(uuid->valuestring, 1)) 
-								{
-									del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4);
-									del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5);
+									DEBUG("update qcow2 %s no find diff 1 update diff 1 and 2 ", uuid->valuestring);
+									del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
+									send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
 									send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
 									memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
-									if(desktop_group_name)
-										strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+                                	if(desktop_group_name)
+                                    	strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+								}
+								else									//存在 1
+								{
+									item = cJSON_GetArrayItem(disks, ++j);
+									if(item)							//diff level 2
+									{
+										dif_level_next = cJSON_GetObjectItem(item, "dif_level");
+										operate_id_next = cJSON_GetObjectItem(item, "operate_id");				
+									}
+
+									if(!dif_level_next || !operate_id_next)		//不存在 2
+									{
+										DEBUG("update qcow2 %s no find 2 update diff only 1 ", uuid->valuestring);
+										del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
+										send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
+										memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
+                                		if(desktop_group_name)
+                                    		strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+									}
+									else										//存在 1 2 
+									{
+										DEBUG("dif_level->valueint %d", dif_level->valueint);
+										DEBUG("operate_id->valueint %d", operate_id->valueint);
+										DEBUG("dif_level_next->valueint %d", dif_level_next->valueint);
+										DEBUG("operate_id_next->valueint %d", operate_id_next->valueint);
+										if(operate_id->valueint != get_operate_qcow2(uuid->valuestring, 1))		//1 操作号不同
+										{
+											if(diff_mode->valueint && operate_id->valueint == 
+															get_operate_qcow2(uuid->valuestring, 1) + 1 &&
+												operate_id_next->valueint == get_operate_qcow2(uuid->valuestring, 2) + 1 &&
+												!(scan_qcow2(uuid->valuestring, 3)))
+
+											{
+
+										  		DEBUG("update qcow2 %s download diff 3 for commit ", uuid->valuestring);
+                                        		del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4); 
+                                        		del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5); 
+                                        		send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 3); 
+                                        		memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
+                                        		if(desktop_group_name)
+                                            		strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+												
+											}
+											else
+											{
+												DEBUG("update qcow2 %s download diff 1 and 2 no commit ", uuid->valuestring);
+												del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
+												send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
+												send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
+												memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
+                                				if(desktop_group_name)
+                                    				strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+											}
+										}
+										else if(operate_id_next->valueint != get_operate_qcow2(uuid->valuestring, 2)) //1 相同 2 不同
+										{
+											DEBUG("update qcow2 %s download diff only 2 ", uuid->valuestring);
+											del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 3); 
+											del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4); 
+                                        	del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5); 
+											send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
+											memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
+                                			if(desktop_group_name)
+                                    			strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+										}
+										else
+										{
+											 DEBUG("diff 1 and diff 2 operate equal no update");
+										}
+									}
 								}
 							}
-						}	
-#if 0
-						if(update_flag)
-						{ if(!strcmp(uuid->valuestring, current_uuid))
-							{
-								DEBUG("update qcow2 ");
-								DEBUG("dif_level:%d prefix %s real_size %s reserve_size %s \n"
-							  		"type: %d uuid: %s",dif_level->valueint, prefix->valuestring, real_size->valuestring,
-													reserve_size->valuestring, type->valueint, uuid->valuestring );
-								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 
-														dif_level->valueint );
-							}
-							else
-							{
-								update_flag = 0;
-								current_diff = -1;
-							}
 						}
-
-						/* 存在不同更新 */
-						if(dif_level->valueint == 0 && 
-							max_diff->valueint != (current_diff = get_max_diff_qcow2(uuid->valuestring)) &&
-							current_diff != -1)
-							
-						{
-							DEBUG("current_diff %d", current_diff);
-							DEBUG("max_diff->value %d", max_diff->valueint);
-							DEBUG("del current uuid: %s all diff", uuid->valuestring);
-							del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);		//删除当前的不同的驱动
-							strcpy(current_uuid, uuid->valuestring);
-							update_flag = 1;
-						}
-#endif
 					}
 				}
-			}
+			}	
 		}
     }
+	if(root)
+		 cJSON_Delete(root);
 	return SUCCESS;
 }
 
@@ -1403,7 +1413,7 @@ static int send_get_desktop_group_list(struct client *cli)
 
 static int recv_get_config(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
 	if(root)
@@ -1413,7 +1423,7 @@ static int recv_get_config(struct client *cli)
 		{
 			cJSON *data = cJSON_GetObjectItem(root, "data");
 			if(!data)
-				return ERROR;
+				goto run_out;
 
 			cJSON *conf_version = cJSON_GetObjectItem(data, "conf_version");
         	cJSON *terminal_id = cJSON_GetObjectItem(data, "terminal_id");
@@ -1429,17 +1439,17 @@ static int recv_get_config(struct client *cli)
 
         	cJSON *setup_info = cJSON_GetObjectItem(data, "setup_info");
 			if(!setup_info)
-				return ERROR;
+				goto run_out;
         	cJSON *mode = cJSON_GetObjectItem(setup_info, "mode");
 			if(!mode)
-				return ERROR;
+				goto run_out;
      
         	cJSON *auto_desktop = cJSON_GetObjectItem(mode, "auto_desktop");
         	cJSON *show_desktop_type = cJSON_GetObjectItem(mode, "show_desktop_type");
      
         	cJSON *program = cJSON_GetObjectItem(setup_info, "program");
 			if(!program)
-				return ERROR;
+				goto run_out;
      
         	cJSON *server_ip = cJSON_GetObjectItem(program, "server_ip");
 
@@ -1484,12 +1494,17 @@ static int recv_get_config(struct client *cli)
 			//update_config();
 			send_config_pipe();
 			if(conf.install_flag)
-				return send_get_desktop_group_list(cli);
+				ret = send_get_desktop_group_list(cli);
 			else	
-				return SUCCESS;
+				ret = SUCCESS;
 		}
 	}
-	return ERROR;
+
+run_out:
+
+	if(root)
+		 cJSON_Delete(root);		
+	return ret;
 }
 
 static int send_get_config(struct client *cli)
@@ -1520,7 +1535,7 @@ static int send_get_config(struct client *cli)
 
 static int recv_set_update_config(struct client *cli)
 {
-    int ret;
+    int ret = ERROR;
     char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 
     cJSON *root = cJSON_Parse((char*)(buf));
@@ -1529,10 +1544,11 @@ static int recv_set_update_config(struct client *cli)
     	cJSON* code = cJSON_GetObjectItem(root, "code");
 		if(code && code->valueint == SUCCESS)
 		{
-			return send_get_config(cli);
+			ret = send_get_config(cli);
 		}
+		cJSON_Delete(root);
     }
-    return ERROR;
+    return ret;
 }
 
 static int send_set_update_config(struct client *cli)
@@ -1602,7 +1618,7 @@ static int send_set_update_config(struct client *cli)
 
 static int recv_config_version(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	
 	cJSON *root = cJSON_Parse((char*)(buf));
@@ -1618,16 +1634,17 @@ static int recv_config_version(struct client *cli)
 			if(config_ver->valueint == -1 || config_ver->valueint <= conf.config_ver || conf.config_ver == -1) //没有配置上传配置 
 			{
 				DEBUG("upload config data");
-				return send_set_update_config(cli);
+				ret = send_set_update_config(cli);
 			}
 			else if(config_ver->valueint > conf.config_ver)	//更新本地配置
 			{
 				DEBUG("updata load config data");
-				return send_get_config(cli);
+				ret = send_get_config(cli);
 			}
 		}
+		cJSON_Delete(root);
 	}
-	return ERROR;
+	return ret;
 }
 
 static int send_config_version(struct client *cli)
@@ -1659,12 +1676,11 @@ static int send_config_version(struct client *cli)
 
 static int recv_login(struct client *cli)
 {
-	int ret;
+	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
 	if(root)
 	{
-		char *tmp = cJSON_Print(root);
 		cJSON* code = cJSON_GetObjectItem(root, "code");	
 		if(code && code->valueint == SUCCESS)
 		{
@@ -1672,10 +1688,11 @@ static int recv_login(struct client *cli)
 			cli->login_flag = 1;
 			set_packet_token(cli);
 			set_heartbeat(cli);
-			return send_config_version(cli);
+			ret = send_config_version(cli);
 		}
+		cJSON_Delete(root);
 	}
-	return ERROR;
+	return ret;
 }
 
 static int send_login(struct client *cli)
@@ -1941,6 +1958,14 @@ static int tcp_loop(int sockfd)
 		}
 	}
 	close_fd(sockfd);
+    if(current->head_buf)
+        free(current->head_buf);
+    if(current->packet)
+        free(current->packet);
+
+	current->head_buf = NULL;
+	current->packet = NULL;
+	
 	current->login_flag = 0;
 	client_disconnect();	
 	client_connect();
@@ -1974,12 +1999,19 @@ int init_client()
     ret = send_login(&m_client);
     if(0 != ret)
     {   
+		close_fd(m_client.fd);
+		if(m_client.head_buf)
+			free(m_client.head_buf);
+		if(m_client.packet)
+			free(m_client.packet);
+		
+		m_client.head_buf = NULL;		
+		m_client.packet = NULL;
         DEBUG("login server ip: %s port: %d error", server->ip, server->port);
         return ERROR;
     }    
     return SUCCESS;
 }
-
 
 void *thread_client(void *param)
 {

@@ -34,7 +34,6 @@ struct blkdev_ioctl_param {
 };
 
 
-
 /* from <linux/major.h> */
 #define IDE0_MAJOR              3
 #define IDE1_MAJOR              22

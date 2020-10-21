@@ -111,13 +111,15 @@ int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t phys
 			if(lt::alert_cast<lt::torrent_finished_alert>(a))
 			{
 				DEBUG("download finish done");
-				ses.pause();	
+				ses.remove_torrent(h);
+				ses.abort();
 				return 0;
 			}
 			if(lt::alert_cast<lt::torrent_error_alert>(a))
 			{
 				DEBUG("bt error: %s", a->message().c_str());
-				ses.pause();	
+				ses.remove_torrent(h);
+				ses.abort();
 				return 1;
 			}
 
@@ -159,7 +161,7 @@ int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t phys
 	send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
 
 	DEBUG("bt cancel download %s", file_name);
-	ses.pause();	
+	ses.abort();
 	return 1;
 }
 catch(std::exception &e)

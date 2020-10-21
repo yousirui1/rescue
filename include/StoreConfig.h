@@ -91,7 +91,7 @@ typedef struct _StoreDriver
     int (*del)(uint32_t difLevel, PYZYGUID name); // 注意！！！！ 删除节点后会重建，所有指针失效，需要重新SCAN
     PYZY_QCOW_ENTRY(*scan)
     (uint32_t difLevel, PYZYGUID name);
-    int (*alloc)(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint64_t sizeLba, uint64_t realLba, int type, PYZY_QCOW_ENTRY *ppQe);
+    int (*alloc)(uint32_t difLevel, YZYGUID name, YZYGUID diskName, uint64_t sizeLba, uint64_t realLba, int type, PYZY_QCOW_ENTRY *ppQe);
     int (*load)(yzy_file_t hd); //加载失败后需要init
     int (*save)(yzy_file_t hd);
     void (*rebuild)(); //在删除节点后，需要进行重建，重建后所有指针失效，需要重新scan

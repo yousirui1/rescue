@@ -189,5 +189,8 @@ void *thread_task(void *param)
 	init_queue(&task_queue, task_buf, MAX_VIDSBUFSIZE);
 
 	task_loop();
+
+	free(task_buf);
+
 	return (void *)ret;	
 }

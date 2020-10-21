@@ -43,7 +43,6 @@ partition_parent (dev_t part_dev)
   return makedev (parent_major, parent_minor);
 }
 
-
 /**
  * Return true if the named device (eg. C<dev == "sda">) contains the
  * root filesystem.  C<root_device> is the major:minor of the root
@@ -121,6 +120,7 @@ static void find_all_disks()
 			memset(result, 0, sizeof(result));
 			exec_cmd(buf, result);	
 
+			DEBUG("cat /sys/block/%s/removable %s",d->d_name, result);
 			sprintf(buf, "/dev/%s", d->d_name);
 			dev = linux_new(buf);
 			DEBUG("----------------------");
@@ -168,6 +168,7 @@ static void find_all_disks()
 			dev_info.disk_count++;
 		}
 	}
+	closedir(dir);
 }
 
 void find_all_netcards()
@@ -182,6 +183,10 @@ void find_all_netcards()
     {   
 		DEBUG("only find loop network");
 		exec_cmd("ifconfig eth0 169.254.1.1 netmask 255.255.0.0", result);	//设置默认地址
+	
+        strcpy(buf, "udhcpc -n -i eth0 ");
+        exec_cmd(buf, result);
+
     	ret = get_netcard_info(&dev_info.net);
     }   
 

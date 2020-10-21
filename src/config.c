@@ -71,6 +71,7 @@ void init_config()
         		memcpy(net->netmask, buf, strlen(buf));
 			}
     	}
+		DEBUG("set static  ip address");
 		char cmd[MAX_BUFLEN] = {0};
 		char result[MAX_BUFLEN] = {0};
 		exec_cmd("udhcpc -t 1 -R -q -n ", result);

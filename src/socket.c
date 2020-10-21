@@ -2,7 +2,6 @@
 #include "packet.h"
 #include "client.h"
 
-
 /* packet msg */
 unsigned short read_packet_order(unsigned char *buf)
 {
@@ -347,7 +346,6 @@ run_out:
     close_fd(fd);
     return -1;
 }
-
 
 /* 连接服务器 */
 int connect_server(int fd, const char *ip, int port, int count)

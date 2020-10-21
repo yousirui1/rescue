@@ -404,7 +404,6 @@ static int AllocStore(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint6
     if (pQe)
     {
         *ppQe = pQe;
-		
         return 0;
     }
 
@@ -427,7 +426,6 @@ static int AllocStore(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint6
     *ppQe = &storeDrv.pStoreCfg->entry[storeDrv.pStoreCfg->qcowCount];
     storeDrv.pStoreCfg->qcowCount++;
 
-	DEBUG("---------- realLba %lld", realLba);
     if (UpdateStoreEntry(*ppQe, difLevel, name, diskName, iStart, iEnd, realLba, type) < 0)
         return -1;
 
@@ -436,16 +434,21 @@ static int AllocStore(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint6
 
 // sizeLba: 保留大小
 // realLba: 实际大小
-static int AllocStoreSpace(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint64_t sizeLba, uint64_t realLba, uint8_t type, PYZY_QCOW_ENTRY* ppQe)
+static int AllocStoreSpace(uint32_t difLevel, YZYGUID name, YZYGUID diskName, uint64_t sizeLba, uint64_t realLba, uint8_t type, PYZY_QCOW_ENTRY* ppQe)
 {
-    int ret = AllocStore(difLevel, name, diskName, sizeLba, realLba, type, ppQe);
+    int ret = AllocStore(difLevel, &name, &diskName, sizeLba, realLba, type, ppQe);
+	
     if (ret == 0)
     {
         RebuildStoreConfig();
-        *ppQe = ScanStoreEntry(difLevel, name);
+        *ppQe = ScanStoreEntry(difLevel, &name);
     }
+	if(*ppQe == NULL)
+		return -1;
+		
     return ret;
 }
+
 uint64_t GetBackLba()
 {
     return storeDrv.storeLba + 28;

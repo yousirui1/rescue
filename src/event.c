@@ -219,6 +219,7 @@ void event_loop(int network_fd)
                 if(buf[0] == 'S')
                 {   
                     DEBUG("event thread pipe msg exit");
+					write(pipe_qt[1], buf, 1);
                     break;
                 }    
             }   
@@ -273,6 +274,7 @@ void event_loop(int network_fd)
                 continue;
 		}
 	}
+	close_fd(network_fd);
 }
 
 void *thread_event(void *param)

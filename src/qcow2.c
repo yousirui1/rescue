@@ -121,15 +121,15 @@ uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, 
 	str2uuid(name, &uuid);
 	char temp[32] = {0};
 	uuid2str(&uuid, temp);
-	YZYGUID desk_uuid = {0};
-	uuid2str(&desk_uuid, dev->disk_name);
+
+
 
 	DEBUG("temp %s", temp);
 	DEBUG("diff %d", diff);
 	DEBUG("name %s", name);
 	DEBUG("disk_type %d", disk_type);
 
-    ret = storeDrv.alloc(diff, uuid, desk_uuid, sizeLba, realLba, disk_type, &pQe);
+    ret = storeDrv.alloc(diff, uuid, *(PYZYGUID)dev->disk_name, sizeLba, realLba, disk_type, &pQe);
 	if(SUCCESS == ret)
 	{
 		DEBUG("sizeLba %lu", sizeLba);

@@ -437,7 +437,6 @@ static int AllocStore(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint6
 static int AllocStoreSpace(uint32_t difLevel, YZYGUID name, YZYGUID diskName, uint64_t sizeLba, uint64_t realLba, uint8_t type, PYZY_QCOW_ENTRY* ppQe)
 {
     int ret = AllocStore(difLevel, &name, &diskName, sizeLba, realLba, type, ppQe);
-	
     if (ret == 0)
     {
         RebuildStoreConfig();

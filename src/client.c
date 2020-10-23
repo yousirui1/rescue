@@ -1312,12 +1312,15 @@ static int recv_get_desktop_group_list(struct client *cli)
 
 									if(!dif_level_next || !operate_id_next)		//不存在 2
 									{
-										DEBUG("update qcow2 %s no find 2 update diff only 1 ", uuid->valuestring);
-										del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
-										send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
-										memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
-                                		if(desktop_group_name)
-                                    		strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+										if(operate_id->valueint != get_operate_qcow2(uuid->valuestring, 1))		//1 操作号不同
+										{
+											DEBUG("update qcow2 %s no find 2 update diff only 1 ", uuid->valuestring);
+											del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
+											send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
+											memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
+                                			if(desktop_group_name)
+                                    			strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+										}
 									}
 									else										//存在 1 2 
 									{

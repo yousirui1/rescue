@@ -281,7 +281,6 @@ void Uploadwindow::setProgressValue(struct progress_info *info)
             if(info->download_rate > 0)
                 ui->i_download_rate_label->setText(add_suffix_float(info->download_rate, "/s"));
             ui->i_progress_label->setText(QString("%1%").arg(info->progress));
-
             if(info->download_rate != 0 && info->total_size != 0)
             {
                 remain_time = (info->file_size - info->total_size)/info->download_rate;

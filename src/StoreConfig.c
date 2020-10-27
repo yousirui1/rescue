@@ -389,7 +389,7 @@ static void ScanSpaceFormInterval(uint64_t sizeLba, PYZYGUID diskName, int64_t *
         {
             suit = l;
             *startLba = pQe0->endLba;
-            *endLba = pQe1->startLba;
+            *endLba = pQe0->endLba + sizeLba;
         }
     }
 }
@@ -446,6 +446,34 @@ static int AllocStoreSpace(uint32_t difLevel, YZYGUID name, YZYGUID diskName, ui
 		return -1;
 		
     return ret;
+}
+
+static uint64_t  ScanSpace(PYZYGUID diskName, uint64_t* maxInterval, uint64_t* last)
+{
+    uint64_t  l,diskSize;
+    YZY_QCOW_ENTRY Qe = { 0 };
+    PYZY_QCOW_ENTRY pQe0;
+    PYZY_QCOW_ENTRY pQe1;
+    PYZY_QCOW_ENTRY diskList[YZY_MAX_STORE_QCOW_ENTRY];
+    uint32_t count = GetDiskList(diskName, diskList);
+    *maxInterval = 0;
+    *last = 0;
+    for (uint32_t i = 0; i < count; i++) //从两个文件间空隙alloc
+    {   
+        if (i == 0)  pQe0 = &Qe;//从0开始          
+        else pQe0 = diskList[i - 1]; 
+
+        pQe1 = diskList[i];
+        l = (pQe1->startLba - pQe0->endLba);
+        if ( *maxInterval < l)    
+            *maxInterval = l;
+    
+        if (*last < pQe1->endLba)
+            *last = pQe1->endLba;
+    }   
+    diskSize = GetDiskSizeLba(diskName);
+    *last = diskSize - *last; //磁盘剩余
+    return diskSize;
 }
 
 uint64_t GetBackLba()
@@ -536,6 +564,19 @@ void SetBoot(int idx, PYZY_QCOW_ENTRY pQe)
         storeDrv.pStoreCfg->shareLevel = pQe->difLevel;
     }
 }
+
+
+uint64_t available_space(PYZYGUID diskName)
+{
+    uint64_t max_size = 0;
+    uint64_t last_size = 0;
+
+    ScanSpace(diskName, &max_size, &last_size);
+
+    return max_size > last_size ? max_size : last_size;
+}
+
+
 
 StoreDriver storeDrv = {
     0,

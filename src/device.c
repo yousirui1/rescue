@@ -282,7 +282,8 @@ void init_device()
 	{
 		DEBUG("-----------%s  dev_info.mini_disk init_qcow2 ---------- %d ",dev_info.mini_disk->dev->path, dev_info.mini_disk->disk_ready);
 		init_qcow2(dev_info.mini_disk->dev, dev_info.mini_disk->disk_ready);	
-		terminal->disk_size = dev_info.mini_disk->total_space;
+		//terminal->disk_size = dev_info.mini_disk->total_space;
+		terminal->disk_size = available_space(dev_info.mini_disk->dev->disk_name);
 		DEBUG("terminal->disk_size %llu", terminal->disk_size);
         if(dev_info.mini_disk->disk_ready) // 安装ok
         {

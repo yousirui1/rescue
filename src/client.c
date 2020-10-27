@@ -6,6 +6,7 @@
 #include "task.h"
 #include "queue.h"
 #include "bt_client.h"
+#include "adlist.h"
 
 struct client m_client;
 static int server_s = -1;
@@ -13,9 +14,13 @@ static int server_s = -1;
 extern struct device_info dev_info;
 extern QUEUE task_queue;
 
-char m_desktop_group_name[128] = {0};
+char m_desktop_group_name[128][128] = {0};
 
 char m_group_diff_mode[8][37] = {0};
+
+int current_group = 0;
+int last_group = 0;
+
 
 pthread_mutex_t client_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -624,9 +629,6 @@ static int recv_desktop(struct client *cli)
 		if(desktop)
 		{
         	cJSON *desktop_group_name = cJSON_GetObjectItem(desktop, "desktop_group_name");
-			memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
-			if(desktop_group_name)
-				strcpy(m_desktop_group_name, desktop_group_name->valuestring);
 
 			cJSON *disks = cJSON_GetObjectItem(desktop, "disks");
 			int i, flag = 0;
@@ -647,6 +649,9 @@ static int recv_desktop(struct client *cli)
 				if(uuid && dif_level)
 				{
 					//if(scan_qcow2(uuid->valuestring, dif_level->valueint))
+
+					if(desktop_group_name)
+						strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
 					del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);	
 					//else
 					//	return send_desktop(cli, batch_no->valueint, ERROR);		
@@ -746,7 +751,7 @@ static int recv_down_torrent(struct client *cli)
 			uint64_t offset = -1;
 			if(torrent->dif_level == 1 && get_diff_mode(torrent->group_uuid) == 1)
 			{
-#if 0
+#if 1
 				offset = add_qcow2(dev_info.mini_disk->dev, torrent->uuid, torrent->dif_level,
 								(uint64_t)(torrent->file_size) + 1024 * 1024 * 4,  
 								torrent->real_size, torrent->sys_type, torrent->type, torrent->operate_id);
@@ -772,7 +777,8 @@ static int recv_down_torrent(struct client *cli)
 				if(torrent->dif_level == 3)		
 					torrent->dif_level = 2;
 
-				sprintf(task.file_name, "%s_%d", m_desktop_group_name, torrent->dif_level);
+
+				sprintf(task.file_name, "%s_%d", m_desktop_group_name[last_group++], torrent->dif_level);
             	task.diff = torrent->dif_level;
 				task.disk_type = torrent->type;
             	task.offset = offset;
@@ -1297,9 +1303,8 @@ static int recv_get_desktop_group_list(struct client *cli)
 									del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
 									send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
 									send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
-									memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
-                                	if(desktop_group_name)
-                                    	strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+									if(desktop_group_name)
+										strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
 								}
 								else									//存在 1
 								{
@@ -1317,9 +1322,10 @@ static int recv_get_desktop_group_list(struct client *cli)
 											DEBUG("update qcow2 %s no find 2 update diff only 1 ", uuid->valuestring);
 											del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
 											send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
-											memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
-                                			if(desktop_group_name)
-                                    			strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+											//listAddNodeHead(desktop_list, desktop_group_name->valuestring);
+
+											if(desktop_group_name)
+												strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
 										}
 									}
 									else										//存在 1 2 
@@ -1341,10 +1347,9 @@ static int recv_get_desktop_group_list(struct client *cli)
                                         		del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4); 
                                         		del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5); 
                                         		send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 3); 
-                                        		memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
-                                        		if(desktop_group_name)
-                                            		strcpy(m_desktop_group_name, desktop_group_name->valuestring);
-												
+
+												if(desktop_group_name)
+													strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
 											}
 											else
 											{
@@ -1352,9 +1357,8 @@ static int recv_get_desktop_group_list(struct client *cli)
 												del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
 												send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
 												send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
-												memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
-                                				if(desktop_group_name)
-                                    				strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+												if(desktop_group_name)
+													strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
 											}
 										}
 										else if(operate_id_next->valueint != get_operate_qcow2(uuid->valuestring, 2)) //1 相同 2 不同
@@ -1364,9 +1368,9 @@ static int recv_get_desktop_group_list(struct client *cli)
 											del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4); 
                                         	del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5); 
 											send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
-											memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
-                                			if(desktop_group_name)
-                                    			strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+
+											if(desktop_group_name)
+												strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
 										}
 										else
 										{
@@ -2013,6 +2017,7 @@ int init_client()
         DEBUG("login server ip: %s port: %d error", server->ip, server->port);
         return ERROR;
     }    
+	//desktop_list = listCreate();
     return SUCCESS;
 }
 

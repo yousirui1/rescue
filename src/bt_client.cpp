@@ -138,6 +138,7 @@ int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t phys
 						s.total_upload / 1000, s.progress_ppm / 10000);
 
 					strcpy(info->state, state(s.state));
+					info->file_size = s.total_wanted;
 					info->progress = s.progress_ppm / 10000;
 					info->download_rate = s.download_payload_rate;
 					info->upload_rate = s.upload_rate;

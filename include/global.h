@@ -36,5 +36,7 @@ void *thread_qt(void *param);
 void log_msg(const char *fmt, ...);
 void err_msg(const char *fmt, ...);
 
+/* socket.c */
+int send_pipe(char *buf, short cmd, int size, int type);
 
 #endif

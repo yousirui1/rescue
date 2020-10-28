@@ -80,7 +80,6 @@ struct _PedDevice {
 	uint8_t disk_name[16];
 	//uint64_t startLba;	
 	uint8_t boot_flag;		
-
     //bl
 };
 

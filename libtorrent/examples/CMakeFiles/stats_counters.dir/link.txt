@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/stats_counters.dir/stats_counters.o  -o stats_counters -rdynamic -ltorrent-rasterbar 

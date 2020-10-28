@@ -923,6 +923,21 @@ font: 12pt &quot;黑体&quot;;</string>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>dhcp_radio</tabstop>
+  <tabstop>static_radio</tabstop>
+  <tabstop>ip_edit</tabstop>
+  <tabstop>netmask_edit</tabstop>
+  <tabstop>gateway_edit</tabstop>
+  <tabstop>dns_edit</tabstop>
+  <tabstop>dns2_edit</tabstop>
+  <tabstop>server_ip_edit</tabstop>
+  <tabstop>cacel_btn</tabstop>
+  <tabstop>confirm_btn</tabstop>
+  <tabstop>error_confirm_btn</tabstop>
+  <tabstop>install_cacel_btn</tabstop>
+  <tabstop>install_confirm_btn</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

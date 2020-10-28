@@ -23,6 +23,8 @@ public:
     ~MainWindow();
 
     void keyPressEvent(QKeyEvent *e);
+    //void focusInEvent( QFocusEvent * event);
+    //bool eventFilter(QObject *watched, QEvent *event);
 
 signals:
     void display(int number);

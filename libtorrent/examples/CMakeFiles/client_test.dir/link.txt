@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/client_test.dir/client_test.o CMakeFiles/client_test.dir/print.o CMakeFiles/client_test.dir/torrent_view.o CMakeFiles/client_test.dir/session_view.o  -o client_test -rdynamic -ltorrent-rasterbar 

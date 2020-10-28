@@ -23,7 +23,7 @@
 build-lib:
 	sudo apt-get install uuid-dev
 	apt-get install libboost-system1.58-dev
-	apt-get install libglib2.0-dev	
+	apt-get install libglib2.0-dev
 	ln -s /usr/lib/x86_64-linux-gnu/glib-2.0/include/glibconfig.h /usr/include/
 	apt-get install libncurses-dev
 	apt-get install flex

@@ -160,7 +160,7 @@ border-bottom: 10px transparent;
            <number>0</number>
           </property>
           <item>
-           <widget class="QPushButton" name="installButton">
+           <widget class="mPushButton" name="installButton">
             <property name="minimumSize">
              <size>
               <width>576</width>
@@ -198,7 +198,7 @@ QPushButton#installButton:pressed
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="uploadButton">
+           <widget class="mPushButton" name="uploadButton">
             <property name="minimumSize">
              <size>
               <width>576</width>
@@ -226,7 +226,7 @@ color: #FFFFFF;</string>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="rebootButton">
+           <widget class="mPushButton" name="rebootButton">
             <property name="minimumSize">
              <size>
               <width>576</width>
@@ -512,6 +512,13 @@ color: #FFFFFF;</string>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>mPushButton</class>
+   <extends>QPushButton</extends>
+   <header>mpushbutton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

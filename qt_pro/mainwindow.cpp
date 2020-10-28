@@ -7,6 +7,7 @@
 #include <QKeyEvent>
 #include <QDesktopWidget>
 #include <QScreen>
+//#include <QFile
 
 void loadFont(QString fontFileName)
 {
@@ -15,6 +16,40 @@ void loadFont(QString fontFileName)
     qDebug()<<"index ID:"<<index;
 }
 
+#if 0
+class mPushButton : public QPushButton
+{
+        Q_OBJECT
+
+ public:
+       mPushButton(QWidget *parent=0);
+       ~mPushButton();
+ protected:
+       virtual void focusInEvent(QFocusEvent *e);
+       virtual void focusOutEvent(QFocusEvent *e);
+};
+
+
+mPushButton::mPushButton(QWidget *parent):QPushButton(parent)
+{
+
+}
+
+mPushButton::~mPushButton()
+{
+
+}
+
+void mPushButton::focusInEvent(QFocusEvent *e)
+{
+
+}
+
+void mPushButton::focusOutEvent(QFocusEvent *e)
+{
+
+}
+#endif
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MainWindow)
@@ -28,12 +63,9 @@ MainWindow::MainWindow(QWidget *parent) :
         this->showFullScreen();
         this->setAutoFillBackground(true);
     }
-#if 0
-    ui.pushButton->setFocus();    //设置默认焦点
-    ui.pushButton->setShortcut( QKeySequence::InsertParagraphSeparator );  //设置快捷键为键盘的“回车”键
-    ui.pushButton->setShortcut(Qt::Key_Enter);  //设置快捷键为enter键
-    ui.pushButton->setShortcut(Qt::Key_Return); //设置快捷键为小键盘上的enter键
-#endif
+
+
+
     global->setDesktopRect(QApplication::desktop()->availableGeometry());
 
     loadFont("/opt/freetype2/font/pin.ttf");
@@ -94,7 +126,6 @@ MainWindow::MainWindow(QWidget *parent) :
     global->startTimeOut();
     global->pipe->start();
 	DEBUG("global->ip %s", global->conf.netcard.ip);
-
     if(global->install_flag)
     {
         emit display(2);
@@ -113,6 +144,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
+    DEBUG("keyPressEvent");
     if (event->key() == Qt::Key_F2)
     {
         DEBUG("F2");
@@ -130,16 +162,23 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     	Global *global = Global::getGlobal();
     	global->pipe->send_pipe(head, REBOOT_PIPE, 0);
     }
-#if 0
-    if (event->key() == Qt::Key_F1)
+    if((event->modifiers() == Qt::AltModifier) &&  (event->key() == Qt::Key_F1))
     {
         char head[HEAD_LEN] = {0};
         Global *global = Global::getGlobal();
         global->pipe->send_pipe(head, EXIT_PROGRESS_PIPE, 0);
         qApp->exit();
     }
-#endif
+
+
 }
+
+#if 0
+void QWidget::focusOutEvent ( QFocusEvent * event )
+{
+
+}
+#endif
 
 void MainWindow::on_installButton_clicked()
 {

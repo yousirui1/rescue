@@ -20,9 +20,6 @@ static void do_exit()
     pthread_join(pthread_qt, &tret);
     DEBUG("pthread_exit %d qt", (int *)tret);
 
-    //pthread_join(pthread_task, &tret);
-    //DEBUG("pthread_exit %d task", (int *)tret);
-
     pthread_join(pthread_event, &tret);
     DEBUG("pthread_exit %d event", (int *)tret);
 }
@@ -141,24 +138,19 @@ int main(int argc, char *argv[])
 	{
 		DIE("create  tcp thread ret: %d error: %s", ret, strerror(ret));
 	}
-#if 0
 	ret = pthread_create(&pthread_qt, NULL, thread_qt, NULL);
 	if(0 != ret)
 	{
 		DIE("create qt thread ret: %d error: %s", ret, strerror(ret));
 	}
-#endif
 	ret = pthread_create(&pthread_task, NULL, thread_task, NULL);
 	if(0 != ret)
 	{
 		DIE("create qt thread ret: %d error: %s", ret, strerror(ret));
 	}	
-
 	client_connect();
 	do_exit();
 	close_pipe();
-	close_device();
 	close_logs();
 	return 0;
 }
-

@@ -3,7 +3,7 @@
 #include "StoreConfig.h"
 #include "queue.h"
 #include "task.h"
-#include "torrent.h"
+#include "packet.h"
 
 struct device_info dev_info;
 #define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
@@ -42,7 +42,6 @@ partition_parent (dev_t part_dev)
 
   return makedev (parent_major, parent_minor);
 }
-
 
 /**
  * Return true if the named device (eg. C<dev == "sda">) contains the
@@ -121,6 +120,7 @@ static void find_all_disks()
 			memset(result, 0, sizeof(result));
 			exec_cmd(buf, result);	
 
+			DEBUG("cat /sys/block/%s/removable %s",d->d_name, result);
 			sprintf(buf, "/dev/%s", d->d_name);
 			dev = linux_new(buf);
 			DEBUG("----------------------");
@@ -183,6 +183,10 @@ void find_all_netcards()
     {   
 		DEBUG("only find loop network");
 		exec_cmd("ifconfig eth0 169.254.1.1 netmask 255.255.0.0", result);	//设置默认地址
+	
+        strcpy(buf, "udhcpc -n -i eth0 ");
+        exec_cmd(buf, result);
+
     	ret = get_netcard_info(&dev_info.net);
     }   
 
@@ -221,12 +225,6 @@ void find_all_netcards()
         } 	
     }   
 	DEBUG("net->ip %s net->netmask %s net->mac %s", net->ip, net->netmask, net->mac);
-}
-
-
-void close_device()
-{
-	//dev_info
 }
 
 
@@ -284,7 +282,8 @@ void init_device()
 	{
 		DEBUG("-----------%s  dev_info.mini_disk init_qcow2 ---------- %d ",dev_info.mini_disk->dev->path, dev_info.mini_disk->disk_ready);
 		init_qcow2(dev_info.mini_disk->dev, dev_info.mini_disk->disk_ready);	
-		terminal->disk_size = dev_info.mini_disk->total_space;
+		//terminal->disk_size = dev_info.mini_disk->total_space;
+		terminal->disk_size = available_space(dev_info.mini_disk->dev->disk_name);
 		DEBUG("terminal->disk_size %llu", terminal->disk_size);
         if(dev_info.mini_disk->disk_ready) // 安装ok
         {

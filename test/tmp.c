@@ -1,4 +1,113 @@
 #if 0
+                        if(update_flag)
+                        { if(!strcmp(uuid->valuestring, current_uuid))
+                            {
+                                DEBUG("update qcow2 ");
+                                DEBUG("dif_level:%d prefix %s real_size %s reserve_size %s \n"
+                                    "type: %d uuid: %s",dif_level->valueint, prefix->valuestring, real_size->valuestring,
+                                                    reserve_size->valuestring, type->valueint, uuid->valuestring );
+                                send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 
+                                                        dif_level->valueint );
+                            }
+                            else
+                            {
+                                update_flag = 0;
+                                current_diff = -1;
+                            }
+                        }
+
+                        /* 存在不同更新 */
+                        if(dif_level->valueint == 0 && 
+                            max_diff->valueint != (current_diff = get_max_diff_qcow2(uuid->valuestring)) &&
+                            current_diff != -1)
+                            
+                        {
+                            DEBUG("current_diff %d", current_diff);
+                            DEBUG("max_diff->value %d", max_diff->valueint);
+                            DEBUG("del current uuid: %s all diff", uuid->valuestring);
+                            del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);     //删除当前的不同的驱动
+                            strcpy(current_uuid, uuid->valuestring);
+                            update_flag = 1;
+                        }
+#endif
+
+
+							if(scan_qcow2(uuid->valuestring, 0) && !scan_qcow2(uuid->valuestring, 1))
+							{
+								DEBUG("update qcow2 %s download diff all", uuid->valuestring);
+								del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
+								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
+								memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
+								if(desktop_group_name)
+									strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+							}
+							else if(operate_id->valueint != get_operate_qcow2(uuid->valuestring, 1))
+							{
+							if(diff_mode->valueint)	//模式1 diff 1 full disk and commit diff 1,2 -> 1
+							{
+								if(operate_id->valueint == get_operate_qcow2(uuid->valuestring, 1) + 1)		
+								{
+									item = cJSON_GetArrayItem(disks, 2);
+									if(!item)
+										continue;
+									dif_level = cJSON_GetObjectItem(item, "dif_level");
+									operate_id = cJSON_GetObjectItem(item, "operate_id");
+									if(!dif_level || !operate_id)
+										continue;
+									if(operate_id->valueint == get_operate_qcow2(uuid->valuestring, 2) + 1 && !(scan_qcow2(uuid->valuestring, 3)))
+									{
+										DEBUG("update qcow2 %s download diff 3 and commit ", uuid->valuestring);
+										del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4);
+										del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5);
+										send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 3);
+										memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
+										if(desktop_group_name)
+											strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+										//;		下载合并
+										continue;
+									}
+								}							
+							}
+							DEBUG("uuid->valuestring %s ", uuid->valuestring);
+							if(scan_qcow2(uuid->valuestring, 0)) // 模式0  update diff del 1,2 download 1, 2
+							{
+								DEBUG("update qcow2 %s download diff all", uuid->valuestring);
+								del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
+								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
+								memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
+								if(desktop_group_name)
+									strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+							}
+							}
+						}
+						if(dif_level->valueint == 2)
+						{
+							if(scan_qcow2(uuid->valuestring, 0)  && !(scan_qcow2(uuid->valuestring, 2))) 
+							{
+								del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4);
+								del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5);
+								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
+								memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
+								if(desktop_group_name)
+									strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+							}
+							
+							if(operate_id->valueint > (get_operate_qcow2(uuid->valuestring, 2) + 1))
+							{
+								if(scan_qcow2(uuid->valuestring, 0) && scan_qcow2(uuid->valuestring, 1)) 
+								{
+									del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4);
+									del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5);
+									send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
+									memset(m_desktop_group_name, 0, sizeof(m_desktop_group_name));
+									if(desktop_group_name)
+										strcpy(m_desktop_group_name, desktop_group_name->valuestring);
+								}
+							}
+						}	
+
+
+#if 0
     struct torrent_task task = {0}; 
     memcpy(task.torrent_file, "123", 3);
     task.offset = 10001;

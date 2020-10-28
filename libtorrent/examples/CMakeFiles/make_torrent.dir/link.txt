@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/make_torrent.dir/make_torrent.o  -o make_torrent -rdynamic -ltorrent-rasterbar 

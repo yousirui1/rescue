@@ -204,6 +204,17 @@ void ConfigWindow::keyPressEvent(QKeyEvent *event)
     {
          this->focusNextPrevChild(TRUE);//按D时焦点切换至下一部件
     }
+
+
+    QWidget *current_focus = this->focusWidget();
+    QPushButton *btn = qobject_cast<QPushButton*>(current_focus);
+    if(btn)
+    {
+        btn->setFocus();
+        btn->setShortcut( QKeySequence::InsertParagraphSeparator); //设置快捷键为键盘的“回车”键
+        btn->setShortcut(Qt::Key_Enter);   //设置快捷键为enter键
+        btn->setShortcut(Qt::Key_Return); //设置快捷键为小键盘上的enter键
+    }
 }
 
 void ConfigWindow::showEvent(QShowEvent *e)

@@ -34,7 +34,6 @@ struct blkdev_ioctl_param {
 };
 
 
-
 /* from <linux/major.h> */
 #define IDE0_MAJOR              3
 #define IDE1_MAJOR              22
@@ -353,7 +352,15 @@ static _device_seek(const PedDevice* dev, PedSector sector)
 }
 
 
+void linux_destroy(PedDevice *dev)
+{
+	void *p = dev->dmtype;
 
+	free(p);
+	free(dev->path);
+	free(dev->model);
+	free(dev);	
+}
 
 
 
@@ -565,30 +572,6 @@ error_free_dev:
 error:
 	return NULL;
 }
-
-
-void linux_destroy(PedDevice *dev)
-{
-//	if(dev->path)
-//		free(dev->path);
-	
-	linux_close(dev);
-
-	if(dev->path)
-		free(dev->path);
-
-	void *p = dev->dmtype;
-
-	free(p);
-	free(dev->path);
-	free(dev->model);
-	free(dev);	
-
-		
-}
-
-
-
 
 
 int read_sector(PedDevice const *dev, PedSector start, void **buf)

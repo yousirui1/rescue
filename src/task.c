@@ -2,7 +2,8 @@
 #include "queue.h"
 #include "task.h"
 #include "device.h"
-#include "torrent.h"
+#include "packet.h"
+#include "bt_client.h"
 
 QUEUE task_queue;
 
@@ -26,7 +27,6 @@ void task_loop()
     		char buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};
     		progress_info *info = (progress_info *)&buf[HEAD_LEN];
             struct torrent_task * task = (struct torrent_task *)index->pBuf;
-            DEBUG("index->torrent_file %s", task->torrent_file);
             ret = start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name, (uint64_t)task->offset * 512); 
 			DEBUG("task bt %s ret: %d", task->torrent_file, ret);
 			if(ret != SUCCESS)			//下载失败
@@ -38,6 +38,7 @@ void task_loop()
 				clear_task(&task_queue);		
 				if(ret == 2)	//timeout 
 				{
+					//DEBUG("Download Timeout");
 					DEBUG("Timeout redown group_uuid %s task->uuid %s", task->group_uuid, task->uuid);
 					switch(task->diff)
 					{
@@ -154,7 +155,6 @@ void task_loop()
 		}
         de_queuePos(&task_queue);
     }  
-	free(task_queue.pBuf);
 }
 
 void clear_task()
@@ -189,5 +189,8 @@ void *thread_task(void *param)
 	init_queue(&task_queue, task_buf, MAX_VIDSBUFSIZE);
 
 	task_loop();
+
+	free(task_buf);
+
 	return (void *)ret;	
 }

@@ -27,6 +27,9 @@ int uuid2str(PYZYGUID GUID, char* uuid)
 }
 
 
+
+
+
 int check_qcow2(PedDevice *dev)
 {
     DiskDriver dd, *pdd;
@@ -98,7 +101,7 @@ uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, 
 	DEBUG("name %s", name);
 	DEBUG("disk_type %d", disk_type);
 
-    ret = storeDrv.alloc(diff, &uuid, dev->disk_name, sizeLba, realLba, disk_type, &pQe);
+    ret = storeDrv.alloc(diff, uuid, *(PYZYGUID)dev->disk_name, sizeLba, realLba, disk_type, &pQe);
 	if(SUCCESS == ret)
 	{
 		DEBUG("sizeLba %lu", sizeLba);

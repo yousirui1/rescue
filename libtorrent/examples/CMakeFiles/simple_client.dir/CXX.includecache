@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ysr/project/libtorrent/examples/simple_client.cpp
+cstdlib
+-
+libtorrent/entry.hpp
+/home/ysr/project/libtorrent/examples/libtorrent/entry.hpp
+libtorrent/bencode.hpp
+/home/ysr/project/libtorrent/examples/libtorrent/bencode.hpp
+libtorrent/session.hpp
+/home/ysr/project/libtorrent/examples/libtorrent/session.hpp
+libtorrent/torrent_info.hpp
+/home/ysr/project/libtorrent/examples/libtorrent/torrent_info.hpp
+iostream
+-
+

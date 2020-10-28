@@ -36,8 +36,7 @@ private slots:
     void on_pushButton_12_clicked();
     void on_pushButton_11_clicked();
     void on_template_size_edit_textChanged(const QString &arg1);
-
-
+    void on_template_name_edit_editingFinished();
 };
 
 #endif // OSWINDOW_H

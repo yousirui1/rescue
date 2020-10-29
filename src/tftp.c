@@ -151,7 +151,7 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
     FILE *fp = fopen(local_file, "w");
     if(fp == NULL){
         printf("Create file \"%s\" error.\n", local_file);
-        return;
+        return ERROR;
     }   
 	time_t last_time = current_time;	
     /* receive data. */
@@ -218,8 +218,12 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
         }   
         block ++; 
     }while(ret == blocksize + 4); 
+
 	close_fd(udp.fd);	
     fclose(fp);
+	//if(info->progress == )
+
+
 	return SUCCESS;
 }
 

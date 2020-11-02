@@ -120,7 +120,7 @@ void task_loop()
 			}
 			if(STRPREFIX (task->remote_file, "vmlinuz-5.2.8-lfs-9.0"))
 			{
-				DEBUG("/boot/linux/vmlinuz-5.2.8-lfs-9.0_new /boot/linux/vmlinuz-5.2.8-lfs-9.0");
+				DEBUG("mv /boot/linux/vmlinuz-5.2.8-lfs-9.0_new /boot/linux/vmlinuz-5.2.8-lfs-9.0");
 				exec_cmd("mv /boot/linux/vmlinuz-5.2.8-lfs-9.0_new /boot/linux/vmlinuz-5.2.8-lfs-9.0",result);
 				if(task->type == 3)
 				{

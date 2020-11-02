@@ -108,7 +108,8 @@ static void find_all_disks()
         	STRPREFIX (d->d_name, "hd") ||
         	STRPREFIX (d->d_name, "sd") ||
         	STRPREFIX (d->d_name, "ubd") ||
-        	STRPREFIX (d->d_name, "vd")) 
+        	STRPREFIX (d->d_name, "vd") ||
+        	STRPREFIX (d->d_name, "nvme0n1"))
 		{
 			if(device_contains(d->d_name, root_device))
 				continue;
@@ -168,6 +169,8 @@ static void find_all_disks()
 			dev_info.disk_count++;
 		}
 	}
+
+
 	closedir(dir);
 }
 
@@ -281,6 +284,7 @@ void init_device()
 	if(dev_info.mini_disk)
 	{
 		DEBUG("-----------%s  dev_info.mini_disk init_qcow2 ---------- %d ",dev_info.mini_disk->dev->path, dev_info.mini_disk->disk_ready);
+
 		init_qcow2(dev_info.mini_disk->dev, dev_info.mini_disk->disk_ready);	
 		//terminal->disk_size = dev_info.mini_disk->total_space;
 		terminal->disk_size = available_space(dev_info.mini_disk->dev->disk_name);
@@ -306,7 +310,18 @@ int mount_boot()
     char result[MAX_BUFLEN] = {0};
     char cmd[MAX_BUFLEN] = {0};
 
-    sprintf(cmd, mount_sh, dev_info.mini_disk->name);
+	DEBUG("dev_info.mini_disk->name %s", dev_info.mini_disk->name);	
+	if(STRPREFIX(dev_info.mini_disk->name, "nvme0n1"))
+	{
+		DEBUG("dev_info.mini_disk->name %s", dev_info.mini_disk->name);	
+    	sprintf(cmd, mount_nv_sh, dev_info.mini_disk->name);
+	}
+	else
+	{
+    	sprintf(cmd, mount_sh, dev_info.mini_disk->name);
+	}
+	DEBUG("cmd %s", cmd);
+
     exec_cmd(cmd, result);
     if(strstr(result, "successd"))
     {   
@@ -372,7 +387,15 @@ int format_disk(const char *path)
     sleep(1);
     exec_cmd("mdev -s", result); 
 
-    sprintf(cmd, "mkfs.vfat %s1", path);
+	if(STRPREFIX(path, "/dev/nvme0n1"))
+	{
+    	sprintf(cmd, "mkfs.vfat %sp1", path);
+	}
+	else
+	{
+    	sprintf(cmd, "mkfs.vfat %s1", path);
+	}
+
     DEBUG("cmd: %s", cmd);
     exec_cmd(cmd, result); 
 	DEBUG("result %s", result);

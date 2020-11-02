@@ -9,7 +9,7 @@ extern "C"
 
 
 struct terminal_info{
-    unsigned int id;
+    int id;
     unsigned char name[128];
     unsigned char platform[12];     //平台 x86 arm
     unsigned int desktop_type;      //1, 2, 个人桌面教学桌面

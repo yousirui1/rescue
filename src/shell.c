@@ -79,6 +79,17 @@ char mount_sh[] = {"#!/bin/sh \n"
 					 "fi \n"
 					};
 
+char mount_nv_sh[] = {"#!/bin/sh \n"
+ 					 "mount /dev/%sp1 /boot \n" 
+					 "if [ $? -ne 0 ]; then \n"
+    				 "	echo \"failed\" \n"
+					 "else \n"
+					 "	echo \"successd\" \n"
+					 "fi \n"
+					};
+
+
+
 char umount_sh[] = {"#!/bin/sh \n"
  					 "umount  /boot \n" 
 					 "if [ $? -ne 0 ]; then \n"
@@ -87,6 +98,7 @@ char umount_sh[] = {"#!/bin/sh \n"
 					 "	echo \"successd\" \n"
 					 "fi \n"
 					};
+
 
 char check_data_sh[] = {"#!/bin/sh \n"
  					 "date -s %s \n" 

@@ -24,6 +24,7 @@ void init_config()
     server_info *server = &(conf.server);
 
     DEBUG("config_file %s", config_file);
+	//terminal->id = -1;
     /* base */
     conf.install_flag = read_profile_int(BASE_SECTION, BASE_INSTALL_KEY, 0, config_file); 
 

@@ -27,9 +27,6 @@ int uuid2str(PYZYGUID GUID, char* uuid)
 }
 
 
-
-
-
 int check_qcow2(PedDevice *dev)
 {
     DiskDriver dd, *pdd;

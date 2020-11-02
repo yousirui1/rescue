@@ -44,7 +44,7 @@ ConfigWindow::ConfigWindow(QWidget *parent) :
     ui->server_ip_edit->setValidator(validator);
 
     /* 数字格式 */
-    QRegExpValidator *num_validator = new QRegExpValidator(QRegExp("^[1-9][0-9]{1,3}"), this);
+    QRegExpValidator *num_validator = new QRegExpValidator(QRegExp("^[\-|1-9][0-9]{1,3}"), this);
     ui->num_edit->setValidator(num_validator);
 
     /* 终端名称 */

@@ -129,6 +129,10 @@ int main(int argc, char *argv[])
 
 	parse_options(argc, argv);
 
+#if 0
+    p2v_transform("192.169.27.197", "root", "123qwe,.", 
+                  "template-voi", "test", "/dev/sda");
+#else
 	init_pipe();
 	init_device();
 	init_config();
@@ -152,5 +156,6 @@ int main(int argc, char *argv[])
 	do_exit();
 	close_pipe();
 	close_logs();
+#endif
 	return 0;
 }

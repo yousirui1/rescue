@@ -111,9 +111,11 @@ void task_loop()
 			if(strlen(task->file_name) > 0)
 				strcpy(info->file_name, task->file_name);
 			
+			DEBUG("tftp_get !!!!!!!!!!!!!!!");
 			ret = tftp_get(task->server_ip, task->remote_file, task->local_file, buf, task->type);
 			if(ret != SUCCESS)
 			{
+				DEBUG("tftp tftp_get 1111111111111");
 				send_error_msg(INSTALL_ERR);
 				clear_task(&task_queue);		
 				continue;
@@ -151,6 +153,7 @@ void task_loop()
             	info->progress = 100;
             	send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
 			}
+			DEBUG("tftp_get end --------------------------");
 		}
         de_queuePos(&task_queue);
     }  

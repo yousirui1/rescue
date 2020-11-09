@@ -751,7 +751,7 @@ static int recv_down_torrent(struct client *cli)
 			uint64_t offset = -1;
 			if(torrent->dif_level == 1 && get_diff_mode(torrent->group_uuid) == 1)
 			{
-#if 1
+#if 0
 				offset = add_qcow2(dev_info.mini_disk->dev, torrent->uuid, torrent->dif_level,
 								(uint64_t)(torrent->file_size) + 1024 * 1024 * 4,  
 								torrent->real_size, torrent->sys_type, torrent->type, torrent->operate_id);

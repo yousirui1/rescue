@@ -134,7 +134,7 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
     int time_wait_data;
     unsigned short block = 1;
 	char *buf = (char *)&recv_packet;
-	uint64_t file_size = 0;
+	uint64_t file_size = -1;
 	
 	progress_info *info = (progress_info *)&pipe_buf[HEAD_LEN];
 
@@ -150,7 +150,7 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
 	
     FILE *fp = fopen(local_file, "w");
     if(fp == NULL){
-        printf("Create file \"%s\" error.\n", local_file);
+        DEBUG("Create file \"%s\" error.", local_file);
         return ERROR;
     }   
 	time_t last_time = current_time;	
@@ -161,9 +161,16 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
             ret = recvfrom(udp.fd, &recv_packet, sizeof(struct tftp_packet), MSG_DONTWAIT,
                     (struct sockaddr *)&udp.recv_addr, &addr_len);
 
+			if(ret < 0)
+			{
+				//DEBUG("usleep %d", ret);
+				usleep(200);
+				continue;
+			}
+	
             if(ret > 0 && ret < 4)
 			{ 
-                printf("Bad packet: ret=%d\n", ret);
+                DEBUG("Bad packet: ret=%d", ret);
             }   
             if(ret >= 4 && recv_packet.cmd == htons(CMD_DATA) && recv_packet.block == htons(block))
 			{
@@ -207,7 +214,6 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
     			send_packet.cmd = htons(CMD_ACK);
                 sendto(udp.fd, &send_packet, sizeof(struct tftp_packet), 0, (struct sockaddr*)&udp.recv_addr, addr_len);
 			}
-			usleep(50);
         }   
         if(time_wait_data >= PKT_RECV_TIMEOUT * PKT_MAX_RXMT){
             DEBUG("Wait for DATA #%d timeout.", block);
@@ -221,6 +227,7 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
 	close_fd(udp.fd);	
     fclose(fp);
 
+	DEBUG("tftp end info->file_size %lu info->total_size %lu", info->file_size, info->total_size);
 	if(info->file_size == info->total_size)
 		return SUCCESS;
 	else

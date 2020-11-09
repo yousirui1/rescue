@@ -24,7 +24,7 @@ void init_config()
     server_info *server = &(conf.server);
 
     DEBUG("config_file %s", config_file);
-	//terminal->id = -1;
+	terminal->id = 1;
     /* base */
     conf.install_flag = read_profile_int(BASE_SECTION, BASE_INSTALL_KEY, 0, config_file); 
 
@@ -75,9 +75,12 @@ void init_config()
 		DEBUG("set static  ip address");
 		char cmd[MAX_BUFLEN] = {0};
 		char result[MAX_BUFLEN] = {0};
-		exec_cmd("udhcpc -t 1 -R -q -n ", result);
+		exec_cmd("udhcpc -t 1 -R -q -n ", result);		//关闭dhcp
 		sprintf(cmd, "ifconfig eth0 %s netmask %s", net->ip, net->netmask);
 		exec_cmd(cmd, result);
+
+        sprintf(cmd, "route add default gw %s", net->gateway);
+        exec_cmd(cmd, result);
 	}
 
     if(read_profile_string(NET_SECTION, NET_GATEWAY_KEY, buf, sizeof(buf), net->gateway, config_file))
@@ -135,20 +138,6 @@ void init_config()
 	
 	get_version(&conf.major_ver, &conf.minor_ver);
 
-    if(!net->is_dhcp)
-    {   
-		DEBUG("net->is_dhcp %d net->ip %s net->netmask %s", net->is_dhcp, net->ip, net->netmask);
-		if(strlen(net->ip) != 0 && strlen(net->netmask) != 0 )
-		{
-			exec_cmd("udhcpc -t 1 -R -q -n ", result);
-			
-        	sprintf(cmd, "ifconfig eth0 %s netmask %s", net->ip, net->netmask);
-			DEBUG("ifconfig");
-        	exec_cmd(cmd, result);
-        	sprintf(cmd, "route add default gw %s", net->gateway);
-        	exec_cmd(cmd, result);
-		}
-    }   
 	DEBUG("dhcp %d set static ip: %s netmask: %s gw: %s mac: %s", net->is_dhcp, net->ip, net->netmask, net->gateway, net->mac);
 	DEBUG("version: v%d.%d", conf.major_ver, conf.minor_ver);	
 }

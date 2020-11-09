@@ -180,16 +180,17 @@ void find_all_netcards()
     int i;
     char buf[MAX_BUFLEN] = {0};
     char result[MAX_BUFLEN] = {0};
+
+    netcard_param *net = &(conf.netcard);
+
     ret = get_netcard_info(&dev_info.net);
 
     if(ret == 1) 		//未获取ip 只扫描到loop网卡 
     {   
 		DEBUG("only find loop network");
+        //exec_cmd("udhcpc -n -i eth0", result);			//没必要尝试了
+		//exec_cmd("udhcpc -t 1 -R -q -n ", result);		//关闭dhcp
 		exec_cmd("ifconfig eth0 169.254.1.1 netmask 255.255.0.0", result);	//设置默认地址
-	
-        strcpy(buf, "udhcpc -n -i eth0 ");
-        exec_cmd(buf, result);
-
     	ret = get_netcard_info(&dev_info.net);
     }   
 
@@ -200,7 +201,6 @@ void find_all_netcards()
 
 	DEBUG("dev_info.netcard_count %d", dev_info.netcard_count);
 
-    netcard_param *net = &(conf.netcard);
     for(i = 0; i < dev_info.netcard_count; i++)
     {   
         DEBUG("dev_info.net[%d].name %s",i, dev_info.net[i].name);
@@ -367,6 +367,7 @@ int format_disk(const char *path)
     }   
 
     sprintf(cmd, "parted -s %s mkpart YZYVOI fat32 0%c 1.075G", path, '%');
+    //sprintf(cmd, "parted -s %s mkpart YZYVOI fat32 0%c 2G", path, '%');
     DEBUG("cmd: %s", cmd);
     exec_cmd(cmd, result);  
     if(strstr(result, "Error"))

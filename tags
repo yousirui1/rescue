@@ -42,6 +42,8 @@ ALIGNMENT_NONE	parted/src/parted.c	/^        ALIGNMENT_NONE = 2,$/;"	e	enum:__an
 ALIGNMENT_OPTIMAL	parted/src/parted.c	/^        ALIGNMENT_OPTIMAL$/;"	e	enum:__anon169	file:
 ALTERNATE_CYLINDERS_USED	parted/include/fdasd.h	150;"	d
 ALTERNATE_CYLINDERS_USED	parted/include/fdasd.in.h	150;"	d
+AL_START_HEAD	include/adlist.h	77;"	d
+AL_START_TAIL	include/adlist.h	78;"	d
 AMTAR	libtorrent/examples/Makefile	/^AMTAR = $${TAR-tar}$/;"	m
 AMTAR	libtorrent/include/libtorrent/Makefile	/^AMTAR = $${TAR-tar}$/;"	m
 AM_CPPFLAGS	libtorrent/examples/Makefile	/^AM_CPPFLAGS = -ftemplate-depth-50 -g0 -Os$/;"	m
@@ -59,7 +61,7 @@ AM_V_at	libtorrent/include/libtorrent/Makefile	/^AM_V_at = $(am__v_at_$(V))$/;"	
 AM_V_lt	libtorrent/examples/Makefile	/^AM_V_lt = $(am__v_lt_$(V))$/;"	m
 ANNOUNCE_FLAGS_HPP	libtorrent/include/libtorrent/kademlia/announce_flags.hpp	34;"	d
 AOE_MAJOR	parted/src/linux.c	314;"	d	file:
-AOE_MAJOR	src/linux.c	91;"	d	file:
+AOE_MAJOR	src/linux.c	90;"	d	file:
 AR	Makefile	/^AR = $(CROSS_COMPILE)ar$/;"	m
 AR	libtorrent/Makefile	/^AR = $(CROSS_COMPILE)ar$/;"	m
 AR	libtorrent/examples/Makefile	/^AR = ar$/;"	m
@@ -111,7 +113,7 @@ AS	parted/Makefile	/^AS = $(CROSS_COMPILE)as$/;"	m
 ASC	hwinfo/src/hd/dvd.c	22;"	d	file:
 ASCQ	hwinfo/src/hd/dvd.c	23;"	d	file:
 ATARAID_MAJOR	parted/src/linux.c	302;"	d	file:
-ATARAID_MAJOR	src/linux.c	79;"	d	file:
+ATARAID_MAJOR	src/linux.c	78;"	d	file:
 AUTHORS	parted/src/parted.c	39;"	d	file:
 AUTOCONF	libtorrent/examples/Makefile	/^AUTOCONF = ${SHELL} \/home\/ysr\/project\/libtorrent\/build-aux\/missing autoconf$/;"	m
 AUTOCONF	libtorrent/include/libtorrent/Makefile	/^AUTOCONF = ${SHELL} \/home\/ysr\/project\/libtorrent\/build-aux\/missing autoconf$/;"	m
@@ -129,7 +131,7 @@ AddDisk	src/StoreConfig.c	/^int AddDisk(PYZYGUID diskName, uint64_t size_lba)$/;
 AddStoreEntry	src/StoreConfig.c	/^static int AddStoreEntry(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint64_t sizeLba, uint64_t realLba, int type, PYZY_QCOW_ENTRY *diskList, uint32_t count) \/\/�½�λ�ô�0��ʼ�����ж�д����������?��λ��ƫ��$/;"	f	file:
 AlignmentType	parted/include/ui.h	/^enum AlignmentType$/;"	g
 AllocStore	src/StoreConfig.c	/^static int AllocStore(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint64_t sizeLba, uint64_t realLba, uint8_t type, PYZY_QCOW_ENTRY* ppQe)$/;"	f	file:
-AllocStoreSpace	src/StoreConfig.c	/^static int AllocStoreSpace(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint64_t sizeLba, uint64_t realLba, uint8_t type, PYZY_QCOW_ENTRY* ppQe)$/;"	f	file:
+AllocStoreSpace	src/StoreConfig.c	/^static int AllocStoreSpace(uint32_t difLevel, YZYGUID name, YZYGUID diskName, uint64_t sizeLba, uint64_t realLba, uint8_t type, PYZY_QCOW_ENTRY* ppQe)$/;"	f	file:
 AlternateLBA	parted/src/gpt.c	/^  uint64_t AlternateLBA;$/;"	m	struct:_GuidPartitionTableHeader_t	file:
 Announcing	libtorrent/bak/udp_tracker.cpp	/^DWORD CUDPTrackerClient::Announcing(BYTE* pInfoHash,BYTE * pPeerID,$/;"	f	class:CUDPTrackerClient
 ArpHead	test/arp.c	/^  }ArpHead;$/;"	t	typeref:struct:ARP	file:
@@ -160,7 +162,7 @@ BIOS_ROM_SIZE	hwinfo/src/hd/bios.h	2;"	d
 BIOS_ROM_START	hwinfo/src/hd/bios.h	1;"	d
 BIOS_TEST	hwinfo/src/hd/bios.c	95;"	d	file:
 BITROTATE_INLINE	virt-p2v/include/gnulib/bitrotate.h	31;"	d
-BLKEXT_MAJOR	src/linux.c	98;"	d	file:
+BLKEXT_MAJOR	src/linux.c	97;"	d	file:
 BLKFLSBUF	parted/src/linux.c	247;"	d	file:
 BLKFLSBUF	src/linux.c	22;"	d	file:
 BLKGETLASTSECT	parted/src/linux.c	249;"	d	file:
@@ -225,7 +227,7 @@ BUSTYPE_PCI	hwinfo/src/smp/smp.c	86;"	d	file:
 BUSTYPE_PCMCIA	hwinfo/src/smp/smp.c	87;"	d	file:
 BUSTYPE_VL	hwinfo/src/smp/smp.c	85;"	d	file:
 BYTE	src/tools.c	/^typedef char BYTE;$/;"	t	file:
-BYTE_TYPE	include/packet.h	72;"	d
+BYTE_TYPE	include/packet.h	74;"	d
 BarStyle	qt_pro/QRoundProgressBar.h	/^    enum BarStyle$/;"	g	class:QRoundProgressBar
 Bi	libtorrent/ed25519/precomp_data.h	/^static const ge_precomp Bi[8] = {$/;"	v
 Big_str2u16	include/packet.h	12;"	d
@@ -378,37 +380,37 @@ CODE_PADT	hwinfo/src/hd/pppoe.c	48;"	d	file:
 COLSUFFIX	parted/src/table.c	/^static const wchar_t*           COLSUFFIX = L_("\\n");$/;"	v	file:
 COMMAND_H_INCLUDED	parted/include/command.h	20;"	d
 COMPAQ_SMART2_MAJOR	parted/src/linux.c	285;"	d	file:
-COMPAQ_SMART2_MAJOR	src/linux.c	62;"	d	file:
+COMPAQ_SMART2_MAJOR	src/linux.c	61;"	d	file:
 COMPAQ_SMART2_MAJOR1	parted/src/linux.c	286;"	d	file:
-COMPAQ_SMART2_MAJOR1	src/linux.c	63;"	d	file:
+COMPAQ_SMART2_MAJOR1	src/linux.c	62;"	d	file:
 COMPAQ_SMART2_MAJOR2	parted/src/linux.c	287;"	d	file:
-COMPAQ_SMART2_MAJOR2	src/linux.c	64;"	d	file:
+COMPAQ_SMART2_MAJOR2	src/linux.c	63;"	d	file:
 COMPAQ_SMART2_MAJOR3	parted/src/linux.c	288;"	d	file:
-COMPAQ_SMART2_MAJOR3	src/linux.c	65;"	d	file:
+COMPAQ_SMART2_MAJOR3	src/linux.c	64;"	d	file:
 COMPAQ_SMART2_MAJOR4	parted/src/linux.c	289;"	d	file:
-COMPAQ_SMART2_MAJOR4	src/linux.c	66;"	d	file:
+COMPAQ_SMART2_MAJOR4	src/linux.c	65;"	d	file:
 COMPAQ_SMART2_MAJOR5	parted/src/linux.c	290;"	d	file:
-COMPAQ_SMART2_MAJOR5	src/linux.c	67;"	d	file:
+COMPAQ_SMART2_MAJOR5	src/linux.c	66;"	d	file:
 COMPAQ_SMART2_MAJOR6	parted/src/linux.c	291;"	d	file:
-COMPAQ_SMART2_MAJOR6	src/linux.c	68;"	d	file:
+COMPAQ_SMART2_MAJOR6	src/linux.c	67;"	d	file:
 COMPAQ_SMART2_MAJOR7	parted/src/linux.c	292;"	d	file:
-COMPAQ_SMART2_MAJOR7	src/linux.c	69;"	d	file:
+COMPAQ_SMART2_MAJOR7	src/linux.c	68;"	d	file:
 COMPAQ_SMART_MAJOR	parted/src/linux.c	293;"	d	file:
-COMPAQ_SMART_MAJOR	src/linux.c	70;"	d	file:
+COMPAQ_SMART_MAJOR	src/linux.c	69;"	d	file:
 COMPAQ_SMART_MAJOR1	parted/src/linux.c	294;"	d	file:
-COMPAQ_SMART_MAJOR1	src/linux.c	71;"	d	file:
+COMPAQ_SMART_MAJOR1	src/linux.c	70;"	d	file:
 COMPAQ_SMART_MAJOR2	parted/src/linux.c	295;"	d	file:
-COMPAQ_SMART_MAJOR2	src/linux.c	72;"	d	file:
+COMPAQ_SMART_MAJOR2	src/linux.c	71;"	d	file:
 COMPAQ_SMART_MAJOR3	parted/src/linux.c	296;"	d	file:
-COMPAQ_SMART_MAJOR3	src/linux.c	73;"	d	file:
+COMPAQ_SMART_MAJOR3	src/linux.c	72;"	d	file:
 COMPAQ_SMART_MAJOR4	parted/src/linux.c	297;"	d	file:
-COMPAQ_SMART_MAJOR4	src/linux.c	74;"	d	file:
+COMPAQ_SMART_MAJOR4	src/linux.c	73;"	d	file:
 COMPAQ_SMART_MAJOR5	parted/src/linux.c	298;"	d	file:
-COMPAQ_SMART_MAJOR5	src/linux.c	75;"	d	file:
+COMPAQ_SMART_MAJOR5	src/linux.c	74;"	d	file:
 COMPAQ_SMART_MAJOR6	parted/src/linux.c	299;"	d	file:
-COMPAQ_SMART_MAJOR6	src/linux.c	76;"	d	file:
+COMPAQ_SMART_MAJOR6	src/linux.c	75;"	d	file:
 COMPAQ_SMART_MAJOR7	parted/src/linux.c	300;"	d	file:
-COMPAQ_SMART_MAJOR7	src/linux.c	77;"	d	file:
+COMPAQ_SMART_MAJOR7	src/linux.c	76;"	d	file:
 COMPILE	virt-p2v/src/ssh.c	154;"	d	file:
 COMPILER_ID	libtorrent/examples/CMakeFiles/3.5.1/CompilerIdC/CMakeCCompilerId.c	103;"	d	file:
 COMPILER_ID	libtorrent/examples/CMakeFiles/3.5.1/CompilerIdC/CMakeCCompilerId.c	110;"	d	file:
@@ -716,7 +718,7 @@ ConvertUTF8toUTF16	libtorrent/src/ConvertUTF.cpp	/^ConversionResult ConvertUTF8t
 ConvertUTF8toUTF32	libtorrent/src/ConvertUTF.cpp	/^ConversionResult ConvertUTF8toUTF32 ($/;"	f
 CurAPMvalues	parted/src/linux.c	/^        unsigned short  CurAPMvalues;   \/* current APM values *\/$/;"	m	struct:hd_driveid	file:
 DAC960_MAJOR	parted/src/linux.c	301;"	d	file:
-DAC960_MAJOR	src/linux.c	78;"	d	file:
+DAC960_MAJOR	src/linux.c	77;"	d	file:
 DASDAPIVER	parted/include/fdasd.h	107;"	d
 DASDAPIVER	parted/include/fdasd.in.h	107;"	d
 DASD_3380_TYPE	parted/include/vtoc.h	35;"	d
@@ -742,7 +744,7 @@ DASD_FMT_INT_INVAL	parted/include/fdasd.in.h	97;"	d
 DASD_IOCTL_LETTER	parted/include/fdasd.h	25;"	d
 DASD_IOCTL_LETTER	parted/include/fdasd.in.h	25;"	d
 DASD_MAJOR	parted/src/linux.c	312;"	d	file:
-DASD_MAJOR	src/linux.c	89;"	d	file:
+DASD_MAJOR	src/linux.c	88;"	d	file:
 DASD_MIN_API_VERSION	parted/include/fdasd.h	138;"	d
 DASD_MIN_API_VERSION	parted/include/fdasd.in.h	138;"	d
 DASD_PARTN_BITS	parted/include/fdasd.h	27;"	d
@@ -1730,9 +1732,9 @@ HAVE___XPG_STRERROR_R	virt-p2v/include/config.h	598;"	d
 HDIO_GETGEO	parted/include/fdasd.h	132;"	d
 HDIO_GETGEO	parted/include/fdasd.in.h	132;"	d
 HDIO_GETGEO	parted/src/linux.c	81;"	d	file:
-HDIO_GETGEO	src/linux.c	111;"	d	file:
+HDIO_GETGEO	src/linux.c	110;"	d	file:
 HDIO_GET_IDENTITY	parted/src/linux.c	82;"	d	file:
-HDIO_GET_IDENTITY	src/linux.c	112;"	d	file:
+HDIO_GET_IDENTITY	src/linux.c	111;"	d	file:
 HDR_SIZE	hwinfo/src/hd/pppoe.c	81;"	d	file:
 HD_ARCH	hwinfo/src/hd/hd.c	104;"	d	file:
 HD_ARCH	hwinfo/src/hd/hd.c	108;"	d	file:
@@ -1798,35 +1800,35 @@ Hash_tuning	virt-p2v/include/gnulib/hash.h	/^typedef struct hash_tuning Hash_tun
 HeaderCRC32	parted/src/gpt.c	/^  uint32_t HeaderCRC32;$/;"	m	struct:_GuidPartitionTableHeader_t	file:
 HeaderSize	parted/src/gpt.c	/^  uint32_t HeaderSize;$/;"	m	struct:_GuidPartitionTableHeader_t	file:
 I2O_MAJOR1	parted/src/linux.c	303;"	d	file:
-I2O_MAJOR1	src/linux.c	80;"	d	file:
+I2O_MAJOR1	src/linux.c	79;"	d	file:
 I2O_MAJOR2	parted/src/linux.c	304;"	d	file:
-I2O_MAJOR2	src/linux.c	81;"	d	file:
+I2O_MAJOR2	src/linux.c	80;"	d	file:
 I2O_MAJOR3	parted/src/linux.c	305;"	d	file:
-I2O_MAJOR3	src/linux.c	82;"	d	file:
+I2O_MAJOR3	src/linux.c	81;"	d	file:
 I2O_MAJOR4	parted/src/linux.c	306;"	d	file:
-I2O_MAJOR4	src/linux.c	83;"	d	file:
+I2O_MAJOR4	src/linux.c	82;"	d	file:
 I2O_MAJOR5	parted/src/linux.c	307;"	d	file:
-I2O_MAJOR5	src/linux.c	84;"	d	file:
+I2O_MAJOR5	src/linux.c	83;"	d	file:
 I2O_MAJOR6	parted/src/linux.c	308;"	d	file:
-I2O_MAJOR6	src/linux.c	85;"	d	file:
+I2O_MAJOR6	src/linux.c	84;"	d	file:
 I2O_MAJOR7	parted/src/linux.c	309;"	d	file:
-I2O_MAJOR7	src/linux.c	86;"	d	file:
+I2O_MAJOR7	src/linux.c	85;"	d	file:
 I2O_MAJOR8	parted/src/linux.c	310;"	d	file:
-I2O_MAJOR8	src/linux.c	87;"	d	file:
+I2O_MAJOR8	src/linux.c	86;"	d	file:
 ICONV_LIBS	libtorrent/examples/Makefile	/^ICONV_LIBS = $/;"	m
 ICONV_LIBS	libtorrent/include/libtorrent/Makefile	/^ICONV_LIBS = $/;"	m
 IDE0_MAJOR	parted/src/linux.c	262;"	d	file:
-IDE0_MAJOR	src/linux.c	39;"	d	file:
+IDE0_MAJOR	src/linux.c	38;"	d	file:
 IDE1_MAJOR	parted/src/linux.c	263;"	d	file:
-IDE1_MAJOR	src/linux.c	40;"	d	file:
+IDE1_MAJOR	src/linux.c	39;"	d	file:
 IDE2_MAJOR	parted/src/linux.c	264;"	d	file:
-IDE2_MAJOR	src/linux.c	41;"	d	file:
+IDE2_MAJOR	src/linux.c	40;"	d	file:
 IDE3_MAJOR	parted/src/linux.c	265;"	d	file:
-IDE3_MAJOR	src/linux.c	42;"	d	file:
+IDE3_MAJOR	src/linux.c	41;"	d	file:
 IDE4_MAJOR	parted/src/linux.c	266;"	d	file:
-IDE4_MAJOR	src/linux.c	43;"	d	file:
+IDE4_MAJOR	src/linux.c	42;"	d	file:
 IDE5_MAJOR	parted/src/linux.c	267;"	d	file:
-IDE5_MAJOR	src/linux.c	44;"	d	file:
+IDE5_MAJOR	src/linux.c	43;"	d	file:
 ID_TAG	hwinfo/src/hd/hd.h	100;"	d
 ID_TAG	hwinfo/src/ids/check_hd.c	37;"	d	file:
 ID_VALUE	hwinfo/src/hd/hd.h	95;"	d
@@ -2063,7 +2065,7 @@ JOURNAL_MAX_TRANS_AGE	parted/include/reiserfs.h	102;"	d
 JOURNAL_MIN_RATIO	parted/include/reiserfs.h	99;"	d
 JOURNAL_MIN_SIZE	parted/include/reiserfs.h	94;"	d
 JOURNAL_MIN_TRANS	parted/include/reiserfs.h	95;"	d
-JSON_TYPE	include/packet.h	73;"	d
+JSON_TYPE	include/packet.h	75;"	d
 K	libtorrent/src/sha512.cpp	/^static const u64 K[80] = {$/;"	m	namespace:libtorrent	file:
 KADEMLIA_IO_HPP	libtorrent/include/libtorrent/kademlia/io.hpp	34;"	d
 KADEMLIA_NODE_ENTRY_HPP	libtorrent/include/libtorrent/kademlia/node_entry.hpp	34;"	d
@@ -2071,7 +2073,7 @@ KERNEL_22	hwinfo/src/hd/hd_int.h	51;"	d
 KERNEL_24	hwinfo/src/hd/hd_int.h	52;"	d
 KERNEL_26	hwinfo/src/hd/hd_int.h	53;"	d
 KERNEL_VERSION	parted/src/linux.c	70;"	d	file:
-KERNEL_VERSION	src/linux.c	107;"	d	file:
+KERNEL_VERSION	src/linux.c	106;"	d	file:
 KEY	hwinfo/init_message.h	2;"	d
 KIOCLAYOUT	hwinfo/src/hd/kbd.c	38;"	d	file:
 KIOCTYPE	hwinfo/src/hd/kbd.c	34;"	d	file:
@@ -2117,7 +2119,7 @@ LINE_LENGTH	parted/include/vtoc.h	29;"	d
 LINE_LENGTH	parted/include/vtoc.in.h	29;"	d
 LINK	qt_pro/Makefile	/^LINK          = g++$/;"	m
 LINUX_SPECIFIC	parted/include/linux.h	25;"	d
-LINUX_TYPE	include/packet.h	54;"	d
+LINUX_TYPE	include/packet.h	56;"	d
 LIPO	libtorrent/examples/Makefile	/^LIPO = $/;"	m
 LIPO	libtorrent/include/libtorrent/Makefile	/^LIPO = $/;"	m
 LIST_BUF_SIZE	include/tftp.h	56;"	d
@@ -2164,7 +2166,7 @@ LONG_TIMEOUT	hwinfo/hwscand.c	20;"	d	file:
 LONG_WIDTH	virt-p2v/include/gnulib/limits.h	98;"	d
 LONG_WIDTH	virt-p2v/include/gnulib/limits.in.h	97;"	d
 LOOP_MAJOR	parted/src/linux.c	319;"	d	file:
-LOOP_MAJOR	src/linux.c	96;"	d	file:
+LOOP_MAJOR	src/linux.c	95;"	d	file:
 LOOP_SIGNATURE	parted/src/loop.c	36;"	d	file:
 LOST	parted/src/gpt.c	/^  uint32_t LOST:5;$/;"	m	struct:_GuidPartitionEntryAttributes_t	file:
 LPIOC_GET_BUS_ADDRESS	hwinfo/src/hd/usb.c	31;"	d	file:
@@ -2225,7 +2227,7 @@ MAX_ATTEMPTS	hwinfo/src/hd/pppoe.c	63;"	d	file:
 MAX_ATTR_SIZE	hwinfo/src/hd/hd_int.h	63;"	d
 MAX_BUFLEN	include/base.h	79;"	d
 MAX_CONFIGLEN	include/base.h	81;"	d
-MAX_DESKTOP	src/config.c	244;"	d	file:
+MAX_DESKTOP	src/config.c	246;"	d	file:
 MAX_FAT12_CLUSTERS	parted/include/fat.h	148;"	d
 MAX_FAT16_CLUSTERS	parted/include/fat.h	149;"	d
 MAX_FAT32_CLUSTERS	parted/include/fat.h	150;"	d
@@ -2233,6 +2235,7 @@ MAX_FILENAMELEN	include/base.h	80;"	d
 MAX_FILENAMELEN	parted/include/base.h	69;"	d
 MAX_FILENAMELEN	src/log.c	11;"	d	file:
 MAX_FILE_SIZE	src/inirw.c	7;"	d	file:
+MAX_GROUP	include/packet.h	26;"	d
 MAX_HASH_VALUE	parted/src/pt-limit.c	43;"	d	file:
 MAX_INIT_STRING	hwinfo/src/hd/modem.c	63;"	d	file:
 MAX_LEN_SIZ	libtorrent/bak/tracker.cpp	53;"	d	file:
@@ -2253,7 +2256,7 @@ MAYBE_ASIO_DEBUGGING	libtorrent/src/socket_type.cpp	180;"	d	file:
 MBR_PARTTYPE	include/gpt.h	/^} MBR_PARTTYPE;$/;"	t	typeref:struct:__anon193
 MBR_PART_INFO	include/gpt.h	/^} MBR_PART_INFO;$/;"	t	typeref:struct:__anon192
 MD_MAJOR	parted/src/linux.c	320;"	d	file:
-MD_MAJOR	src/linux.c	97;"	d	file:
+MD_MAJOR	src/linux.c	96;"	d	file:
 MEGABYTE_SECTORS	parted/src/parted.c	/^static int MEGABYTE_SECTORS (PedDevice* dev)$/;"	f	file:
 MEMBASE	hwinfo/src/isdn/cdb/isdn_cdb_def.h	/^	MEMBASE,$/;"	e	enum:__anon147
 MESSAGE_BUFFER	hwinfo/init_message.h	1;"	d
@@ -2294,6 +2297,7 @@ MOVE_STILL	parted/src/parted.c	/^        MOVE_STILL      = 1,$/;"	e	enum:__anon1
 MOVE_UP	parted/src/parted.c	/^        MOVE_UP         = 2,$/;"	e	enum:__anon171	file:
 MPC_APIC_USABLE	hwinfo/src/smp/smp.c	97;"	d	file:
 MPC_SIGNATURE	hwinfo/src/smp/smp.c	37;"	d	file:
+MPUSHBUTTON_H	qt_pro/mpushbutton.h	2;"	d
 MP_APIC_ALL	hwinfo/src/smp/smp.c	130;"	d	file:
 MP_BUS	hwinfo/src/smp/smp.c	53;"	d	file:
 MP_INTSRC	hwinfo/src/smp/smp.c	55;"	d	file:
@@ -3352,7 +3356,7 @@ PROG_UDEVADM	hwinfo/src/hd/hd_int.h	46;"	d
 PROG_UDEVINFO	hwinfo/src/hd/hd_int.h	45;"	d
 PROMOTED_MODE_T	virt-p2v/include/config.h	671;"	d
 PROTECTION_LEVEL_UNRESTRICTED	libtorrent/include/libtorrent/socket.hpp	107;"	d
-PROTOBUF_TYPE	include/packet.h	74;"	d
+PROTOBUF_TYPE	include/packet.h	76;"	d
 PROTOTYPES	virt-p2v/include/config.h	674;"	d
 PTHREAD_CC	libtorrent/examples/Makefile	/^PTHREAD_CC = gcc$/;"	m
 PTHREAD_CC	libtorrent/include/libtorrent/Makefile	/^PTHREAD_CC = gcc$/;"	m
@@ -3578,12 +3582,12 @@ R3	libtorrent/src/sha1.cpp	77;"	d	file:
 R4	include/StoreConfig.h	/^    uint64_t    R4;          \/\/保留$/;"	m	struct:_YZY_QCOW_ENTRY
 R4	libtorrent/src/sha1.cpp	78;"	d	file:
 R5_HASH	parted/include/reiserfs.h	106;"	d
-RAM_MAJOR	src/linux.c	99;"	d	file:
+RAM_MAJOR	src/linux.c	98;"	d	file:
 RANLIB	libtorrent/examples/Makefile	/^RANLIB = ranlib$/;"	m
 RANLIB	libtorrent/include/libtorrent/Makefile	/^RANLIB = ranlib$/;"	m
 RANLIB	qt_pro/Makefile	/^RANLIB        = $/;"	m
 RD_MODE	parted/src/linux.c	84;"	d	file:
-RD_MODE	src/linux.c	115;"	d	file:
+RD_MODE	src/linux.c	114;"	d	file:
 READ	hwinfo/src/hd/dvd.c	/^	READ = CGC_DATA_READ,	\/\/ 2$/;"	e	enum:__anon130	file:
 READONLY_ATTR	parted/include/fat.h	140;"	d
 READ_MEM16	hwinfo/src/hd/smbios.c	62;"	d	file:
@@ -3714,7 +3718,7 @@ RT_REMREF	libtorrent/include/libtorrent/aux_/route.h	407;"	d
 RT_REMREF_LOCKED	libtorrent/include/libtorrent/aux_/route.h	392;"	d
 RT_UNLOCK	libtorrent/include/libtorrent/aux_/route.h	365;"	d
 RW_MODE	parted/src/linux.c	86;"	d	file:
-RW_MODE	src/linux.c	117;"	d	file:
+RW_MODE	src/linux.c	116;"	d	file:
 R_OK	virt-p2v/include/gnulib/unistd.h	723;"	d
 RackMac1_1	hwinfo/src/hd/hd.h	/^	RackMac1_1,$/;"	e	enum:pmac_model
 RackMac1_2	hwinfo/src/hd/hd.h	/^	RackMac1_2,$/;"	e	enum:pmac_model
@@ -4057,46 +4061,46 @@ SCNxPTR	virt-p2v/include/gnulib/inttypes.h	1521;"	d
 SCNxPTR	virt-p2v/include/gnulib/inttypes.in.h	1045;"	d
 SCNxPTR	virt-p2v/include/gnulib/inttypes.in.h	1047;"	d
 SCSI_BLK_MAJOR	parted/src/linux.c	322;"	d	file:
-SCSI_BLK_MAJOR	src/linux.c	101;"	d	file:
+SCSI_BLK_MAJOR	src/linux.c	100;"	d	file:
 SCSI_CDROM_MAJOR	parted/src/linux.c	268;"	d	file:
-SCSI_CDROM_MAJOR	src/linux.c	45;"	d	file:
+SCSI_CDROM_MAJOR	src/linux.c	44;"	d	file:
 SCSI_DISK0_MAJOR	parted/src/linux.c	269;"	d	file:
-SCSI_DISK0_MAJOR	src/linux.c	46;"	d	file:
+SCSI_DISK0_MAJOR	src/linux.c	45;"	d	file:
 SCSI_DISK10_MAJOR	parted/src/linux.c	279;"	d	file:
-SCSI_DISK10_MAJOR	src/linux.c	56;"	d	file:
+SCSI_DISK10_MAJOR	src/linux.c	55;"	d	file:
 SCSI_DISK11_MAJOR	parted/src/linux.c	280;"	d	file:
-SCSI_DISK11_MAJOR	src/linux.c	57;"	d	file:
+SCSI_DISK11_MAJOR	src/linux.c	56;"	d	file:
 SCSI_DISK12_MAJOR	parted/src/linux.c	281;"	d	file:
-SCSI_DISK12_MAJOR	src/linux.c	58;"	d	file:
+SCSI_DISK12_MAJOR	src/linux.c	57;"	d	file:
 SCSI_DISK13_MAJOR	parted/src/linux.c	282;"	d	file:
-SCSI_DISK13_MAJOR	src/linux.c	59;"	d	file:
+SCSI_DISK13_MAJOR	src/linux.c	58;"	d	file:
 SCSI_DISK14_MAJOR	parted/src/linux.c	283;"	d	file:
-SCSI_DISK14_MAJOR	src/linux.c	60;"	d	file:
+SCSI_DISK14_MAJOR	src/linux.c	59;"	d	file:
 SCSI_DISK15_MAJOR	parted/src/linux.c	284;"	d	file:
-SCSI_DISK15_MAJOR	src/linux.c	61;"	d	file:
+SCSI_DISK15_MAJOR	src/linux.c	60;"	d	file:
 SCSI_DISK1_MAJOR	parted/src/linux.c	270;"	d	file:
-SCSI_DISK1_MAJOR	src/linux.c	47;"	d	file:
+SCSI_DISK1_MAJOR	src/linux.c	46;"	d	file:
 SCSI_DISK2_MAJOR	parted/src/linux.c	271;"	d	file:
-SCSI_DISK2_MAJOR	src/linux.c	48;"	d	file:
+SCSI_DISK2_MAJOR	src/linux.c	47;"	d	file:
 SCSI_DISK3_MAJOR	parted/src/linux.c	272;"	d	file:
-SCSI_DISK3_MAJOR	src/linux.c	49;"	d	file:
+SCSI_DISK3_MAJOR	src/linux.c	48;"	d	file:
 SCSI_DISK4_MAJOR	parted/src/linux.c	273;"	d	file:
-SCSI_DISK4_MAJOR	src/linux.c	50;"	d	file:
+SCSI_DISK4_MAJOR	src/linux.c	49;"	d	file:
 SCSI_DISK5_MAJOR	parted/src/linux.c	274;"	d	file:
-SCSI_DISK5_MAJOR	src/linux.c	51;"	d	file:
+SCSI_DISK5_MAJOR	src/linux.c	50;"	d	file:
 SCSI_DISK6_MAJOR	parted/src/linux.c	275;"	d	file:
-SCSI_DISK6_MAJOR	src/linux.c	52;"	d	file:
+SCSI_DISK6_MAJOR	src/linux.c	51;"	d	file:
 SCSI_DISK7_MAJOR	parted/src/linux.c	276;"	d	file:
-SCSI_DISK7_MAJOR	src/linux.c	53;"	d	file:
+SCSI_DISK7_MAJOR	src/linux.c	52;"	d	file:
 SCSI_DISK8_MAJOR	parted/src/linux.c	277;"	d	file:
-SCSI_DISK8_MAJOR	src/linux.c	54;"	d	file:
+SCSI_DISK8_MAJOR	src/linux.c	53;"	d	file:
 SCSI_DISK9_MAJOR	parted/src/linux.c	278;"	d	file:
-SCSI_DISK9_MAJOR	src/linux.c	55;"	d	file:
+SCSI_DISK9_MAJOR	src/linux.c	54;"	d	file:
 SCSI_IOCTL_SEND_COMMAND	parted/src/linux.c	77;"	d	file:
 SC_H	libtorrent/ed25519/sc.h	2;"	d
 SDL_DIR	parted/Makefile	/^SDL_DIR := .\/SDL\/$(TARGET_ARCH)$/;"	m
 SDMMC_MAJOR	parted/src/linux.c	318;"	d	file:
-SDMMC_MAJOR	src/linux.c	95;"	d	file:
+SDMMC_MAJOR	src/linux.c	94;"	d	file:
 SECT_END	parted/src/parted.c	/^        SECT_END        = -1$/;"	e	enum:__anon172	file:
 SECT_START	parted/src/parted.c	/^        SECT_START      =  0,$/;"	e	enum:__anon172	file:
 SED	libtorrent/examples/Makefile	/^SED = \/bin\/sed$/;"	m
@@ -4217,6 +4221,7 @@ STRLIST_H_INCLUDED	parted/include/strlist.h	20;"	d
 STRNEQ	virt-p2v/include/guestfs-utils.h	30;"	d
 STRNEQ	virt-p2v/libguestfs/guestfs-utils.h	30;"	d
 STRPREFIX	include/base.h	65;"	d
+STRPREFIX	qt_pro/global.h	34;"	d
 STRPREFIX	qt_pro/uploadwindow.cpp	9;"	d	file:
 STRPREFIX	src/device.c	9;"	d	file:
 STRPREFIX	virt-p2v/include/guestfs-utils.h	31;"	d
@@ -4226,8 +4231,8 @@ STRTOL_T_MINIMUM	virt-p2v/src/xstrtoull.c	4;"	d	file:
 STR_CRC	hwinfo/src/hd/hd.c	4170;"	d	file:
 STR_CRC	hwinfo/src/hd/hd.c	4277;"	d	file:
 STR_SIZE	hwinfo/src/hd/mdt.c	25;"	d	file:
-STR_TO_U16	include/packet.h	33;"	d
-STR_TO_U32	include/packet.h	34;"	d
+STR_TO_U16	include/packet.h	35;"	d
+STR_TO_U32	include/packet.h	36;"	d
 ST_DATA	libtorrent/include/libtorrent/utp_stream.hpp	/^{ ST_DATA, ST_FIN, ST_STATE, ST_RESET, ST_SYN, NUM_TYPES };$/;"	e	enum:libtorrent::utp_socket_state_t
 ST_FIN	libtorrent/include/libtorrent/utp_stream.hpp	/^{ ST_DATA, ST_FIN, ST_STATE, ST_RESET, ST_SYN, NUM_TYPES };$/;"	e	enum:libtorrent::utp_socket_state_t
 ST_RESET	libtorrent/include/libtorrent/utp_stream.hpp	/^{ ST_DATA, ST_FIN, ST_STATE, ST_RESET, ST_SYN, NUM_TYPES };$/;"	e	enum:libtorrent::utp_socket_state_t
@@ -4240,14 +4245,15 @@ SUCCESS	include/base.h	72;"	d
 SUCCESS	parted/include/base.h	64;"	d
 SUPER_OFFSET_IN_BYTES	parted/include/reiserfs.h	90;"	d
 SX8_MAJOR1	parted/src/linux.c	315;"	d	file:
-SX8_MAJOR1	src/linux.c	92;"	d	file:
+SX8_MAJOR1	src/linux.c	91;"	d	file:
 SX8_MAJOR2	parted/src/linux.c	316;"	d	file:
-SX8_MAJOR2	src/linux.c	93;"	d	file:
+SX8_MAJOR2	src/linux.c	92;"	d	file:
 SYMLINK	qt_pro/Makefile	/^SYMLINK       = ln -sf$/;"	m
 SYSTEM_ATTR	parted/include/fat.h	142;"	d
 S_IFMT	src/linux.c	11;"	d	file:
 S_ISBLK	src/linux.c	16;"	d	file:
 SaveStoreConfig	src/StoreConfig.c	/^int SaveStoreConfig(yzy_file_t hd)$/;"	f
+ScanSpace	src/StoreConfig.c	/^static uint64_t  ScanSpace(PYZYGUID diskName, uint64_t* maxInterval, uint64_t* last)$/;"	f	file:
 ScanSpaceFormInterval	src/StoreConfig.c	/^static void ScanSpaceFormInterval(uint64_t sizeLba, PYZYGUID diskName, int64_t *startLba, int64_t *endLba, PYZY_QCOW_ENTRY *diskList, uint32_t count)$/;"	f	file:
 ScanStoreEntry	src/StoreConfig.c	/^static PYZY_QCOW_ENTRY ScanStoreEntry(uint32_t difLevel, PYZYGUID name)$/;"	f	file:
 ScsiCommand	hwinfo/src/hd/dvd.c	/^struct ScsiCommand {$/;"	s	file:
@@ -4921,10 +4927,10 @@ Table	parted/include/table.h	/^typedef void Table;$/;"	t
 Table	parted/src/table.c	/^} Table;$/;"	t	typeref:struct:__anon164	file:
 TimerContext	parted/src/parted.c	/^} TimerContext;$/;"	t	typeref:struct:__anon170	file:
 Tracker	libtorrent/bak/tracker.cpp	/^btTracker Tracker;$/;"	v
-U16_TO_STR	include/packet.h	35;"	d
-U32_TO_STR	include/packet.h	36;"	d
+U16_TO_STR	include/packet.h	37;"	d
+U32_TO_STR	include/packet.h	38;"	d
 UBD_MAJOR	parted/src/linux.c	311;"	d	file:
-UBD_MAJOR	src/linux.c	88;"	d	file:
+UBD_MAJOR	src/linux.c	87;"	d	file:
 UCHAR_WIDTH	virt-p2v/include/gnulib/limits.h	93;"	d
 UCHAR_WIDTH	virt-p2v/include/gnulib/limits.in.h	92;"	d
 UF_MAX	qt_pro/QRoundProgressBar.h	/^    static const int UF_MAX = 4;$/;"	m	class:QRoundProgressBar
@@ -5086,7 +5092,7 @@ VER_MINOR_KEY	include/config.h	32;"	d
 VFAT_ATTR	parted/include/fat.h	144;"	d
 VHMAGIC	parted/include/dvh.h	150;"	d
 VIODASD_MAJOR	parted/src/linux.c	313;"	d	file:
-VIODASD_MAJOR	src/linux.c	90;"	d	file:
+VIODASD_MAJOR	src/linux.c	89;"	d	file:
 VOLSER_LENGTH	parted/include/vtoc.h	43;"	d
 VOLSER_LENGTH	parted/include/vtoc.in.h	43;"	d
 VOLUME_LABEL_ATTR	parted/include/fat.h	143;"	d
@@ -5139,7 +5145,7 @@ WORD_BIT	virt-p2v/include/gnulib/limits.h	76;"	d
 WORD_BIT	virt-p2v/include/gnulib/limits.in.h	75;"	d
 WRITE	hwinfo/src/hd/dvd.c	/^	WRITE = CGC_DATA_WRITE	\/\/ 1$/;"	e	enum:__anon130	file:
 WR_MODE	parted/src/linux.c	85;"	d	file:
-WR_MODE	src/linux.c	116;"	d	file:
+WR_MODE	src/linux.c	115;"	d	file:
 W_DMA	hwinfo/src/hd/hd_int.h	168;"	d
 W_IO	hwinfo/src/hd/hd_int.h	167;"	d
 W_IRQ	hwinfo/src/hd/hd_int.h	169;"	d
@@ -5162,7 +5168,7 @@ XMALLOC	parted/include/xalloc.h	72;"	d
 XNMALLOC	parted/include/xalloc.h	76;"	d
 XSTRTOL_H_	virt-p2v/include/gnulib/xstrtol.h	20;"	d
 XVD_MAJOR	parted/src/linux.c	317;"	d	file:
-XVD_MAJOR	src/linux.c	94;"	d	file:
+XVD_MAJOR	src/linux.c	93;"	d	file:
 XZALLOC	parted/include/xalloc.h	82;"	d
 X_OK	virt-p2v/include/gnulib/unistd.h	721;"	d
 XkbLayout	hwinfo/src/hd/hd.h	/^  char *XkbLayout;$/;"	m	struct:__anon106
@@ -5890,9 +5896,11 @@ _YZY_DISK_BACK_FILE	test/check.c	/^typedef struct _YZY_DISK_BACK_FILE {$/;"	s	fi
 _YZY_DISK_ITEM	include/StoreConfig.h	/^typedef struct _YZY_DISK_ITEM$/;"	s
 _YZY_QCOW_ENTRY	include/StoreConfig.h	/^typedef struct _YZY_QCOW_ENTRY$/;"	s
 _YZY_STORE_CONFIG	include/StoreConfig.h	/^typedef struct _YZY_STORE_CONFIG$/;"	s
+__ADLIST_H__	include/adlist.h	32;"	d
 __ARP_H__	include/arp.h	2;"	d
 __BASE_H__	include/base.h	2;"	d
 __BASE_H__	parted/include/base.h	2;"	d
+__BT_CLIENT_H__	include/bt_client.h	2;"	d
 __CLIENT_H__	include/client.h	2;"	d
 __CONFIG_H__	include/config.h	2;"	d
 __DEBUG__	include/base.h	42;"	d
@@ -6393,7 +6401,9 @@ add_suffix	libtorrent/examples/print.hpp	/^template<class T> std::string add_suf
 add_suffix_float	libtorrent/bak/print.cpp	/^std::string add_suffix_float(double val, char const* suffix)$/;"	f
 add_suffix_float	libtorrent/examples/print.cpp	/^std::string add_suffix_float(double val, char const* suffix)$/;"	f
 add_suffix_float	qt_pro/uploadwindow.cpp	/^QString add_suffix_float(double val, char const* suffix)$/;"	f
-add_suffix_float	src/torrent_bak.cpp	/^std::string add_suffix_float(double val, char const* suffix)$/;"	f
+add_suffix_float	src/bt_client.cpp	/^std::string add_suffix_float(double val, char const* suffix)$/;"	f
+add_suffix_float	test/torrent.cpp	/^std::string add_suffix_float(double val, char const* suffix)$/;"	f
+add_suffix_float	test/torrent_bak.cpp	/^std::string add_suffix_float(double val, char const* suffix)$/;"	f
 add_suggest_piece	libtorrent/src/torrent.cpp	/^	void torrent::add_suggest_piece(piece_index_t const index)$/;"	f	class:libtorrent::torrent
 add_sun_console	hwinfo/src/hd/kbd.c	/^void add_sun_console(hd_data_t *hd_data)$/;"	f
 add_torrent	libtorrent/bak/client_test.cpp	/^bool add_torrent(lt::session& ses, std::string torrent)$/;"	f
@@ -6526,7 +6536,7 @@ all_removable	virt-p2v/src/p2v_transform.c	/^char **all_removable;$/;"	v
 all_time_download	libtorrent/include/libtorrent/torrent_status.hpp	/^		std::int64_t all_time_download = 0;$/;"	m	struct:libtorrent::torrent_status
 all_time_upload	libtorrent/include/libtorrent/torrent_status.hpp	/^		std::int64_t all_time_upload = 0;$/;"	m	struct:libtorrent::torrent_status
 all_verified	libtorrent/include/libtorrent/torrent.hpp	/^		bool all_verified() const$/;"	f	class:libtorrent::torrent
-alloc	include/StoreConfig.h	/^    int (*alloc)(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint64_t sizeLba, uint64_t realLba, int type, PYZY_QCOW_ENTRY *ppQe);$/;"	m	struct:_StoreDriver
+alloc	include/StoreConfig.h	/^    int (*alloc)(uint32_t difLevel, YZYGUID name, YZYGUID diskName, uint64_t sizeLba, uint64_t realLba, int type, PYZY_QCOW_ENTRY *ppQe);$/;"	m	struct:_StoreDriver
 alloc	libtorrent/include/libtorrent/packet_pool.hpp	/^		packet_ptr alloc()$/;"	f	struct:libtorrent::packet_slab
 alloc	libtorrent/include/libtorrent/packet_pool.hpp	/^		packet_ptr alloc(int const allocate)$/;"	f	struct:libtorrent::packet_pool
 alloc	libtorrent/src/disk_buffer_holder.cpp	/^		: m_allocator(&alloc), m_buf(buf), m_size(sz), m_ref()$/;"	m	namespace:libtorrent	file:
@@ -7069,6 +7079,7 @@ available	libtorrent/src/socket_type.cpp	/^	std::size_t socket_type::available(e
 available	libtorrent/src/utp_stream.cpp	/^std::size_t utp_socket_impl::available() const$/;"	f	class:libtorrent::utp_socket_impl
 available	libtorrent/src/utp_stream.cpp	/^std::size_t utp_stream::available() const$/;"	f	class:libtorrent::utp_stream
 available_orig	hwinfo/src/hd/hd.h	/^  unsigned available_orig:3;$/;"	m	struct:__anon11
+available_space	src/StoreConfig.c	/^uint64_t available_space(PYZYGUID diskName)$/;"	f
 average_hash_time	libtorrent/include/libtorrent/disk_io_thread.hpp	/^		int average_hash_time;$/;"	m	struct:libtorrent::cache_status
 average_job_time	libtorrent/include/libtorrent/disk_io_thread.hpp	/^		int average_job_time;$/;"	m	struct:libtorrent::cache_status
 average_read_time	libtorrent/include/libtorrent/disk_io_thread.hpp	/^		int average_read_time;$/;"	m	struct:libtorrent::cache_status
@@ -8517,7 +8528,8 @@ count	libtorrent/include/libtorrent/sha1.hpp	/^		std::uint32_t count[2];$/;"	m	s
 count	libtorrent/kademlia/dht_storage.cpp	/^		int count() const { return int(samples.size()); }$/;"	f	struct:libtorrent::dht::__anon236::infohashes_sample
 count	libtorrent/src/client.cpp	/^static int count;$/;"	v	file:
 count	libtorrent/src/puff.cpp	/^    short *count;       \/* number of symbols of each length *\/$/;"	m	struct:huffman	file:
-count	src/torrent_bak.cpp	/^static int count;$/;"	v	file:
+count	test/torrent.cpp	/^static int count;$/;"	v	file:
+count	test/torrent_bak.cpp	/^static int count;$/;"	v	file:
 count	virt-p2v/include/gnulib/windows-rwlock.h	/^          unsigned int count; \/* number of waiting threads *\/$/;"	m	struct:__anon176
 count_bufs	libtorrent/src/storage_utils.cpp	/^	int count_bufs(span<iovec_t const> bufs, int bytes)$/;"	f	namespace:libtorrent::aux::__anon281
 count_common_hids	hwinfo/src/ids/check_hd.c	/^int count_common_hids(skey_t *skey0, skey_t *skey1)$/;"	f
@@ -8640,6 +8652,7 @@ currBoot	include/StoreConfig.h	/^    YZYGUID             currBoot;       \/\/当
 currData	include/StoreConfig.h	/^    YZYGUID             currData;       \/\/当前数据盘 GUID $/;"	m	struct:_YZY_STORE_CONFIG
 current	hwinfo/src/hd/hd.h	/^  char *current;		\/**< current language *\/$/;"	m	struct:__anon35
 current	libtorrent/bak/udp_tracker.cpp	/^    char* current;$/;"	m	class:CDataStream	file:
+current_group	src/client.c	/^int current_group = 0;$/;"	v
 current_index	qt_pro/global.h	/^    int current_index;$/;"	m	class:Global
 current_mode	hwinfo/src/hd/hd.h	/^  unsigned current_mode;	\/**< current video mode *\/$/;"	m	struct:__anon18
 current_piece	libtorrent/bak/connection_tester.cpp	/^	piece_index_t current_piece; \/\/ the piece we're currently requesting blocks from$/;"	m	struct:peer_conn	file:
@@ -9300,6 +9313,7 @@ difLevel	include/qcow2.h	/^    uint32_t difLevel;$/;"	m	struct:_YZY_DISK_BACK_FI
 difLevel	test/check.c	/^    uint32_t difLevel;$/;"	m	struct:_YZY_DISK_BACK_FILE	file:
 dif_level	include/packet.h	/^    int dif_level;$/;"	m	struct:yzy_torrent
 dif_level	test/test.c	/^    int dif_level;$/;"	m	struct:yzy_torrent	file:
+diff	include/task.h	/^    int diff;$/;"	m	struct:torrent_task
 diff	include/torrent.h	/^	int diff;$/;"	m	struct:torrent_task
 diffs	hwinfo/src/ids/check_hd.c	/^  unsigned diffs, errors, errors_res;$/;"	m	struct:__anon146	file:
 digest	libtorrent/src/smart_ban.cpp	/^			sha1_hash digest;$/;"	m	struct:libtorrent::__anon288::final::block_entry	file:
@@ -9313,6 +9327,7 @@ direct_request	libtorrent/kademlia/dht_tracker.cpp	/^	void dht_tracker::direct_r
 direct_request	libtorrent/kademlia/node.cpp	/^void node::direct_request(udp::endpoint const& ep, entry& e$/;"	f	class:libtorrent::dht::node
 direct_traversal	libtorrent/include/libtorrent/kademlia/direct_request.hpp	/^	direct_traversal(node& node$/;"	f	struct:libtorrent::dht::direct_traversal
 direct_traversal	libtorrent/include/libtorrent/kademlia/direct_request.hpp	/^struct direct_traversal : traversal_algorithm$/;"	s	namespace:libtorrent::dht
+direction	include/adlist.h	/^    int direction;$/;"	m	struct:listIter
 directory	libtorrent/include/libtorrent/aux_/path.hpp	/^			directory = 0x4000,  \/\/ directory$/;"	e	enum:libtorrent::file_status::__anon216
 directory	libtorrent/include/libtorrent/file.hpp	/^	class TORRENT_EXTRA_EXPORT directory : public boost::noncopyable$/;"	c	namespace:libtorrent
 directory	libtorrent/src/file.cpp	/^	directory::directory(std::string const& path, error_code& ec)$/;"	f	class:libtorrent::directory
@@ -9417,6 +9432,7 @@ disk_t	hwinfo/src/hd/hd.c	/^} disk_t;$/;"	t	typeref:struct:disk_s	file:
 disk_thread	libtorrent/include/libtorrent/peer_connection.hpp	/^		disk_interface* disk_thread;$/;"	m	struct:libtorrent::peer_connection_args
 disk_type	include/device.h	/^    unsigned char disk_type;        \/\/ 2 硬盘 3 u 盘 $/;"	m	struct:disk_param
 disk_type	include/device.h	/^typedef enum disk_type {$/;"	g
+disk_type	include/task.h	/^    int disk_type;$/;"	m	struct:torrent_task
 disk_type	include/torrent.h	/^	int disk_type;$/;"	m	struct:torrent_task
 disk_type_list	parted/src/ui.c	/^static StrList*     disk_type_list;$/;"	v	file:
 disk_types	parted/src/disk.c	/^static PedDiskType*	disk_types = NULL;$/;"	v	file:
@@ -9571,6 +9587,7 @@ download_queue	libtorrent/src/peer_connection.cpp	/^	std::vector<pending_block> 
 download_queue_length	libtorrent/include/libtorrent/peer_info.hpp	/^		int download_queue_length;$/;"	m	struct:libtorrent::peer_info
 download_queue_time	libtorrent/include/libtorrent/peer_info.hpp	/^		time_duration download_queue_time;$/;"	m	struct:libtorrent::peer_info
 download_queue_time	libtorrent/src/peer_connection.cpp	/^	time_duration peer_connection::download_queue_time(int const extra_bytes) const$/;"	f	class:libtorrent::peer_connection
+download_rate	include/packet.h	/^    unsigned long long download_rate;$/;"	m	struct:progress_info
 download_rate	include/torrent.h	/^    unsigned long long download_rate;$/;"	m	struct:progress_info
 download_rate	libtorrent/include/libtorrent/session_status.hpp	/^		int download_rate;$/;"	m	struct:libtorrent::session_status
 download_rate	libtorrent/include/libtorrent/stat.hpp	/^		int download_rate() const$/;"	f	class:libtorrent::stat
@@ -9605,7 +9622,8 @@ downloading_piece_progress	libtorrent/src/web_peer_connection.cpp	/^piece_block_
 downloading_progress	libtorrent/include/libtorrent/peer_info.hpp	/^		int downloading_progress;$/;"	m	struct:libtorrent::peer_info
 downloading_total	libtorrent/include/libtorrent/peer_info.hpp	/^		int downloading_total;$/;"	m	struct:libtorrent::peer_info
 downloadsize	libtorrent/src/client.cpp	/^int64_t downloadsize = 0;$/;"	v
-downloadsize	src/torrent_bak.cpp	/^int64_t downloadsize = 0;$/;"	v
+downloadsize	test/torrent.cpp	/^int64_t downloadsize = 0;$/;"	v
+downloadsize	test/torrent_bak.cpp	/^int64_t downloadsize = 0;$/;"	v
 dp_ctq_depth	parted/include/dvh.h	/^	unsigned char	dp_ctq_depth;	\/* Depth of CTQ queue *\/$/;"	m	struct:device_parameters
 dp_cyls	parted/include/dvh.h	/^	unsigned short	dp_cyls;	\/* number of usable cylinders (i.e.,$/;"	m	struct:device_parameters
 dp_cylshi	parted/include/dvh.h	/^	unsigned char	dp_cylshi;	\/* high byte of 24 bits of cylinder count *\/$/;"	m	struct:device_parameters
@@ -9721,6 +9739,7 @@ dump_xml_drv	hwinfo/src/ids/convert_hd	/^sub dump_xml_drv$/;"	s
 dump_xml_ent	hwinfo/src/ids/convert_hd	/^sub dump_xml_ent$/;"	s
 dump_xml_id	hwinfo/src/ids/convert_hd	/^sub dump_xml_id$/;"	s
 dump_xml_item	hwinfo/src/ids/convert_hd	/^sub dump_xml_item$/;"	s
+dup	include/adlist.h	/^    void *(*dup) (void *ptr);$/;"	m	struct:list
 dup	virt-p2v/include/gnulib/unistd.h	853;"	d
 dup2	virt-p2v/include/gnulib/unistd.h	/^_GL_CXXALIASWARN (dup2);$/;"	v
 dup2	virt-p2v/include/gnulib/unistd.h	881;"	d
@@ -10392,7 +10411,9 @@ file_index	libtorrent/include/libtorrent/file_storage.hpp	/^		file_index_t file_
 file_index	libtorrent/include/libtorrent/web_peer_connection.hpp	/^			file_index_t file_index;$/;"	m	struct:libtorrent::web_peer_connection::file_request_t
 file_index	libtorrent/src/file_storage.cpp	/^	int file_storage::file_index(internal_file_entry const& fe) const$/;"	f	class:libtorrent::file_storage
 file_index_at_offset	libtorrent/src/file_storage.cpp	/^	file_index_t file_storage::file_index_at_offset(std::int64_t const offset) const$/;"	f	class:libtorrent::file_storage
+file_name	include/packet.h	/^    char file_name[36];$/;"	m	struct:progress_info
 file_name	include/task.h	/^	char file_name[128];	$/;"	m	struct:tftp_task
+file_name	include/task.h	/^    char file_name[128];$/;"	m	struct:torrent_task
 file_name	include/tftp.h	/^        char file_name[2];$/;"	m	union:tftp_packet::__anon199
 file_name	include/torrent.h	/^	char file_name[128];$/;"	m	struct:torrent_task
 file_name	include/torrent.h	/^    char file_name[36];$/;"	m	struct:progress_info
@@ -10440,6 +10461,7 @@ file_rename_failed_alert	libtorrent/src/alert.cpp	/^	file_rename_failed_alert::f
 file_renamed_alert	libtorrent/src/alert.cpp	/^	file_renamed_alert::file_renamed_alert(aux::stack_allocator& alloc$/;"	f	class:libtorrent::file_renamed_alert
 file_request_t	libtorrent/include/libtorrent/web_peer_connection.hpp	/^		struct file_request_t$/;"	s	class:libtorrent::web_peer_connection
 file_size	include/packet.h	/^	unsigned long long file_size;$/;"	m	struct:yzy_torrent
+file_size	include/packet.h	/^    unsigned long long file_size;$/;"	m	struct:progress_info
 file_size	include/torrent.h	/^	unsigned long long file_size;$/;"	m	struct:progress_info
 file_size	libtorrent/include/libtorrent/aux_/path.hpp	/^		std::int64_t file_size = 0;$/;"	m	struct:libtorrent::file_status
 file_size	libtorrent/include/libtorrent/stat_cache.hpp	/^			std::int64_t file_size;$/;"	m	struct:libtorrent::stat_cache::stat_cache_t
@@ -10740,6 +10762,8 @@ flush_storage	libtorrent/include/libtorrent/disk_io_job.hpp	/^		, flush_storage$
 flush_write_cache	libtorrent/include/libtorrent/disk_io_thread.hpp	/^			flush_write_cache = 2,$/;"	m	struct:libtorrent::final	typeref:enum:libtorrent::final::
 flushing	libtorrent/include/libtorrent/block_cache.hpp	/^			flushing = static_cast<int>(job_action_t::num_job_ids), \/\/ 20$/;"	e	enum:libtorrent::piece_log_t::artificial_jobs
 flushing_count	libtorrent/include/libtorrent/block_cache.hpp	/^		int flushing_count = 0;$/;"	m	struct:libtorrent::cached_block_entry
+focusInEvent	qt_pro/mpushbutton.cpp	/^void mPushButton::focusInEvent(QFocusEvent *e)$/;"	f	class:mPushButton
+focusOutEvent	qt_pro/mpushbutton.cpp	/^void mPushButton::focusOutEvent(QFocusEvent *e)$/;"	f	class:mPushButton
 fopen	virt-p2v/include/gnulib/stdio.h	785;"	d
 for_each_node	libtorrent/include/libtorrent/kademlia/routing_table.hpp	/^	void for_each_node(std::function<void(node_entry const&)> f) const$/;"	f	class:libtorrent::dht::routing_table
 for_each_node	libtorrent/kademlia/routing_table.cpp	/^void routing_table::for_each_node(std::function<void(node_entry const&)> live_cb$/;"	f	class:libtorrent::dht::routing_table
@@ -10808,6 +10832,7 @@ frag_sectors	parted/include/fat.h	/^	PedSector	frag_sectors;$/;"	m	struct:_FatSp
 frag_size	parted/include/fat.h	/^	int		frag_size;$/;"	m	struct:_FatSpecific
 framebuffer	hwinfo/src/hd/hd.h	/^  res_framebuffer_t framebuffer;$/;"	m	union:u_hd_res_t
 fread	virt-p2v/include/gnulib/stdio.h	/^_GL_CXXALIASWARN (fread);$/;"	v
+free	include/adlist.h	/^    void *(*free)(void *ptr);$/;"	m	struct:list
 free	parted/include/disk.h	/^        void (*free) (PedDisk* disk);$/;"	m	struct:_PedDiskOps
 free	parted/include/disk.in.h	/^        void (*free) (PedDisk* disk);$/;"	m	struct:_PedDiskOps
 free_block	libtorrent/src/block_cache.cpp	/^void block_cache::free_block(cached_piece_entry* pe, int block)$/;"	f	class:libtorrent::block_cache
@@ -11039,6 +11064,7 @@ get_conversion_error	virt-p2v/src/conversion.c	/^get_conversion_error (void)$/;"
 get_cpu_config	virt-p2v/src/cpuid.c	/^get_cpu_config (struct cpu_config *cpu)$/;"	f
 get_dht_settings	libtorrent/include/libtorrent/aux_/session_impl.hpp	/^			dht::dht_settings const& get_dht_settings() const { return m_dht_settings; }$/;"	f	class:libtorrent::aux::final::dht
 get_dht_settings	libtorrent/src/session_handle.cpp	/^	dht::dht_settings session_handle::get_dht_settings() const$/;"	f	class:libtorrent::session_handle
+get_diff_mode	src/client.c	/^static int get_diff_mode(char *group_uuid)$/;"	f	file:
 get_disk_crc	hwinfo/src/hd/hd.c	/^unsigned get_disk_crc(unsigned char *data, unsigned len)$/;"	f
 get_download_queue	libtorrent/src/piece_picker.cpp	/^	std::vector<piece_picker::downloading_piece> piece_picker::get_download_queue() const$/;"	f	class:libtorrent::piece_picker
 get_download_queue	libtorrent/src/torrent.cpp	/^	void torrent::get_download_queue(std::vector<partial_piece_info>* queue) const$/;"	f	class:libtorrent::torrent
@@ -11398,6 +11424,8 @@ group	hwinfo/src/hd/hd.h	/^  smbios_group_t group;$/;"	m	union:u_hd_smbios_t
 group_btn	qt_pro/configwindow.h	/^    QButtonGroup *group_btn;$/;"	m	class:ConfigWindow
 group_btn	qt_pro/dialogwindow.h	/^    QButtonGroup *group_btn;$/;"	m	class:DialogWindow
 group_member	virt-p2v/include/gnulib/unistd.h	1547;"	d
+group_uuid	include/packet.h	/^	char group_uuid[36];$/;"	m	struct:yzy_torrent
+group_uuid	include/task.h	/^    char group_uuid[36];$/;"	m	struct:torrent_task
 group_uuid	include/torrent.h	/^	char group_uuid[36];$/;"	m	struct:torrent_task
 grow	libtorrent/src/receive_buffer.cpp	/^void receive_buffer::grow(int const limit)$/;"	f	class:libtorrent::receive_buffer
 grow_capacity	libtorrent/include/libtorrent/heterogeneous_queue.hpp	/^		void grow_capacity(int const size)$/;"	f	struct:libtorrent::heterogeneous_queue
@@ -11510,7 +11538,8 @@ handle	libtorrent/include/libtorrent/torrent_status.hpp	/^		torrent_handle handl
 handle_alert	libtorrent/bak/client_test.cpp	/^bool handle_alert(torrent_view& view, session_view& ses_view$/;"	f
 handle_alert	libtorrent/examples/client_test.cpp	/^bool handle_alert(torrent_view& view, session_view& ses_view$/;"	f
 handle_alter	libtorrent/src/client.cpp	/^bool handle_alter(lt::session& ses, lt::alert* a, lt::torrent_handle &th)$/;"	f
-handle_alter	src/torrent_bak.cpp	/^bool handle_alter(lt::session& ses, lt::alert* a, lt::torrent_handle &th)$/;"	f
+handle_alter	test/torrent.cpp	/^bool handle_alter(lt::session& ses, lt::alert* a, lt::torrent_handle &th)$/;"	f
+handle_alter	test/torrent_bak.cpp	/^bool handle_alter(lt::session& ses, lt::alert* a, lt::torrent_handle &th)$/;"	f
 handle_backwards_compatible_resume_data	libtorrent/src/session_handle.cpp	/^	void handle_backwards_compatible_resume_data(add_torrent_params& atp)$/;"	f	namespace:libtorrent::__anon308
 handle_disk_error	libtorrent/src/torrent.cpp	/^	void torrent::handle_disk_error(string_view job_name$/;"	f	class:libtorrent::torrent
 handle_error	libtorrent/src/proxy_base.cpp	/^	bool proxy_base::handle_error(error_code const& e, handler_type const& h)$/;"	f	class:libtorrent::proxy_base
@@ -12016,6 +12045,7 @@ he_subvendor_id	hwinfo/src/hd/hddb_int.h	/^  he_vendor_id, he_device_id, he_subv
 he_subvendor_name	hwinfo/src/hd/hddb_int.h	/^  he_vendor_name, he_device_name, he_subvendor_name, he_subdevice_name,$/;"	e	enum:hddb_entry_e
 he_vendor_id	hwinfo/src/hd/hddb_int.h	/^  he_vendor_id, he_device_id, he_subvendor_id, he_subdevice_id, he_rev_id,$/;"	e	enum:hddb_entry_e
 he_vendor_name	hwinfo/src/hd/hddb_int.h	/^  he_vendor_name, he_device_name, he_subvendor_name, he_subdevice_name,$/;"	e	enum:hddb_entry_e
+head	include/adlist.h	/^    listNode *head;$/;"	m	struct:list
 head_buf	include/client.h	/^    unsigned char *head_buf;$/;"	m	struct:client
 header	hwinfo/src/hd/cpu.c	/^  acpi_table_entry_header header;$/;"	m	struct:acpi_table_lsapic	file:
 header	hwinfo/src/hd/cpu.c	/^  struct acpi_table_header header;$/;"	m	struct:acpi_table_madt	typeref:struct:acpi_table_madt::acpi_table_header	file:
@@ -12396,7 +12426,7 @@ id	hwinfo/src/hd/hd.h	/^  unsigned host, channel, id, lun;$/;"	m	struct:scsi_s
 id	hwinfo/src/hd/hd.h	/^  unsigned id;			\/**< slot id *\/$/;"	m	struct:__anon30
 id	hwinfo/src/hd/hd.h	/^  unsigned id;		\/**< Numeric id. *\/$/;"	m	struct:__anon14
 id	hwinfo/src/ids/check_hd.c	/^  unsigned id;$/;"	m	struct:__anon140	file:
-id	include/config.h	/^    unsigned int id;$/;"	m	struct:terminal_info
+id	include/config.h	/^    int id;$/;"	m	struct:terminal_info
 id	libtorrent/include/libtorrent/kademlia/io.hpp	/^		node_id id;$/;"	m	struct:libtorrent::dht::node_endpoint
 id	libtorrent/include/libtorrent/kademlia/observer.hpp	/^	node_id const& id() const { return m_id; }$/;"	f	struct:libtorrent::dht::observer
 id	libtorrent/include/libtorrent/kademlia/routing_table.hpp	/^	node_id const& id() const$/;"	f	class:libtorrent::dht::routing_table
@@ -12405,7 +12435,7 @@ id	libtorrent/include/libtorrent/torrent_handle.hpp	/^		std::uint32_t id() const
 id	libtorrent/src/identify_client.cpp	/^		char const* id;$/;"	m	struct:__anon320::generic_map_entry	file:
 id	libtorrent/src/identify_client.cpp	/^		char const* id;$/;"	m	struct:__anon320::map_entry	file:
 id	libtorrent/src/session_handle.cpp	/^	peer_id session_handle::id() const$/;"	f	class:libtorrent::session_handle
-id	qt_pro/external.h	/^    unsigned int id;$/;"	m	struct:terminal_info
+id	qt_pro/external.h	/^    int id;$/;"	m	struct:terminal_info
 id_dump	hwinfo/src/ids/convert_hd	/^sub id_dump$/;"	s
 id_string	hwinfo/src/hd/hd.h	/^    char *id_string;$/;"	m	struct:cdrom_info_s::__anon52
 identd_error	libtorrent/include/libtorrent/socks5_stream.hpp	/^		identd_error,$/;"	e	enum:libtorrent::socks_error::socks_error_code
@@ -12446,6 +12476,7 @@ ignore_value	virt-p2v/include/gnulib/ignore-value.h	44;"	d
 ignore_value	virt-p2v/include/gnulib/ignore-value.h	47;"	d
 ignore_value	virt-p2v/include/ignore-value.h	44;"	d
 ignore_value	virt-p2v/include/ignore-value.h	47;"	d
+image_name	include/packet.h	/^    char image_name[128];$/;"	m	struct:progress_info
 image_name	include/task.h	/^    char image_name[128];$/;"	m	struct:p2v_task
 image_name	include/torrent.h	/^	char image_name[128];$/;"	m	struct:progress_info
 image_name	qt_pro/global.h	/^    char image_name[36];$/;"	m	struct:progress_info
@@ -12575,7 +12606,9 @@ info	hwinfo/src/hd/hd.h	/^  char *info;$/;"	m	struct:scsi_s
 info	hwinfo/src/isdn/cdb/isdn_cdb_def.h	/^	info,$/;"	e	enum:__anon147
 info	libtorrent/include/libtorrent/alert.hpp	/^		enum TORRENT_DEPRECATED_ENUM severity_t { debug, info, warning, critical, fatal, none };$/;"	e	enum:libtorrent::alert::severity_t
 info	libtorrent/src/torrent_info.cpp	/^	bdecode_node torrent_info::info(char const* key) const$/;"	f	class:libtorrent::torrent_info
-info	src/torrent_bak.cpp	/^static progress_info *info;$/;"	v	file:
+info	src/bt_client.cpp	/^static progress_info *info = NULL;$/;"	v	file:
+info	test/torrent.cpp	/^static progress_info *info;$/;"	v	file:
+info	test/torrent_bak.cpp	/^static progress_info *info;$/;"	v	file:
 info	virt-p2v/src/conversion.c	/^static struct progress_info *info = NULL;$/;"	v	typeref:struct:progress_info	file:
 info_arch	libtorrent/examples/CMakeFiles/3.5.1/CompilerIdC/CMakeCCompilerId.c	/^char const* info_arch = "INFO" ":" "arch[" ARCHITECTURE_ID "]";$/;"	v
 info_arch	libtorrent/examples/CMakeFiles/3.5.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* info_arch = "INFO" ":" "arch[" ARCHITECTURE_ID "]";$/;"	v
@@ -13342,6 +13375,7 @@ last_connected	libtorrent/include/libtorrent/torrent_peer.hpp	/^		std::uint16_t 
 last_download	libtorrent/include/libtorrent/add_torrent_params.hpp	/^		std::time_t last_download = 0;$/;"	m	struct:libtorrent::add_torrent_params
 last_download	libtorrent/include/libtorrent/torrent_status.hpp	/^		time_point last_download;$/;"	m	struct:libtorrent::torrent_status
 last_error	libtorrent/include/libtorrent/announce_entry.hpp	/^		error_code last_error;$/;"	m	struct:libtorrent::announce_endpoint
+last_group	src/client.c	/^int last_group = 0;$/;"	v
 last_idx	hwinfo/src/hd/hd.h	/^  unsigned last_idx;		\/**< (Internal) index of the last hd entry generated *\/$/;"	m	struct:__anon121
 last_job	libtorrent/include/libtorrent/block_cache.hpp	/^			last_job$/;"	e	enum:libtorrent::piece_log_t::artificial_jobs
 last_lun	parted/src/linux.c	/^        unsigned short  last_lun;       \/* reserved (word 126) *\/$/;"	m	struct:hd_driveid	file:
@@ -13370,7 +13404,9 @@ last_seen_complete	libtorrent/include/libtorrent/torrent_status.hpp	/^		std::tim
 last_seen_complete	libtorrent/src/peer_connection_handle.cpp	/^std::time_t peer_connection_handle::last_seen_complete() const$/;"	f	class:libtorrent::peer_connection_handle
 last_time	include/client.h	/^    time_t last_time;$/;"	m	struct:client
 last_time	libtorrent/src/client.cpp	/^time_t current_time, last_time;$/;"	v
-last_time	src/torrent_bak.cpp	/^time_t last_time;$/;"	v
+last_time	src/bt_client.cpp	/^time_t last_time;$/;"	v
+last_time	test/torrent.cpp	/^time_t last_time;$/;"	v
+last_time	test/torrent_bak.cpp	/^time_t last_time;$/;"	v
 last_update	parted/src/parted.c	/^        time_t  last_update;$/;"	m	struct:__anon170	file:
 last_upload	libtorrent/include/libtorrent/add_torrent_params.hpp	/^		std::time_t last_upload = 0;$/;"	m	struct:libtorrent::add_torrent_params
 last_upload	libtorrent/include/libtorrent/torrent_status.hpp	/^		time_point last_upload;$/;"	m	struct:libtorrent::torrent_status
@@ -13411,6 +13447,7 @@ legacy_boot	parted/src/gpt.c	/^  int legacy_boot;$/;"	m	struct:_GPTPartitionData
 len	hwinfo/src/hd/hd.h	/^  int len;$/;"	m	struct:__anon47
 len	hwinfo/src/hd/hddb.c	/^  int len;$/;"	m	struct:__anon9	file:
 len	hwinfo/src/hd/smbios.c	/^  unsigned len;$/;"	m	struct:__anon127	file:
+len	include/adlist.h	/^    unsigned long len;$/;"	m	struct:list
 len	libtorrent/include/libtorrent/heterogeneous_queue.hpp	/^			std::uint16_t len;$/;"	m	struct:libtorrent::heterogeneous_queue::header_t
 len	libtorrent/include/libtorrent/kademlia/types.hpp	/^		static constexpr int len = 32;$/;"	m	struct:libtorrent::dht::public_key
 len	libtorrent/include/libtorrent/kademlia/types.hpp	/^		static constexpr int len = 64;$/;"	m	struct:libtorrent::dht::secret_key
@@ -13932,10 +13969,43 @@ list	hwinfo/src/hd/hd.h	/^  hddb_list_t *list;$/;"	m	struct:__anon67
 list	hwinfo/src/hd/smbios.c	/^  } list;$/;"	m	struct:__anon127	typeref:union:__anon127::__anon128	file:
 list	hwinfo/src/ids/check_hd.c	/^  hddb_list_t *list;$/;"	m	struct:__anon144	file:
 list	hwinfo/src/ids/check_hd.c	/^  list_t list;$/;"	m	struct:__anon142	file:
+list	include/adlist.h	/^typedef struct list {$/;"	s
+list	include/adlist.h	/^} list;$/;"	t	typeref:struct:list
 list	libtorrent/include/libtorrent/bdecode.hpp	/^	{ none, dict, list, string, integer, end };$/;"	m	struct:libtorrent::detail::bdecode_token	typeref:enum:libtorrent::detail::bdecode_token::
 list	libtorrent/include/libtorrent/lazy_entry.hpp	/^			lazy_entry* list;$/;"	m	union:libtorrent::lazy_entry::data_t
 list	libtorrent/src/entry.cpp	/^	entry::list_type const& entry::list() const$/;"	f	class:libtorrent::entry::entry
 list	libtorrent/src/entry.cpp	/^	entry::list_type& entry::list()$/;"	f	class:libtorrent::entry
+listAddNodeHead	src/adlist.c	/^list *listAddNodeHead(list *list, void *value)$/;"	f
+listAddNodeTail	src/adlist.c	/^list *listAddNodeTail(list *list, void *value)$/;"	f
+listCreate	src/adlist.c	/^list *listCreate(void)$/;"	f
+listDelNode	src/adlist.c	/^void listDelNode(list *list, listNode *node)$/;"	f
+listDup	src/adlist.c	/^list *listDup(list *orig)$/;"	f
+listFirst	include/adlist.h	57;"	d
+listGetDupMethod	include/adlist.h	67;"	d
+listGetFree	include/adlist.h	68;"	d
+listGetIterator	src/adlist.c	/^listIter *listGetIterator(list *list, int direction)$/;"	f
+listGetMatchMethod	include/adlist.h	69;"	d
+listIndex	src/adlist.c	/^listNode *listIndex(list *list, long index)$/;"	f
+listInsertNode	src/adlist.c	/^list *listInsertNode(list *list, listNode *old_node, void *value, int after)$/;"	f
+listIter	include/adlist.h	/^typedef struct listIter {$/;"	s
+listIter	include/adlist.h	/^} listIter;$/;"	t	typeref:struct:listIter
+listLast	include/adlist.h	58;"	d
+listLength	include/adlist.h	56;"	d
+listNext	src/adlist.c	/^listNode *listNext(listIter *iter)$/;"	f
+listNextNode	include/adlist.h	60;"	d
+listNode	include/adlist.h	/^typedef struct listNode {$/;"	s
+listNode	include/adlist.h	/^} listNode;$/;"	t	typeref:struct:listNode
+listNodeValue	include/adlist.h	61;"	d
+listPrevNode	include/adlist.h	59;"	d
+listRelease	src/adlist.c	/^void listRelease(list *list)$/;"	f
+listReleaseIterator	src/adlist.c	/^void listReleaseIterator(listIter *iter)$/;"	f
+listRewind	src/adlist.c	/^void listRewind(list *list, listIter *li)$/;"	f
+listRewindTail	src/adlist.c	/^void listRewindTail(list *list, listIter *li)$/;"	f
+listRotate	src/adlist.c	/^void listRotate(list *list)$/;"	f
+listSearchKey	src/adlist.c	/^listNode *listSearchKey(list *list, void *key)$/;"	f
+listSetDupMethod	include/adlist.h	63;"	d
+listSetFreeMethod	include/adlist.h	64;"	d
+listSetMatchMethod	include/adlist.h	65;"	d
 list_all	hwinfo/src/hd/hd.h	/^    unsigned list_all:1;	\/**< Return even devices with status 'not available'. *\/$/;"	m	struct:__anon121::flag_struct
 list_any_s	hwinfo/src/ids/check_hd.c	/^typedef struct list_any_s {$/;"	s	file:
 list_any_t	hwinfo/src/ids/check_hd.c	/^} list_any_t;$/;"	t	typeref:struct:list_any_s	file:
@@ -14198,6 +14268,8 @@ mGlobal	qt_pro/global.cpp	/^Global *Global::mGlobal = NULL;$/;"	m	class:Global	f
 mGlobal	qt_pro/global.h	/^    static Global *mGlobal;$/;"	m	class:Global
 mHomePageFlag	qt_pro/operatetimeouttimer.h	/^    bool mHomePageFlag;$/;"	m	class:OperateTimeOutTimer
 mOperateTimeOutTimer	qt_pro/operatetimeouttimer.h	/^    static OperateTimeOutTimer *mOperateTimeOutTimer;$/;"	m	class:OperateTimeOutTimer
+mPushButton	qt_pro/mpushbutton.cpp	/^mPushButton::mPushButton(QWidget *parent):QPushButton(parent)$/;"	f	class:mPushButton
+mPushButton	qt_pro/mpushbutton.h	/^class mPushButton : public QPushButton$/;"	c
 mSecondTimer	qt_pro/operatetimeouttimer.h	/^    QTimer *mSecondTimer;$/;"	m	class:OperateTimeOutTimer
 mTimeoutSecond	qt_pro/operatetimeouttimer.h	/^    int mTimeoutSecond;$/;"	m	class:OperateTimeOutTimer
 m_5_sec_average	libtorrent/include/libtorrent/stat.hpp	/^		std::int32_t m_5_sec_average;$/;"	m	class:libtorrent::stat_channel
@@ -14414,7 +14486,7 @@ m_delay_sample_hist	libtorrent/src/utp_stream.cpp	/^	std::array<std::uint32_t, 3
 m_delay_sample_idx	libtorrent/src/utp_stream.cpp	/^	std::uint8_t m_delay_sample_idx:2;$/;"	m	struct:libtorrent::utp_socket_impl	file:
 m_depth	libtorrent/include/libtorrent/kademlia/routing_table.hpp	/^	mutable int m_depth;$/;"	m	class:libtorrent::dht::routing_table
 m_desired_queue_size	libtorrent/include/libtorrent/peer_connection.hpp	/^		std::uint16_t m_desired_queue_size = 4;$/;"	m	class:libtorrent::peer_connection
-m_desktop_group_name	src/client.c	/^char m_desktop_group_name[128] = {0};$/;"	v
+m_desktop_group_name	src/client.c	/^char m_desktop_group_name[128][128] = {0};$/;"	v
 m_dest	libtorrent/include/libtorrent/i2p_stream.hpp	/^	std::string m_dest;$/;"	m	class:libtorrent::i2p_stream
 m_destructed	libtorrent/include/libtorrent/peer_connection.hpp	/^		bool m_destructed = false;$/;"	m	class:libtorrent::peer_connection
 m_device	libtorrent/include/libtorrent/upnp.hpp	/^	std::string m_device;$/;"	m	struct:libtorrent::final
@@ -14549,6 +14621,7 @@ m_get_foreign_node	libtorrent/include/libtorrent/kademlia/node.hpp	/^	get_foreig
 m_ghost_size	libtorrent/include/libtorrent/block_cache.hpp	/^		int m_ghost_size;$/;"	m	struct:libtorrent::block_cache
 m_graceful_pause_mode	libtorrent/include/libtorrent/torrent.hpp	/^		bool m_graceful_pause_mode:1;$/;"	m	struct:libtorrent::torrent_hot_members
 m_gradientData	qt_pro/QRoundProgressBar.h	/^    QGradientStops m_gradientData;$/;"	m	class:QRoundProgressBar
+m_group_diff_mode	src/client.c	/^char m_group_diff_mode[8][37] = {0};$/;"	v
 m_handle	libtorrent/include/libtorrent/file.hpp	/^		DIR* m_handle;$/;"	m	class:libtorrent::directory
 m_handle	libtorrent/include/libtorrent/file.hpp	/^		HANDLE m_handle;$/;"	m	class:libtorrent::directory
 m_handler	libtorrent/include/libtorrent/aux_/deferred_handler.hpp	/^	Handler m_handler;$/;"	m	struct:libtorrent::aux::handler_wrapper
@@ -15547,6 +15620,7 @@ mask	hwinfo/src/hd/modem.c	/^  speed_t mask;$/;"	m	struct:speeds_s	file:
 mask	hwinfo/src/ids/check_hd.c	/^    unsigned mask:1;$/;"	m	struct:__anon140::__anon141	file:
 mask	hwinfo/src/ids/check_hd.c	/^  unsigned mask;$/;"	m	struct:__anon140	file:
 mask_signal	parted/src/ui.c	/^mask_signal()$/;"	f	file:
+match	include/adlist.h	/^    void (*match)(void *ptr, void *key);$/;"	m	struct:list
 match	libtorrent/src/resolve_links.cpp	/^void resolve_links::match(std::shared_ptr<const torrent_info> const& ti$/;"	f	class:libtorrent::resolve_links
 match_addr_mask	libtorrent/src/enum_net.cpp	/^	bool match_addr_mask(address const& a1, address const& a2, address const& mask)$/;"	f	namespace:libtorrent
 match_all	hwinfo/src/ids/check_hd.c	/^  match_any, match_all$/;"	e	enum:__anon136	file:
@@ -16067,6 +16141,7 @@ month	hwinfo/src/hd/hd.h	/^  unsigned month;		\/**< next scheduled power-on mont
 month_tab	src/tools.c	/^const char month_tab[48] =$/;"	v
 mostly_verified_nodes	libtorrent/kademlia/routing_table.cpp	/^bool mostly_verified_nodes(bucket_t const& b)$/;"	f	namespace:libtorrent::dht
 mount_boot	src/device.c	/^int mount_boot()$/;"	f
+mount_nv_sh	src/shell.c	/^char mount_nv_sh[] = {"#!\/bin\/sh \\n"$/;"	v
 mount_sh	src/shell.c	/^char mount_sh[] = {"#!\/bin\/sh \\n"$/;"	v
 mouse	hwinfo/src/hd/hd.h	/^  driver_info_mouse_t mouse;$/;"	m	union:driver_info_u
 mouse	hwinfo/src/hd/hd.h	/^  smbios_mouse_t mouse;$/;"	m	union:u_hd_smbios_t
@@ -16503,6 +16578,8 @@ next	hwinfo/src/ids/check_hd.c	/^  struct item_s *next;$/;"	m	struct:item_s	type
 next	hwinfo/src/ids/check_hd.c	/^  struct list_any_s *next;$/;"	m	struct:list_any_s	typeref:struct:list_any_s::list_any_s	file:
 next	hwinfo/src/ids/check_hd.c	/^  struct skey_s *next;$/;"	m	struct:skey_s	typeref:struct:skey_s::skey_s	file:
 next	hwinfo/src/ids/check_hd.c	/^  struct str_s *next;$/;"	m	struct:str_s	typeref:struct:str_s::str_s	file:
+next	include/adlist.h	/^    listNode *next;$/;"	m	struct:listIter
+next	include/adlist.h	/^    struct listNode *next;$/;"	m	struct:listNode	typeref:struct:listNode::listNode
 next	include/cJSON.h	/^	struct cJSON *next,*prev;	\/* next\/prev allow you to walk array\/object chains. Alternatively, use GetArraySize\/GetArrayItem\/GetObjectItem *\/$/;"	m	struct:cJSON	typeref:struct:cJSON::cJSON
 next	include/device.h	/^    PedDevice *next;$/;"	m	struct:_PedDevice
 next	libtorrent/include/libtorrent/linked_list.hpp	/^		T* next;$/;"	m	struct:libtorrent::list_node
@@ -17055,6 +17132,7 @@ oem_table_id	hwinfo/src/hd/cpu.c	/^  char oem_table_id[8];$/;"	m	struct:acpi_tab
 oem_version	hwinfo/src/hd/hd.h	/^  unsigned oem_version;		\/**< oem version info *\/$/;"	m	struct:__anon18
 of_entry	virt-p2v/src/gui.c	/^  *o_combo, *oc_entry, *os_entry, *of_entry, *oa_combo,$/;"	v	file:
 off_list	parted/src/ui.c	/^static StrList*     off_list;$/;"	v	file:
+offset	include/task.h	/^    uint64_t offset;$/;"	m	struct:torrent_task
 offset	include/torrent.h	/^	uint64_t offset;$/;"	m	struct:torrent_task
 offset	libtorrent/include/libtorrent/block_cache.hpp	/^		int offset;$/;"	m	struct:libtorrent::partial_hash
 offset	libtorrent/include/libtorrent/disk_io_job.hpp	/^			std::int32_t offset;$/;"	m	struct:libtorrent::disk_io_job::un::io_args
@@ -17272,6 +17350,7 @@ on_state	libtorrent/include/libtorrent/extensions.hpp	/^		virtual void on_state(
 on_storage_moved	libtorrent/src/torrent.cpp	/^	void torrent::on_storage_moved(status_t const status, std::string const& path$/;"	f	class:libtorrent::torrent
 on_suggest	libtorrent/include/libtorrent/extensions.hpp	/^		virtual bool on_suggest(piece_index_t) { return false; }$/;"	f	struct:libtorrent::peer_plugin
 on_suggest_piece	libtorrent/src/bt_peer_connection.cpp	/^	void bt_peer_connection::on_suggest_piece(int received)$/;"	f	class:libtorrent::bt_peer_connection
+on_template_name_edit_editingFinished	qt_pro/oswindow.cpp	/^void OSWindow::on_template_name_edit_editingFinished()$/;"	f	class:OSWindow
 on_template_size_edit_textChanged	qt_pro/oswindow.cpp	/^void OSWindow::on_template_size_edit_textChanged(const QString &arg1)$/;"	f	class:OSWindow
 on_tick	libtorrent/include/libtorrent/extensions.hpp	/^		virtual void on_tick() {}$/;"	f	struct:libtorrent::plugin
 on_tick	libtorrent/include/libtorrent/peer_connection.hpp	/^		virtual void on_tick() {}$/;"	f	class:libtorrent::peer_connection
@@ -18638,7 +18717,9 @@ pipe	virt-p2v/include/gnulib/unistd.h	/^_GL_CXXALIASWARN (pipe);$/;"	v
 pipe	virt-p2v/include/gnulib/unistd.h	1707;"	d
 pipe2	virt-p2v/include/gnulib/unistd.h	1736;"	d
 pipe_bt	test/test.c	/^int pipe_bt[2];$/;"	v
-pipe_buf	src/torrent_bak.cpp	/^static char pipe_buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};$/;"	v	file:
+pipe_buf	src/bt_client.cpp	/^static char pipe_buf[HEAD_LEN + sizeof(progress_info) + 1];$/;"	v	file:
+pipe_buf	test/torrent.cpp	/^static char pipe_buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};$/;"	v	file:
+pipe_buf	test/torrent_bak.cpp	/^static char pipe_buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};$/;"	v	file:
 pipe_buf	virt-p2v/src/conversion.c	/^static char pipe_buf[sizeof(struct progress_info) + HEAD_LEN + 1] = {0};$/;"	v	file:
 pipe_event	src/main.c	/^int pipe_event[2];$/;"	v
 pipe_event	test/test.c	/^int pipe_event[2];$/;"	v
@@ -18908,6 +18989,7 @@ prepend	libtorrent/include/libtorrent/tailqueue.hpp	/^		void prepend(tailqueue<T
 prepend_buffer	libtorrent/include/libtorrent/chained_buffer.hpp	/^		void prepend_buffer(Holder buffer, int used_size)$/;"	f	namespace:libtorrent
 pretend_input_tty	parted/src/parted.c	/^int     pretend_input_tty = 0;$/;"	v
 prev	cJSON/cJSON.h	/^	struct cJSON *next,*prev;	\/* next\/prev allow you to walk array\/object chains. Alternatively, use GetArraySize\/GetArrayItem\/GetObjectItem *\/$/;"	m	struct:cJSON	typeref:struct:cJSON::
+prev	include/adlist.h	/^    struct listNode *prev;$/;"	m	struct:listNode	typeref:struct:listNode::listNode
 prev	include/cJSON.h	/^	struct cJSON *next,*prev;	\/* next\/prev allow you to walk array\/object chains. Alternatively, use GetArraySize\/GetArrayItem\/GetObjectItem *\/$/;"	m	struct:cJSON	typeref:struct:cJSON::
 prev	libtorrent/include/libtorrent/linked_list.hpp	/^		T* prev;$/;"	m	struct:libtorrent::list_node
 prev	libtorrent/include/libtorrent/linked_list.hpp	/^		void prev() { m_current = m_current->prev; }$/;"	f	struct:libtorrent::list_iterator
@@ -19102,6 +19184,7 @@ program_transform_name	libtorrent/examples/Makefile	/^program_transform_name = s
 program_transform_name	libtorrent/include/libtorrent/Makefile	/^program_transform_name = s,x,x,$/;"	m
 progress	hwinfo/src/hd/hd.c	/^void progress(hd_data_t *hd_data, unsigned pos, unsigned count, char *msg)$/;"	f
 progress	hwinfo/src/hd/hd.h	/^  void (*progress)(char *pos, char *msg);$/;"	m	struct:__anon121
+progress	include/packet.h	/^    unsigned int long progress;$/;"	m	struct:progress_info
 progress	include/torrent.h	/^    unsigned int long progress;$/;"	m	struct:progress_info
 progress	libtorrent/include/libtorrent/peer_info.hpp	/^		float progress; \/\/ [0, 1]$/;"	m	struct:libtorrent::peer_info
 progress	libtorrent/include/libtorrent/torrent_status.hpp	/^		float progress = 0.f;$/;"	m	struct:libtorrent::torrent_status
@@ -19112,6 +19195,8 @@ progress	virt-p2v/src/conversion.c	/^    unsigned int long progress;$/;"	m	struc
 progress2	hwinfo/hwinfo.c	/^void progress2(char *pos, char *msg)$/;"	f
 progress_bar	libtorrent/bak/print.cpp	/^std::string const& progress_bar(int progress, int width, color_code c$/;"	f	class:std
 progress_bar	libtorrent/examples/print.cpp	/^std::string const& progress_bar(int progress, int width, color_code c$/;"	f	class:std
+progress_info	include/packet.h	/^struct progress_info{$/;"	s
+progress_info	include/packet.h	/^typedef struct progress_info progress_info;$/;"	t	typeref:struct:progress_info
 progress_info	include/torrent.h	/^struct progress_info{$/;"	s
 progress_info	include/torrent.h	/^typedef struct progress_info progress_info;$/;"	t	typeref:struct:progress_info
 progress_info	qt_pro/global.h	/^struct progress_info{$/;"	s
@@ -20157,8 +20242,10 @@ run_cmd	hwinfo/src/hd/hd.c	/^int run_cmd(hd_data_t *hd_data, char *cmd)$/;"	f
 run_command	virt-p2v/src/kernel.c	/^run_command (const char *stage, const char *command)$/;"	f	file:
 run_dlg	virt-p2v/src/gui.c	/^static GtkWidget *run_dlg,$/;"	v	file:
 run_flag	qt_pro/pipethread.h	/^    int run_flag;$/;"	m	class:PipeThread
-run_flag	src/torrent_bak.cpp	/^int run_flag = 0;$/;"	v
+run_flag	src/bt_client.cpp	/^static int run_flag = 0;$/;"	v	file:
 run_flag	test/test.c	/^int run_flag = 0;$/;"	v
+run_flag	test/torrent.cpp	/^int run_flag = 0;$/;"	v
+run_flag	test/torrent_bak.cpp	/^int run_flag = 0;$/;"	v
 run_test	libtorrent/examples/run_benchmarks.py	/^def run_test(config):$/;"	f
 runcount	virt-p2v/include/gnulib/windows-rwlock.h	/^          int runcount; \/* number of readers running, or -1 when a writer runs *\/$/;"	m	struct:__anon177
 running	virt-p2v/src/conversion.c	/^static int running = 0;$/;"	v	file:
@@ -20583,7 +20670,7 @@ send_buffer_watermark_too_low	libtorrent/include/libtorrent/alert_types.hpp	/^		
 send_cancel_p2v	src/client.c	/^static int send_cancel_p2v(struct client *cli, int batch_no)$/;"	f	file:
 send_cancel_send_desktop	src/client.c	/^static int send_cancel_send_desktop(struct client *cli, int batch_no)$/;"	f	file:
 send_choke	libtorrent/src/peer_connection.cpp	/^	bool peer_connection::send_choke()$/;"	f	class:libtorrent::peer_connection
-send_clear_all_desktop	src/client.c	/^static int send_clear_all_desktop(struct client *cli, int batch_no, int flag)$/;"	f	file:
+send_clear_all_desktop	src/client.c	/^static int send_clear_all_desktop(struct client *cli, int batch_no)$/;"	f	file:
 send_code	test/test.c	/^static int send_code(struct client *cli, int code)$/;"	f	file:
 send_config_pipe	src/config.c	/^int send_config_pipe()$/;"	f
 send_config_version	src/client.c	/^static int send_config_version(struct client *cli)$/;"	f	file:
@@ -20620,7 +20707,8 @@ send_peer	libtorrent/src/ut_pex.cpp	/^	bool send_peer(peer_connection const& p)$
 send_piece_suggestions	libtorrent/src/peer_connection.cpp	/^	void peer_connection::send_piece_suggestions(int const num)$/;"	f	class:libtorrent::peer_connection
 send_pipe	qt_pro/pipethread.cpp	/^int PipeThread::send_pipe(char *buf, short cmd, int size)$/;"	f	class:PipeThread
 send_pipe	src/socket.c	/^int send_pipe(char *buf, short cmd, int size, int type)$/;"	f
-send_pipe	src/torrent_bak.cpp	/^static int send_pipe(char *buf, short cmd, int size)$/;"	f	file:
+send_pipe	test/torrent.cpp	/^static int send_pipe(char *buf, short cmd, int size)$/;"	f	file:
+send_pipe	test/torrent_bak.cpp	/^static int send_pipe(char *buf, short cmd, int size)$/;"	f	file:
 send_pipe	virt-p2v/src/conversion.c	/^static int send_pipe(char *buf, short cmd, int size)$/;"	f	file:
 send_pkt	libtorrent/src/utp_stream.cpp	/^bool utp_socket_impl::send_pkt(int const flags)$/;"	f	class:libtorrent::utp_socket_impl
 send_quota	libtorrent/include/libtorrent/peer_info.hpp	/^		int send_quota;$/;"	m	struct:libtorrent::peer_info
@@ -21051,7 +21139,8 @@ set_ratio	libtorrent/src/torrent_handle.cpp	/^	void torrent_handle::set_ratio(fl
 set_removable_from_ui	virt-p2v/src/gui.c	/^set_removable_from_ui (struct config *config)$/;"	f	file:
 set_request_head	qt_pro/pipethread.cpp	/^void set_request_head(char *buf, char encrypt_flag, short cmd, int data_size)$/;"	f
 set_request_head	src/socket.c	/^void set_request_head(char *buf, char encrypt_flag, short cmd, int data_size)$/;"	f
-set_request_head	src/torrent_bak.cpp	/^void set_request_head(char *buf, char encrypt_flag, short cmd, int data_size)$/;"	f
+set_request_head	test/torrent.cpp	/^void set_request_head(char *buf, char encrypt_flag, short cmd, int data_size)$/;"	f
+set_request_head	test/torrent_bak.cpp	/^void set_request_head(char *buf, char encrypt_flag, short cmd, int data_size)$/;"	f
 set_root_cert	libtorrent/src/create_torrent.cpp	/^	void create_torrent::set_root_cert(string_view cert)$/;"	f	class:libtorrent::create_torrent
 set_running	virt-p2v/src/conversion.c	/^set_running (int r)$/;"	f	file:
 set_seed	libtorrent/src/peer_list.cpp	/^	void peer_list::set_seed(torrent_peer* p, bool s)$/;"	f	class:libtorrent::peer_list
@@ -21771,7 +21860,6 @@ start_align	parted/include/constraint.in.h	/^	PedAlignment*	start_align;$/;"	m	s
 start_announce	libtorrent/src/udp_tracker_connection.cpp	/^	void udp_tracker_connection::start_announce()$/;"	f	class:libtorrent::udp_tracker_connection
 start_announcing	libtorrent/src/torrent.cpp	/^	void torrent::start_announcing()$/;"	f	class:libtorrent::torrent
 start_bt	libtorrent/src/client.cpp	/^int start_bt(char *torrent, char *save_path, uint64_t physic_offset)$/;"	f
-start_bt	src/bt_client.cpp	/^int start_bt(char *torrent, char *save_path, char *file_name, uint64_t physical_offset) try$/;"	f
 start_button	virt-p2v/src/gui.c	/^  *start_button;$/;"	v	file:
 start_checking	libtorrent/src/torrent.cpp	/^	void torrent::start_checking()$/;"	f	class:libtorrent::torrent
 start_chs	include/gpt.h	/^    uint8_t   start_chs[3];$/;"	m	struct:__anon192
@@ -21816,7 +21904,9 @@ start_spinner	virt-p2v/src/gui.c	/^start_spinner (gpointer user_data)$/;"	f	file
 start_ssh	virt-p2v/src/ssh.c	/^start_ssh (unsigned spawn_flags, struct config *config,$/;"	f	file:
 start_time	libtorrent/bak/connection_tester.cpp	/^	time_point start_time;$/;"	m	struct:peer_conn	file:
 start_time	libtorrent/examples/connection_tester.cpp	/^	time_point start_time;$/;"	m	struct:peer_conn	file:
-start_torrent	src/torrent_bak.cpp	/^int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t physical_offset)$/;"	f
+start_torrent	src/bt_client.cpp	/^int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t physical_offset) try$/;"	f
+start_torrent	test/torrent.cpp	/^int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t physical_offset)$/;"	f
+start_torrent	test/torrent_bak.cpp	/^int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t physical_offset)$/;"	f
 start_trk	parted/include/fdasd.h	/^	unsigned long start_trk;$/;"	m	struct:partition_info
 start_trk	parted/include/fdasd.in.h	/^	unsigned long start_trk;$/;"	m	struct:partition_info
 start_unit	parted/include/fdasd.h	/^	int start_unit; \/* from track *\/$/;"	m	struct:format_data_t
@@ -21838,6 +21928,7 @@ stat_file	libtorrent/src/path.cpp	/^	void stat_file(std::string const& inf, file
 stat_to_array	libtorrent/src/alert.cpp	/^		std::array<int, stats_alert::num_channels> stat_to_array(stat const& s)$/;"	f	namespace:libtorrent::__anon241
 state	hwinfo/src/hd/hd.h	/^  unsigned state:1;			\/**< network link state: 0 - not connected, 1 - connected *\/$/;"	m	struct:__anon91
 state	hwinfo/src/hd/hd.h	/^  unsigned state;		\/**< 0\/1: disabled\/enabled *\/$/;"	m	struct:__anon28
+state	include/packet.h	/^    char state[12];$/;"	m	struct:progress_info
 state	include/torrent.h	/^    char state[12];$/;"	m	struct:progress_info
 state	libtorrent/bak/bt-get2.cpp	/^char const* state(lt::torrent_status::state_t s)$/;"	f
 state	libtorrent/bak/connection_tester.cpp	/^	int state;$/;"	m	struct:peer_conn	file:
@@ -21860,7 +21951,8 @@ state	libtorrent/src/puff.cpp	/^struct state {$/;"	s	file:
 state	libtorrent/src/session_handle.cpp	/^	entry session_handle::state() const$/;"	f	class:libtorrent::session_handle
 state	qt_pro/global.h	/^    char state[12];$/;"	m	struct:progress_info
 state	src/bt_client.cpp	/^char const* state(lt::torrent_status::state_t s)$/;"	f
-state	src/torrent_bak.cpp	/^char const* state(lt::torrent_status::state_t s)$/;"	f
+state	test/torrent.cpp	/^char const* state(lt::torrent_status::state_t s)$/;"	f
+state	test/torrent_bak.cpp	/^char const* state(lt::torrent_status::state_t s)$/;"	f
 state	virt-p2v/src/conversion.c	/^    char state[12];$/;"	m	struct:progress_info	file:
 state_changed_alert	libtorrent/src/alert.cpp	/^	state_changed_alert::state_changed_alert(aux::stack_allocator& alloc$/;"	f	class:libtorrent::state_changed_alert
 state_finished	libtorrent/include/libtorrent/piece_picker.hpp	/^			enum { state_none, state_requested, state_writing, state_finished };$/;"	e	enum:libtorrent::piece_picker::block_info::__anon208
@@ -22061,7 +22153,9 @@ stop_natpmp	libtorrent/src/session_impl.cpp	/^	void session_impl::stop_natpmp()$
 stop_spinner	virt-p2v/src/gui.c	/^stop_spinner (gpointer user_data)$/;"	f	file:
 stop_threads	libtorrent/src/disk_io_thread_pool.cpp	/^	void disk_io_thread_pool::stop_threads(int num_to_stop)$/;"	f	class:libtorrent::disk_io_thread_pool
 stop_torrent	libtorrent/include/libtorrent/disk_io_job.hpp	/^		, stop_torrent$/;"	m	class:libtorrent::job_action_t
-stop_torrent	src/torrent_bak.cpp	/^void stop_torrent()$/;"	f
+stop_torrent	src/bt_client.cpp	/^void stop_torrent()$/;"	f
+stop_torrent	test/torrent.cpp	/^void stop_torrent()$/;"	f
+stop_torrent	test/torrent_bak.cpp	/^void stop_torrent()$/;"	f
 stop_tracker_timeout	libtorrent/include/libtorrent/settings_pack.hpp	/^			stop_tracker_timeout,$/;"	e	enum:libtorrent::settings_pack::int_types
 stop_unit	parted/include/fdasd.h	/^	int stop_unit;  \/* to track *\/$/;"	m	struct:format_data_t
 stop_unit	parted/include/fdasd.in.h	/^	int stop_unit;  \/* to track *\/$/;"	m	struct:format_data_t
@@ -22074,6 +22168,7 @@ stop_when_ready	libtorrent/src/torrent_handle.cpp	/^	void torrent_handle::stop_w
 stopbits	hwinfo/src/hd/hd.h	/^  unsigned bits, stopbits;$/;"	m	struct:__anon83
 stopped	libtorrent/include/libtorrent/tracker_manager.hpp	/^			stopped,$/;"	e	enum:libtorrent::tracker_request::event_t
 stopping_torrent	libtorrent/include/libtorrent/error_code.hpp	/^			stopping_torrent,$/;"	e	enum:libtorrent::errors::error_code_enum
+storage	include/packet.h	/^    char storage[128];$/;"	m	struct:progress_info
 storage	include/task.h	/^    char storage[32];$/;"	m	struct:p2v_task
 storage	include/torrent.h	/^	char storage[128];$/;"	m	struct:progress_info
 storage	libtorrent/include/libtorrent/add_torrent_params.hpp	/^		aux::noexcept_movable<storage_constructor_type> storage;$/;"	m	struct:libtorrent::add_torrent_params
@@ -22454,6 +22549,7 @@ tag	include/StoreConfig.h	/^    char                tag[8]; \/\/ "yzyVOI"   $/;"
 tag_s	hwinfo/src/hd/hd.h	/^  struct tag_s {		\/**< this struct is for internal purposes only *\/$/;"	s	struct:s_hd_t
 tag_stack	libtorrent/include/libtorrent/upnp.hpp	/^	std::vector<string_view> tag_stack;$/;"	m	struct:libtorrent::parse_state
 tag_version	libtorrent/include/libtorrent/fingerprint.hpp	/^		int tag_version;$/;"	m	struct:libtorrent::fingerprint
+tail	include/adlist.h	/^    listNode *tail;$/;"	m	struct:list
 tailqueue	libtorrent/include/libtorrent/tailqueue.hpp	/^		tailqueue(): m_first(nullptr), m_last(nullptr), m_size(0) {}$/;"	f	struct:libtorrent::tailqueue
 tailqueue	libtorrent/include/libtorrent/tailqueue.hpp	/^	struct tailqueue$/;"	s	namespace:libtorrent
 tailqueue_iterator	libtorrent/include/libtorrent/tailqueue.hpp	/^		explicit tailqueue_iterator(T* cur)$/;"	f	struct:libtorrent::tailqueue_iterator
@@ -22720,6 +22816,7 @@ torrent_downloading_auto_managed	libtorrent/src/session.cpp	/^	constexpr torrent
 torrent_entry	libtorrent/kademlia/dht_storage.cpp	/^	struct torrent_entry$/;"	s	namespace:libtorrent::dht::__anon236	file:
 torrent_error_alert	libtorrent/src/alert.cpp	/^	torrent_error_alert::torrent_error_alert($/;"	f	class:libtorrent::torrent_error_alert
 torrent_evicted_counter	libtorrent/include/libtorrent/performance_counters.hpp	/^			torrent_evicted_counter,$/;"	e	enum:libtorrent::counters::stats_counter_t
+torrent_file	include/task.h	/^    char torrent_file[128];$/;"	m	struct:torrent_task
 torrent_file	include/torrent.h	/^	char torrent_file[128];$/;"	m	struct:torrent_task
 torrent_file	libtorrent/include/libtorrent/torrent.hpp	/^		torrent_info const& torrent_file() const$/;"	f	class:libtorrent::torrent
 torrent_file	libtorrent/include/libtorrent/torrent_status.hpp	/^		std::weak_ptr<const torrent_info> torrent_file;$/;"	m	struct:libtorrent::torrent_status
@@ -22786,6 +22883,7 @@ torrent_state	libtorrent/examples/torrent_view.cpp	/^std::string torrent_state(l
 torrent_state	libtorrent/include/libtorrent/peer_list.hpp	/^	struct torrent_state$/;"	s	namespace:libtorrent
 torrent_state_updates	libtorrent/src/session.cpp	/^	constexpr torrent_list_index_t session_interface::torrent_state_updates;$/;"	m	class:libtorrent::aux::session_interface	file:
 torrent_status	libtorrent/include/libtorrent/torrent_status.hpp	/^	struct TORRENT_EXPORT torrent_status$/;"	s	namespace:libtorrent
+torrent_task	include/task.h	/^struct torrent_task{$/;"	s
 torrent_task	include/torrent.h	/^struct torrent_task{$/;"	s
 torrent_update_alert	libtorrent/src/alert.cpp	/^	torrent_update_alert::torrent_update_alert(aux::stack_allocator& alloc, torrent_handle h$/;"	f	class:libtorrent::torrent_update_alert
 torrent_upload_limit	libtorrent/bak/client_test.cpp	/^int torrent_upload_limit = 0;$/;"	v
@@ -22849,6 +22947,7 @@ total_read_back	libtorrent/include/libtorrent/disk_io_thread.hpp	/^		int total_r
 total_redundant_bytes	libtorrent/include/libtorrent/session_status.hpp	/^		std::int64_t total_redundant_bytes;$/;"	m	struct:libtorrent::session_status
 total_redundant_bytes	libtorrent/include/libtorrent/torrent_status.hpp	/^		std::int64_t total_redundant_bytes = 0;$/;"	m	struct:libtorrent::torrent_status
 total_seconds	libtorrent/include/libtorrent/time.hpp	/^	std::int64_t total_seconds(T td)$/;"	f	namespace:libtorrent
+total_size	include/packet.h	/^    unsigned long long total_size;      \/\/下载总大小$/;"	m	struct:progress_info
 total_size	include/torrent.h	/^    unsigned long long total_size;		\/\/下载总大小$/;"	m	struct:progress_info
 total_size	libtorrent/include/libtorrent/file_storage.hpp	/^		std::int64_t total_size() const { return m_total_size; }$/;"	f	class:libtorrent::file_storage
 total_size	libtorrent/include/libtorrent/torrent_info.hpp	/^		std::int64_t total_size() const { return m_files.total_size(); }$/;"	f	class:libtorrent::torrent_info
@@ -23078,6 +23177,7 @@ type	include/device.h	/^    PedDeviceType type;         \/\/SCSI IDE etc sa PedD
 type	include/gpt.h	/^    uint8_t   type;$/;"	m	struct:__anon192
 type	include/gpt.h	/^    uint8_t   type;$/;"	m	struct:__anon193
 type	include/packet.h	/^    char type;$/;"	m	struct:yzy_torrent
+type	include/packet.h	/^    int type;$/;"	m	struct:progress_info
 type	include/task.h	/^    char type;$/;"	m	struct:tftp_task
 type	include/torrent.h	/^	int type;$/;"	m	struct:progress_info
 type	libtorrent/include/libtorrent/aux_/aligned_storage.hpp	/^	struct type$/;"	s	struct:libtorrent::aux::aligned_storage
@@ -23445,6 +23545,7 @@ upload_priority	libtorrent/include/libtorrent/peer_class.hpp	/^		int upload_prio
 upload_protocol	libtorrent/include/libtorrent/stat.hpp	/^			upload_protocol,$/;"	e	enum:libtorrent::stat::__anon206
 upload_queue	libtorrent/src/peer_connection.cpp	/^	std::vector<peer_request> const& peer_connection::upload_queue() const$/;"	f	class:libtorrent::std::peer_connection
 upload_queue_length	libtorrent/include/libtorrent/peer_info.hpp	/^		int upload_queue_length;$/;"	m	struct:libtorrent::peer_info
+upload_rate	include/packet.h	/^    unsigned long long upload_rate;$/;"	m	struct:progress_info
 upload_rate	include/torrent.h	/^	unsigned long long upload_rate;$/;"	m	struct:progress_info
 upload_rate	libtorrent/include/libtorrent/session_status.hpp	/^		int upload_rate;$/;"	m	struct:libtorrent::session_status
 upload_rate	libtorrent/include/libtorrent/stat.hpp	/^		int upload_rate() const$/;"	f	class:libtorrent::stat
@@ -23648,6 +23749,7 @@ utp_writable	libtorrent/src/utp_stream.cpp	/^void utp_writable(utp_socket_impl* 
 uuQcow	include/StoreConfig.h	/^    YZYGUID     uuQcow;         \/\/QCOW GUID   $/;"	m	struct:_YZY_QCOW_ENTRY
 uuid	hwinfo/src/hd/hd.h	/^  unsigned char uuid[16];	\/**< universal unique id; all 0x00: undef, all 0xff: undef but settable *\/$/;"	m	struct:__anon24
 uuid	include/packet.h	/^    char uuid[36]; $/;"	m	struct:yzy_torrent
+uuid	include/task.h	/^    char uuid[36];$/;"	m	struct:torrent_task
 uuid	include/torrent.h	/^	char uuid[36];$/;"	m	struct:torrent_task
 uuid	libtorrent/include/libtorrent/add_torrent_params.hpp	/^		std::string TORRENT_DEPRECATED_MEMBER uuid;$/;"	m	struct:libtorrent::add_torrent_params
 uuid	libtorrent/include/libtorrent/torrent.hpp	/^		std::string const& uuid() const { return m_uuid; }$/;"	f	class:libtorrent::torrent::std
@@ -23696,6 +23798,7 @@ value	hwinfo/src/hd/hwclass_names.h	/^  char *value;$/;"	m	struct:__anon7
 value	hwinfo/src/ids/check_hd.c	/^  char *value;$/;"	m	struct:line_s	file:
 value	hwinfo/src/ids/check_hd.c	/^  skey_t *value;$/;"	m	struct:item_s	file:
 value	hwinfo/src/ids/check_hd.c	/^  unsigned value;$/;"	m	struct:hddb_list_s	file:
+value	include/adlist.h	/^    void *value;$/;"	m	struct:listNode
 value	libtorrent/include/libtorrent/aux_/socket_type.hpp	/^	{ static constexpr int value = 0; };$/;"	m	struct:libtorrent::aux::socket_type_int_impl
 value	libtorrent/include/libtorrent/aux_/socket_type.hpp	/^	{ static constexpr int value = 1; };$/;"	m	struct:libtorrent::aux::socket_type_int_impl
 value	libtorrent/include/libtorrent/aux_/socket_type.hpp	/^	{ static constexpr int value = 2; };$/;"	m	struct:libtorrent::aux::socket_type_int_impl
@@ -24338,6 +24441,7 @@ zip	hwinfo/src/hd/hd.h	/^    unsigned zip:1;		\/**< zip floppy *\/$/;"	m	struct:
 ~ip_change_notifier	libtorrent/include/libtorrent/aux_/ip_notifier.hpp	/^		virtual ~ip_change_notifier() {}$/;"	f	struct:libtorrent::aux::ip_change_notifier
 ~lazy_entry	libtorrent/include/libtorrent/lazy_entry.hpp	/^		~lazy_entry()$/;"	f	struct:libtorrent::lazy_entry
 ~lsd_callback	libtorrent/include/libtorrent/aux_/lsd.hpp	/^		~lsd_callback() {}$/;"	f	struct:libtorrent::aux::lsd_callback
+~mPushButton	qt_pro/mpushbutton.cpp	/^mPushButton::~mPushButton()$/;"	f	class:mPushButton
 ~observer	libtorrent/kademlia/rpc_manager.cpp	/^observer::~observer()$/;"	f	class:libtorrent::dht::observer
 ~openssl_cleanup	libtorrent/src/session_impl.cpp	/^		~openssl_cleanup() { CRYPTO_cleanup_all_ex_data(); }$/;"	f	struct:__anon249::openssl_cleanup
 ~overlapped_t	libtorrent/src/file.cpp	/^		~overlapped_t()$/;"	f	struct:libtorrent::overlapped_t

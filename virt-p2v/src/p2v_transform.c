@@ -190,9 +190,13 @@ int p2v_transform(const char *ip, char *user, char *passwd, char *storage, char 
     config->auth.password=strdup(passwd);
     config->output.format = strdup("qcow2");
     config->output.storage = strdup(storage);
+	//config->output.allocation = OUTPUT_ALLOCATION_PREALLOCATED;
+	config->output.allocation = OUTPUT_ALLOCATION_NONE;
+	//config->output.allocation = OUTPUT_ALLOCATION_SPARSE;
     config->guestname = strdup(image_name);
 	//guestfs_int_free_string_list (c->disks);
 	config->disks = guestfs_int_split_string (',', disks);
+	
 
   /* If p2v.server exists, then we use the non-interactive kernel
    * conversion.  Otherwise we run the GUI.

@@ -1,85 +1,49 @@
 #ifndef __TFTP_H__
 #define __TFTP_H__
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <pthread.h>
+#include <poll.h>
 #include <sys/stat.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <dirent.h>
 
+#define ENABLE_TFTPD 1
+#define TFTP_BLKSIZE_DEFAULT       512  /* according to RFC 1350, don't change */
+#define TFTP_BLKSIZE_DEFAULT_STR "512"
+/* Was 50 ms but users asked to bump it up a bit */
+#define TFTP_TIMEOUT_MS            100
+#define TFTP_MAXTIMEOUT_MS        2000
+#define TFTP_NUM_RETRIES            12  /* number of backed-off retries */
 
-#define CMD_RRQ (short)1
-#define CMD_WRQ (short)2
-#define CMD_DATA (short)3
-#define CMD_ACK (short)4
-#define CMD_ERROR (short)5
-#define CMD_OACK (short)6
-#define CMD_HEAD (short)7
+/* opcodes we support */
+#define TFTP_RRQ   1
+#define TFTP_WRQ   2
+#define TFTP_DATA  3
+#define TFTP_ACK   4
+#define TFTP_ERROR 5
+#define TFTP_OACK  6
 
+/* error codes sent over network (we use only 0, 1, 3 and 8) */
+/* generic (error message is included in the packet) */
+#define ERR_UNSPEC   0
+#define ERR_NOFILE   1
+#define ERR_ACCESS   2
+/* disk full or allocation exceeded */
+#define ERR_WRITE    3
+#define ERR_OP       4
+#define ERR_BAD_ID   5
+#define ERR_EXIST    6
+#define ERR_BAD_USER 7
+#define ERR_BAD_OPT  8
 
-#if 0
-// Without a '/' at the end.
-char *conf_document_root;
-
-#define SERVER_PORT 10220
-// Max request datagram size
-#define MAX_REQUEST_SIZE 1024
-// TFTPX_DATA_SIZE
-#define DATA_SIZE 512
-//
-#define LIST_BUF_SIZE (DATA_SIZE * 8)
-
-
-// Max packet retransmission.
-#define PKT_MAX_RXMT 3
-// usecond
-#define PKT_SEND_TIMEOUT 12*1000*1000
-#define PKT_RECV_TIMEOUT 3*1000*1000
-// usecond
-#define PKT_TIME_INTERVAL 5*1000
-#endif
-
-// Without a '/' at the end.
-char *conf_document_root;
-
-#define SERVER_PORT 10220
-// Max request datagram size
-#define MAX_REQUEST_SIZE 1024
-// TFTPX_DATA_SIZE
-#define DATA_SIZE 512
-//
-#define LIST_BUF_SIZE (DATA_SIZE * 8)
-
-
-// Max packet retransmission.
-#define PKT_MAX_RXMT 3
-// usecond
-#define PKT_SEND_TIMEOUT 12*1000*1000
-#define PKT_RECV_TIMEOUT 3*1000*1000
-// usecond
-#define PKT_TIME_INTERVAL 5*1000
-
-struct tftp_packet{
-    unsigned short cmd;
-    union{
-        unsigned short code;
-        unsigned short block;
-        // For a RRQ and WRQ TFTP packet
-        char file_name[2];
-    };
-    char data[DATA_SIZE];
+/* masks coming from getopt32 */
+enum {
+    TFTP_OPT_GET = (1 << 0),
+    TFTP_OPT_PUT = (1 << 1),
+    /* pseudo option: if set, it's tftpd */
+    TFTPD_OPT = (1 << 7) * ENABLE_TFTPD,
+    TFTPD_OPT_r = (1 << 8) * ENABLE_TFTPD,
+    TFTPD_OPT_c = (1 << 9) * ENABLE_TFTPD,
+    TFTPD_OPT_u = (1 << 10) * ENABLE_TFTPD,
+    TFTPD_OPT_l = (1 << 11) * ENABLE_TFTPD,
 };
-#if 0
-struct tftp_request{
-    int size;
-    struct sockaddr_in client;
-    struct tftp_packet packet;
-};
-#endif
+
 
 #endif

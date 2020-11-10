@@ -72,25 +72,28 @@ void init_config()
         		memcpy(net->netmask, buf, strlen(buf));
 			}
     	}
+
+		if(read_profile_string(NET_SECTION, NET_GATEWAY_KEY, buf, sizeof(buf), net->gateway, config_file))
+    	{
+			if(strlen(buf) != 0)
+			{
+				memset(net->gateway, 0, sizeof(net->gateway));
+        		memcpy(net->gateway, buf, strlen(buf));
+			}
+    	}
 		DEBUG("set static  ip address");
 		char cmd[MAX_BUFLEN] = {0};
 		char result[MAX_BUFLEN] = {0};
 		exec_cmd("udhcpc -t 1 -R -q -n ", result);		//关闭dhcp
 		sprintf(cmd, "ifconfig eth0 %s netmask %s", net->ip, net->netmask);
 		exec_cmd(cmd, result);
-
+		
         sprintf(cmd, "route add default gw %s", net->gateway);
+		DEBUG("cmd: %s", cmd);
         exec_cmd(cmd, result);
 	}
 
-    if(read_profile_string(NET_SECTION, NET_GATEWAY_KEY, buf, sizeof(buf), net->gateway, config_file))
-    {
-		if(strlen(buf) != 0)
-		{
-			memset(net->gateway, 0, sizeof(net->gateway));
-        	memcpy(net->gateway, buf, strlen(buf));
-		}
-    }
+   
     if(read_profile_string(NET_SECTION, NET_DNS1_KEY, buf, sizeof(buf), net->dns1, config_file))
     {
 		if(strlen(buf) != 0)

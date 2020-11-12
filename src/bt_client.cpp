@@ -77,6 +77,8 @@ int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t phys
 
     lt::settings_pack pack;
 
+	DEBUG("bt torrent %s", info->image_name);
+
 	pack.set_int(lt::settings_pack::alert_mask,
                   lt::alert::error_notification
                 | lt::alert::storage_notification

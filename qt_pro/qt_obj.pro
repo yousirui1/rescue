@@ -41,7 +41,8 @@ SOURCES += \
     pipethread.cpp \
     global.cpp \
     QRoundProgressBar.cpp \
-    mpushbutton.cpp
+    qbutton.cpp \
+    qbutton2.cpp
     #downloadwindow.cpp
 
 #operatetimeouttimer.cpp \
@@ -56,7 +57,8 @@ HEADERS += \
     pipethread.h \
     global.h \
     QRoundProgressBar.h \
-    mpushbutton.h
+    qbutton.h \
+    qbutton2.h
     #downloadwindow.h
 
 # operatetimeouttimer.h \

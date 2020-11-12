@@ -2,14 +2,45 @@
 #include "packet.h"
 #include "tftp.h"
 
-static void tftp_progress_update(void)
+static time_t last_time;
+
+static void tftp_progress_update(uint64_t file_size, uint64_t download_size, char *pipe_buf, int type)
 {
+	progress_info *info = (progress_info *)&pipe_buf[HEAD_LEN];
+	if(file_size <= 0 || download_size <= 0)
+		return ;
+
+	(void)time(&current_time);
+	if(current_time - last_time > 1)
+	{
+		if(type == 3)
+		{
+			info->progress = (download_size  * 100)/ file_size;
+		}
+		else
+		{
+			info->progress = (download_size  * 100)/ file_size / 2;
+			if(type == 2)
+			{
+				info->progress += 50;
+			}
+			if(info->progress < 2)
+				info->progress = 2;
+			if(info->progress >= 98)
+				info->progress = 98;
+		}
+		DEBUG("tftp info->progress %d", info->progress);
+		last_time = current_time;
+		send_pipe(pipe_buf, PROGRESS_PIPE, sizeof(progress_info), PIPE_QT);
+	}
 }
 static void tftp_progress_init(void)
 {
+	last_time = current_time;
 }
 static void tftp_progress_done(void)
 {
+	//file_size = 0;
 }
 
 static int tftp_blksize_check(const char *blksize_str, int maxsize)
@@ -85,7 +116,7 @@ int safe_poll(struct pollfd *ufds, nfds_t nfds, int timeout)
     }
 }
 
-int tftp_get(char *server_ip, char *local_file, char* remote_file)
+int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_buf, int type)
 {
     int blksize = TFTP_BLKSIZE_DEFAULT;
     struct pollfd pfd[1];
@@ -111,7 +142,8 @@ int tftp_get(char *server_ip, char *local_file, char* remote_file)
     char *rbuf = (char *)malloc(io_bufsize);
 
     int want_transfer_size = 1;
-    int file_len = 0;
+    uint64_t file_size = 0;
+	uint64_t download_size = 0;
     int first = 1;
 
     open_mode = O_WRONLY | O_TRUNC | O_CREAT;
@@ -213,7 +245,7 @@ int tftp_get(char *server_ip, char *local_file, char* remote_file)
             cp += sprintf(cp, "%llu", (off_t)st.st_size) + 1;
             /* Save for progress bar. If 0 (tftp downloading),
              * we look at server's reply later */
-            file_len = st.st_size;
+            file_size = st.st_size;
             if (remote_file && st.st_size)
                 tftp_progress_init();
         }
@@ -242,10 +274,12 @@ int tftp_get(char *server_ip, char *local_file, char* remote_file)
         waittime_ms = TFTP_TIMEOUT_MS;
 
  send_again:
-        fprintf(stderr, "sending %u bytes\n", send_len);
+#if 0
+  		fprintf(stderr, "sending %u bytes\n", send_len);
         for (cp = xbuf; cp < &xbuf[send_len]; cp++)
             fprintf(stderr, "%02x ", (unsigned char) *cp);
         fprintf(stderr, "\n");
+#endif
         //xsendto(socket_fd, xbuf, send_len, &peer_lsa->u.sa, peer_lsa->len);
         if(first)
         {
@@ -255,7 +289,6 @@ int tftp_get(char *server_ip, char *local_file, char* remote_file)
         else
             sendto(udp.fd, xbuf, send_len, 0, (struct sockaddr*)&udp.recv_addr, addr_len);
 
-        tftp_progress_update();
         /* Was it final ACK? then exit */
         if (finished && (opcode == TFTP_ACK))
             goto ret;
@@ -293,8 +326,6 @@ int tftp_get(char *server_ip, char *local_file, char* remote_file)
             len = recvfrom(udp.fd, rbuf, io_bufsize, 0,
                     (struct sockaddr *)&udp.recv_addr, &addr_len);
 
-            DEBUG("recv len %d", len);
-
             /* Our first dgram went to port 69
              * but reply may come from different one.
              * Remember and use this new port (and IP) */
@@ -311,8 +342,8 @@ int tftp_get(char *server_ip, char *local_file, char* remote_file)
         /* Process recv'ed packet */
         opcode = ntohs( ((uint16_t*)rbuf)[0] );
         recv_blk = ntohs( ((uint16_t*)rbuf)[1] );
-        fprintf(stderr, "received %d bytes: %04x %04x\n", len, opcode, recv_blk);
 
+		//fprintf(stderr, "received %d bytes: %04x %04x\n", len, opcode, recv_blk);
         if (opcode == TFTP_ERROR) {
             static const char errcode_str[] =
                 "\0"
@@ -351,12 +382,11 @@ int tftp_get(char *server_ip, char *local_file, char* remote_file)
                     }
                     io_bufsize = blksize + 4;
                 }
-                if (remote_file && file_len == 0) { /* if we don't know it yet */
+                if (remote_file && file_size == 0) { /* if we don't know it yet */
                     res = tftp_get_option("tsize", &rbuf[2], len - 2);
                     if (res) {
-                        file_len = strtoull(res, NULL, 10);
-                        DEBUG("file_len %d", file_len);
-                        if(file_len)
+                        file_size = strtoull(res, NULL, 10);
+                        if(file_size)
                             tftp_progress_init();
                     }
                 }
@@ -389,6 +419,8 @@ int tftp_get(char *server_ip, char *local_file, char* remote_file)
                     finished = 1;
                 }
                 //IF_FEATURE_TFTP_PROGRESS_BAR(G.pos += sz;)
+				download_size += sz;
+				tftp_progress_update(file_size, download_size, pipe_buf, type);
                 continue; /* send ACK */
             }
 /* Disabled to cope with servers with Sorcerer's Apprentice Syndrome */

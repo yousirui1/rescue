@@ -153,7 +153,7 @@ border-left: 10px transparent;
            <string/>
           </property>
          </widget>
-         <widget class="QPushButton" name="error_confirm_btn">
+         <widget class="QButton2" name="error_confirm_btn">
           <property name="geometry">
            <rect>
             <x>200</x>
@@ -163,7 +163,11 @@ border-left: 10px transparent;
            </rect>
           </property>
           <property name="styleSheet">
-           <string notr="true">border-image: url(:/images/bluebutton.png);
+           <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
 color: #FFFFFF;
 font: 12pt &quot;黑体&quot;;</string>
           </property>
@@ -185,7 +189,7 @@ font: 12pt &quot;黑体&quot;;</string>
            <height>900</height>
           </rect>
          </property>
-         <widget class="QPushButton" name="cacel_btn">
+         <widget class="QButton2" name="cacel_btn">
           <property name="geometry">
            <rect>
             <x>430</x>
@@ -195,8 +199,11 @@ font: 12pt &quot;黑体&quot;;</string>
            </rect>
           </property>
           <property name="styleSheet">
-           <string notr="true">image: url(:/images/bluebutton.png);
-border-image: url(:/images/bluebutton.png);
+           <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
 color: #FFFFFF;
 font: 12pt &quot;黑体&quot;;</string>
           </property>
@@ -204,7 +211,7 @@ font: 12pt &quot;黑体&quot;;</string>
            <string>取消</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="confirm_btn">
+         <widget class="QButton2" name="confirm_btn">
           <property name="geometry">
            <rect>
             <x>620</x>
@@ -214,8 +221,11 @@ font: 12pt &quot;黑体&quot;;</string>
            </rect>
           </property>
           <property name="styleSheet">
-           <string notr="true">image: url(:/images/bluebutton.png);
-border-image: url(:/images/bluebutton.png);
+           <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
 color: #FFFFFF;
 font: 12pt &quot;黑体&quot;;</string>
           </property>
@@ -839,17 +849,21 @@ font: 12pt &quot;黑体&quot;;</string>
            <string>是否确认安装客户端?</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="install_cacel_btn">
+         <widget class="QButton2" name="install_cacel_btn">
           <property name="geometry">
            <rect>
             <x>150</x>
             <y>190</y>
             <width>91</width>
-            <height>31</height>
+            <height>33</height>
            </rect>
           </property>
           <property name="styleSheet">
-           <string notr="true">border-image: url(:/images/bluebutton.png);
+           <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
 color: #FFFFFF;
 font: 12pt &quot;黑体&quot;;</string>
           </property>
@@ -878,17 +892,21 @@ border-left: 10px transparent;
            <string/>
           </property>
          </widget>
-         <widget class="QPushButton" name="install_confirm_btn">
+         <widget class="QButton2" name="install_confirm_btn">
           <property name="geometry">
            <rect>
             <x>280</x>
             <y>190</y>
             <width>91</width>
-            <height>31</height>
+            <height>33</height>
            </rect>
           </property>
           <property name="styleSheet">
-           <string notr="true">border-image: url(:/images/bluebutton.png);
+           <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
 color: #FFFFFF;
 font: 12pt &quot;黑体&quot;;</string>
           </property>
@@ -923,6 +941,13 @@ font: 12pt &quot;黑体&quot;;</string>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QButton2</class>
+   <extends>QPushButton</extends>
+   <header>qbutton2.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>dhcp_radio</tabstop>
   <tabstop>static_radio</tabstop>

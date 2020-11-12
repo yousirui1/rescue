@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'dialogwindow.h'
 **
-** Created: Mon Nov 2 16:53:02 2020
+** Created: Wed Nov 11 21:53:11 2020
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.2)
 **
 ** WARNING! All changes made in this file will be lost!

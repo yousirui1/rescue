@@ -199,17 +199,21 @@ font: 12pt &quot;黑体&quot;;</string>
            </property>
           </widget>
          </widget>
-         <widget class="QPushButton" name="laststepButton">
+         <widget class="QButton2" name="laststepButton">
           <property name="geometry">
            <rect>
             <x>140</x>
             <y>500</y>
             <width>91</width>
-            <height>31</height>
+            <height>33</height>
            </rect>
           </property>
           <property name="styleSheet">
-           <string notr="true">border-image: url(:/images/bluebutton.png);
+           <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
 color: #FFFFFF;
 font: 12pt &quot;黑体&quot;;</string>
           </property>
@@ -255,17 +259,21 @@ font: 12pt &quot;黑体&quot;;</string>
            <string/>
           </property>
          </widget>
-         <widget class="QPushButton" name="formatButton">
+         <widget class="QButton2" name="formatButton">
           <property name="geometry">
            <rect>
             <x>340</x>
             <y>500</y>
             <width>101</width>
-            <height>31</height>
+            <height>33</height>
            </rect>
           </property>
           <property name="styleSheet">
-           <string notr="true">border-image: url(:/images/bluebutton.png);
+           <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
 color: #FFFFFF;
 font: 12pt &quot;黑体&quot;;</string>
           </property>
@@ -877,18 +885,21 @@ font: 12pt &quot;黑体&quot;;</string>
            </property>
           </widget>
          </widget>
-         <widget class="QPushButton" name="nextButton">
+         <widget class="QButton2" name="nextButton">
           <property name="geometry">
            <rect>
             <x>250</x>
             <y>500</y>
             <width>91</width>
-            <height>31</height>
+            <height>33</height>
            </rect>
           </property>
           <property name="styleSheet">
-           <string notr="true">image: url(:/images/bluebutton.png);
-border-image: url(:/images/bluebutton.png);
+           <string notr="true">border-image:url(:/images/textEdit.png) 10 10 10 10;
+border-top: 10px transparent;
+border-right: 10px transparent;
+border-bottom: 10px transparent;
+border-left: 10px transparent;
 color: #FFFFFF;
 font: 12pt &quot;黑体&quot;;</string>
           </property>
@@ -1012,7 +1023,7 @@ color: #FFFFFF;</string>
 color: #FFFFFF;</string>
         </property>
         <property name="text">
-         <string>[Space]选择确认</string>
+         <string>[Enter]选择确认</string>
         </property>
        </widget>
       </item>
@@ -1047,6 +1058,30 @@ color: #FFFFFF;</string>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QButton2</class>
+   <extends>QPushButton</extends>
+   <header>qbutton2.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>num_edit</tabstop>
+  <tabstop>prefix_edit</tabstop>
+  <tabstop>hostname_edit</tabstop>
+  <tabstop>auto_in_cloud_radio</tabstop>
+  <tabstop>laststepButton</tabstop>
+  <tabstop>formatButton</tabstop>
+  <tabstop>static_radio</tabstop>
+  <tabstop>dhcp_radio</tabstop>
+  <tabstop>nextButton</tabstop>
+  <tabstop>dns_edit</tabstop>
+  <tabstop>gateway_edit</tabstop>
+  <tabstop>dns2_edit</tabstop>
+  <tabstop>netmask_edit</tabstop>
+  <tabstop>ip_edit</tabstop>
+  <tabstop>server_ip_edit</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

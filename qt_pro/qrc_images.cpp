@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Resource object code
 **
-** Created: Mon Nov 2 16:53:02 2020
+** Created: Wed Nov 11 21:53:11 2020
 **      by: The Resource Compiler for Qt version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost!

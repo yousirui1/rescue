@@ -160,7 +160,7 @@ border-bottom: 10px transparent;
            <number>0</number>
           </property>
           <item>
-           <widget class="mPushButton" name="installButton">
+           <widget class="QButton" name="installButton">
             <property name="minimumSize">
              <size>
               <width>576</width>
@@ -198,7 +198,7 @@ QPushButton#installButton:pressed
            </widget>
           </item>
           <item>
-           <widget class="mPushButton" name="uploadButton">
+           <widget class="QButton" name="uploadButton">
             <property name="minimumSize">
              <size>
               <width>576</width>
@@ -226,7 +226,7 @@ color: #FFFFFF;</string>
            </widget>
           </item>
           <item>
-           <widget class="mPushButton" name="rebootButton">
+           <widget class="QButton" name="rebootButton">
             <property name="minimumSize">
              <size>
               <width>576</width>
@@ -375,7 +375,7 @@ color: #FFFFFF;</string>
 color: #FFFFFF;</string>
         </property>
         <property name="text">
-         <string>[Space]选择确认</string>
+         <string>[Enter]选择确认</string>
         </property>
        </widget>
       </item>
@@ -514,9 +514,9 @@ color: #FFFFFF;</string>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>mPushButton</class>
+   <class>QButton</class>
    <extends>QPushButton</extends>
-   <header>mpushbutton.h</header>
+   <header>qbutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

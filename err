@@ -1,0 +1,16 @@
+cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
+./src/tftp.c: In function ‘tftp_get’:
+./src/tftp.c:242:31: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 3 has type ‘long int’ [-Wformat=]
+             cp += sprintf(cp, "%llu", (off_t)st.st_size) + 1;
+                               ^
+./src/tftp.c:287:50: error: ‘buf’ undeclared (first use in this function)
+   tftp_progress_update(file_size, download_size, buf, type);
+                                                  ^
+./src/tftp.c:287:50: note: each undeclared identifier is reported only once for each function it appears in
+./src/tftp.c:346:31: warning: unused variable ‘errcode_str’ [-Wunused-variable]
+             static const char errcode_str[] =
+                               ^
+./src/tftp.c:223:2: warning: label ‘add_blksize_opt’ defined but not used [-Wunused-label]
+  add_blksize_opt:
+  ^
+make: *** [tftp.o] Error 1

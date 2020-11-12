@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'configwindow.ui'
 **
-** Created: Mon Nov 2 16:53:02 2020
+** Created: Wed Nov 11 22:10:35 2020
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -18,11 +18,11 @@
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
-#include <QtGui/QPushButton>
 #include <QtGui/QRadioButton>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
+#include "qbutton2.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -40,10 +40,10 @@ public:
     QLabel *num_label;
     QLineEdit *num_edit;
     QLabel *num_result_label;
-    QPushButton *laststepButton;
+    QButton2 *laststepButton;
     QRadioButton *auto_in_cloud_radio;
     QLabel *linue1_label_2;
-    QPushButton *formatButton;
+    QButton2 *formatButton;
     QLabel *label_66;
     QWidget *hostname_widget;
     QLabel *hostname_label;
@@ -81,7 +81,7 @@ public:
     QLabel *server_ip_label;
     QLabel *server_ip_result_label;
     QLineEdit *server_ip_edit;
-    QPushButton *nextButton;
+    QButton2 *nextButton;
     QSpacerItem *horizontalSpacer;
     QLabel *lineLabel_2;
     QLabel *bottomWidget;
@@ -162,10 +162,14 @@ public:
         num_result_label->setGeometry(QRect(320, 10, 71, 21));
         num_result_label->setStyleSheet(QString::fromUtf8("color: #ff3636;\n"
 "font: 12pt \"\351\273\221\344\275\223\";"));
-        laststepButton = new QPushButton(deskconfig_widget);
+        laststepButton = new QButton2(deskconfig_widget);
         laststepButton->setObjectName(QString::fromUtf8("laststepButton"));
-        laststepButton->setGeometry(QRect(140, 500, 91, 31));
-        laststepButton->setStyleSheet(QString::fromUtf8("border-image: url(:/images/bluebutton.png);\n"
+        laststepButton->setGeometry(QRect(140, 500, 91, 33));
+        laststepButton->setStyleSheet(QString::fromUtf8("border-image:url(:/images/textEdit.png) 10 10 10 10;\n"
+"border-top: 10px transparent;\n"
+"border-right: 10px transparent;\n"
+"border-bottom: 10px transparent;\n"
+"border-left: 10px transparent;\n"
 "color: #FFFFFF;\n"
 "font: 12pt \"\351\273\221\344\275\223\";"));
         auto_in_cloud_radio = new QRadioButton(deskconfig_widget);
@@ -177,10 +181,14 @@ public:
         linue1_label_2->setObjectName(QString::fromUtf8("linue1_label_2"));
         linue1_label_2->setGeometry(QRect(0, 480, 576, 1));
         linue1_label_2->setStyleSheet(QString::fromUtf8("border-image: url(:/images/line.png);"));
-        formatButton = new QPushButton(deskconfig_widget);
+        formatButton = new QButton2(deskconfig_widget);
         formatButton->setObjectName(QString::fromUtf8("formatButton"));
-        formatButton->setGeometry(QRect(340, 500, 101, 31));
-        formatButton->setStyleSheet(QString::fromUtf8("border-image: url(:/images/bluebutton.png);\n"
+        formatButton->setGeometry(QRect(340, 500, 101, 33));
+        formatButton->setStyleSheet(QString::fromUtf8("border-image:url(:/images/textEdit.png) 10 10 10 10;\n"
+"border-top: 10px transparent;\n"
+"border-right: 10px transparent;\n"
+"border-bottom: 10px transparent;\n"
+"border-left: 10px transparent;\n"
 "color: #FFFFFF;\n"
 "font: 12pt \"\351\273\221\344\275\223\";"));
         label_66 = new QLabel(deskconfig_widget);
@@ -390,11 +398,14 @@ public:
 "border-left: 10px transparent;\n"
 "color: #FFFFFF;\n"
 "font: 12pt \"\351\273\221\344\275\223\";"));
-        nextButton = new QPushButton(netconfig_widget);
+        nextButton = new QButton2(netconfig_widget);
         nextButton->setObjectName(QString::fromUtf8("nextButton"));
-        nextButton->setGeometry(QRect(250, 500, 91, 31));
-        nextButton->setStyleSheet(QString::fromUtf8("image: url(:/images/bluebutton.png);\n"
-"border-image: url(:/images/bluebutton.png);\n"
+        nextButton->setGeometry(QRect(250, 500, 91, 33));
+        nextButton->setStyleSheet(QString::fromUtf8("border-image:url(:/images/textEdit.png) 10 10 10 10;\n"
+"border-top: 10px transparent;\n"
+"border-right: 10px transparent;\n"
+"border-bottom: 10px transparent;\n"
+"border-left: 10px transparent;\n"
 "color: #FFFFFF;\n"
 "font: 12pt \"\351\273\221\344\275\223\";"));
         server_ip_widget->raise();
@@ -476,6 +487,20 @@ public:
 
         verticalLayout->addWidget(bottomWidget);
 
+        QWidget::setTabOrder(num_edit, prefix_edit);
+        QWidget::setTabOrder(prefix_edit, hostname_edit);
+        QWidget::setTabOrder(hostname_edit, auto_in_cloud_radio);
+        QWidget::setTabOrder(auto_in_cloud_radio, laststepButton);
+        QWidget::setTabOrder(laststepButton, formatButton);
+        QWidget::setTabOrder(formatButton, static_radio);
+        QWidget::setTabOrder(static_radio, dhcp_radio);
+        QWidget::setTabOrder(dhcp_radio, nextButton);
+        QWidget::setTabOrder(nextButton, dns_edit);
+        QWidget::setTabOrder(dns_edit, gateway_edit);
+        QWidget::setTabOrder(gateway_edit, dns2_edit);
+        QWidget::setTabOrder(dns2_edit, netmask_edit);
+        QWidget::setTabOrder(netmask_edit, ip_edit);
+        QWidget::setTabOrder(ip_edit, server_ip_edit);
 
         retranslateUi(ConfigWindow);
 
@@ -521,7 +546,7 @@ public:
         lineLabel_2->setText(QString());
         f2Label->setText(QApplication::translate("ConfigWindow", "[F8]\351\207\215\345\220\257", 0, QApplication::UnicodeUTF8));
         arrowLabel->setText(QApplication::translate("ConfigWindow", "<html><head/><body><p><span style=\" color:#ffffff;\">[\342\206\221]/[\342\206\223]/[\342\206\220]/[\342\206\222]\351\200\211\346\213\251</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-        enterLabel->setText(QApplication::translate("ConfigWindow", "[Space]\351\200\211\346\213\251\347\241\256\350\256\244", 0, QApplication::UnicodeUTF8));
+        enterLabel->setText(QApplication::translate("ConfigWindow", "[Enter]\351\200\211\346\213\251\347\241\256\350\256\244", 0, QApplication::UnicodeUTF8));
         dataLabel->setText(QApplication::translate("ConfigWindow", "  00:00\n"
 "2000/01/01", 0, QApplication::UnicodeUTF8));
         Q_UNUSED(ConfigWindow);

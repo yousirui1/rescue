@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'mainwindow.ui'
 **
-** Created: Mon Nov 2 16:53:02 2020
+** Created: Wed Nov 11 22:10:35 2020
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -20,7 +20,7 @@
 #include <QtGui/QSpacerItem>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
-#include "mpushbutton.h"
+#include "qbutton.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -36,9 +36,9 @@ public:
     QLabel *desLabel;
     QLabel *modeWidget;
     QVBoxLayout *verticalLayout_2;
-    mPushButton *installButton;
-    mPushButton *uploadButton;
-    mPushButton *rebootButton;
+    QButton *installButton;
+    QButton *uploadButton;
+    QButton *rebootButton;
     QSpacerItem *hleftSpace;
     QLabel *lineLabel;
     QLabel *bottomWidget;
@@ -114,7 +114,7 @@ public:
         verticalLayout_2->setMargin(11);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         verticalLayout_2->setContentsMargins(0, 0, 10, 0);
-        installButton = new mPushButton(modeWidget);
+        installButton = new QButton(modeWidget);
         installButton->setObjectName(QString::fromUtf8("installButton"));
         installButton->setMinimumSize(QSize(576, 41));
         installButton->setMaximumSize(QSize(576, 41));
@@ -138,7 +138,7 @@ public:
 
         verticalLayout_2->addWidget(installButton);
 
-        uploadButton = new mPushButton(modeWidget);
+        uploadButton = new QButton(modeWidget);
         uploadButton->setObjectName(QString::fromUtf8("uploadButton"));
         uploadButton->setMinimumSize(QSize(576, 41));
         uploadButton->setMaximumSize(QSize(576, 41));
@@ -152,7 +152,7 @@ public:
 
         verticalLayout_2->addWidget(uploadButton);
 
-        rebootButton = new mPushButton(modeWidget);
+        rebootButton = new QButton(modeWidget);
         rebootButton->setObjectName(QString::fromUtf8("rebootButton"));
         rebootButton->setMinimumSize(QSize(576, 41));
         rebootButton->setMaximumSize(QSize(576, 41));
@@ -301,7 +301,7 @@ public:
         lineLabel->setText(QApplication::translate("MainWindow", "<html><head/><body><p><br/></p></body></html>", 0, QApplication::UnicodeUTF8));
         f2Label->setText(QApplication::translate("MainWindow", "[F2]\347\273\210\347\253\257\351\205\215\347\275\256", 0, QApplication::UnicodeUTF8));
         arrowLabel->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" color:#ffffff;\">[\342\206\221][\342\206\223]\351\200\211\346\213\251\351\200\211\351\241\271</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-        enterLabel->setText(QApplication::translate("MainWindow", "[Space]\351\200\211\346\213\251\347\241\256\350\256\244", 0, QApplication::UnicodeUTF8));
+        enterLabel->setText(QApplication::translate("MainWindow", "[Enter]\351\200\211\346\213\251\347\241\256\350\256\244", 0, QApplication::UnicodeUTF8));
         netpoint_label->setText(QString());
         netstate_label->setText(QApplication::translate("MainWindow", "<html><head/><body><p align=\"center\">\345\234\250\347\272\277</p></body></html>", 0, QApplication::UnicodeUTF8));
         neticon_label->setText(QString());

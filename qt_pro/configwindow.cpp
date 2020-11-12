@@ -206,14 +206,14 @@ void ConfigWindow::keyPressEvent(QKeyEvent *event)
     }
 
 
-    QWidget *current_focus = this->focusWidget();
-    QPushButton *btn = qobject_cast<QPushButton*>(current_focus);
-    if(btn)
+    if(event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
     {
-        btn->setFocus();
-        btn->setShortcut( QKeySequence::InsertParagraphSeparator); //设置快捷键为键盘的“回车”键
-        btn->setShortcut(Qt::Key_Enter);   //设置快捷键为enter键
-        btn->setShortcut(Qt::Key_Return); //设置快捷键为小键盘上的enter键
+        QWidget *currentitem = QApplication::focusWidget();
+        if(currentitem->inherits("QPushButton"))
+        {
+            QPushButton *btn = qobject_cast<QPushButton *>(currentitem);
+            btn->click();
+        }
     }
 }
 

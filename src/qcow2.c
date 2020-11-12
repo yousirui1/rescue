@@ -98,6 +98,12 @@ uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, 
 	DEBUG("name %s", name);
 	DEBUG("disk_type %d", disk_type);
 
+	uint64_t space_size  = available_space(dev->disk_name);
+	DEBUG("space_size %llu", space_size);
+
+	if((space_size - sizeLba) < (uint64_t)(20 * 1024 * 1024 * 2))
+		return 0;
+
     ret = storeDrv.alloc(diff, uuid, *(PYZYGUID)dev->disk_name, sizeLba, realLba, disk_type, &pQe);
 	if(SUCCESS == ret)
 	{
@@ -117,7 +123,7 @@ uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, 
 	else
 	{
 		DEBUG("ret %d", ret);
-		return -1;	
+		return 0;
 	}
 }
 

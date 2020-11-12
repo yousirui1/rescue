@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'dialogwindow.ui'
 **
-** Created: Mon Nov 2 16:53:02 2020
+** Created: Wed Nov 11 21:53:11 2020
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -18,11 +18,11 @@
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
-#include <QtGui/QPushButton>
 #include <QtGui/QRadioButton>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
+#include "qbutton2.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -38,10 +38,10 @@ public:
     QLabel *label_79;
     QLabel *error_msg_label;
     QLabel *backgroud_init_3;
-    QPushButton *error_confirm_btn;
+    QButton2 *error_confirm_btn;
     QWidget *net_dialog;
-    QPushButton *cacel_btn;
-    QPushButton *confirm_btn;
+    QButton2 *cacel_btn;
+    QButton2 *confirm_btn;
     QLabel *label_15;
     QLabel *label_16;
     QLabel *label_17;
@@ -79,9 +79,9 @@ public:
     QWidget *install_dialog;
     QLabel *label_83;
     QLabel *label_84;
-    QPushButton *install_cacel_btn;
+    QButton2 *install_cacel_btn;
     QLabel *backgroud_init_5;
-    QPushButton *install_confirm_btn;
+    QButton2 *install_confirm_btn;
     QSpacerItem *horizontalSpacer;
 
     void setupUi(QWidget *DialogWindow)
@@ -136,10 +136,14 @@ public:
 "border-bottom: 10px transparent;\n"
 "border-left: 10px transparent;\n"
 ""));
-        error_confirm_btn = new QPushButton(error_dialog);
+        error_confirm_btn = new QButton2(error_dialog);
         error_confirm_btn->setObjectName(QString::fromUtf8("error_confirm_btn"));
         error_confirm_btn->setGeometry(QRect(200, 200, 91, 31));
-        error_confirm_btn->setStyleSheet(QString::fromUtf8("border-image: url(:/images/bluebutton.png);\n"
+        error_confirm_btn->setStyleSheet(QString::fromUtf8("border-image:url(:/images/textEdit.png) 10 10 10 10;\n"
+"border-top: 10px transparent;\n"
+"border-right: 10px transparent;\n"
+"border-bottom: 10px transparent;\n"
+"border-left: 10px transparent;\n"
 "color: #FFFFFF;\n"
 "font: 12pt \"\351\273\221\344\275\223\";"));
         backgroud_init_3->raise();
@@ -149,18 +153,24 @@ public:
         net_dialog = new QWidget(dialog_widget);
         net_dialog->setObjectName(QString::fromUtf8("net_dialog"));
         net_dialog->setGeometry(QRect(0, 0, 1000, 900));
-        cacel_btn = new QPushButton(net_dialog);
+        cacel_btn = new QButton2(net_dialog);
         cacel_btn->setObjectName(QString::fromUtf8("cacel_btn"));
         cacel_btn->setGeometry(QRect(430, 550, 102, 37));
-        cacel_btn->setStyleSheet(QString::fromUtf8("image: url(:/images/bluebutton.png);\n"
-"border-image: url(:/images/bluebutton.png);\n"
+        cacel_btn->setStyleSheet(QString::fromUtf8("border-image:url(:/images/textEdit.png) 10 10 10 10;\n"
+"border-top: 10px transparent;\n"
+"border-right: 10px transparent;\n"
+"border-bottom: 10px transparent;\n"
+"border-left: 10px transparent;\n"
 "color: #FFFFFF;\n"
 "font: 12pt \"\351\273\221\344\275\223\";"));
-        confirm_btn = new QPushButton(net_dialog);
+        confirm_btn = new QButton2(net_dialog);
         confirm_btn->setObjectName(QString::fromUtf8("confirm_btn"));
         confirm_btn->setGeometry(QRect(620, 550, 102, 37));
-        confirm_btn->setStyleSheet(QString::fromUtf8("image: url(:/images/bluebutton.png);\n"
-"border-image: url(:/images/bluebutton.png);\n"
+        confirm_btn->setStyleSheet(QString::fromUtf8("border-image:url(:/images/textEdit.png) 10 10 10 10;\n"
+"border-top: 10px transparent;\n"
+"border-right: 10px transparent;\n"
+"border-bottom: 10px transparent;\n"
+"border-left: 10px transparent;\n"
 "color: #FFFFFF;\n"
 "font: 12pt \"\351\273\221\344\275\223\";"));
         label_15 = new QLabel(net_dialog);
@@ -386,10 +396,14 @@ public:
         label_84->setGeometry(QRect(90, 110, 171, 31));
         label_84->setStyleSheet(QString::fromUtf8("color: #FFFFFF;\n"
 "font: 12pt \"\351\273\221\344\275\223\";"));
-        install_cacel_btn = new QPushButton(install_dialog);
+        install_cacel_btn = new QButton2(install_dialog);
         install_cacel_btn->setObjectName(QString::fromUtf8("install_cacel_btn"));
-        install_cacel_btn->setGeometry(QRect(150, 190, 91, 31));
-        install_cacel_btn->setStyleSheet(QString::fromUtf8("border-image: url(:/images/bluebutton.png);\n"
+        install_cacel_btn->setGeometry(QRect(150, 190, 91, 33));
+        install_cacel_btn->setStyleSheet(QString::fromUtf8("border-image:url(:/images/textEdit.png) 10 10 10 10;\n"
+"border-top: 10px transparent;\n"
+"border-right: 10px transparent;\n"
+"border-bottom: 10px transparent;\n"
+"border-left: 10px transparent;\n"
 "color: #FFFFFF;\n"
 "font: 12pt \"\351\273\221\344\275\223\";"));
         backgroud_init_5 = new QLabel(install_dialog);
@@ -401,10 +415,14 @@ public:
 "border-bottom: 10px transparent;\n"
 "border-left: 10px transparent;\n"
 ""));
-        install_confirm_btn = new QPushButton(install_dialog);
+        install_confirm_btn = new QButton2(install_dialog);
         install_confirm_btn->setObjectName(QString::fromUtf8("install_confirm_btn"));
-        install_confirm_btn->setGeometry(QRect(280, 190, 91, 31));
-        install_confirm_btn->setStyleSheet(QString::fromUtf8("border-image: url(:/images/bluebutton.png);\n"
+        install_confirm_btn->setGeometry(QRect(280, 190, 91, 33));
+        install_confirm_btn->setStyleSheet(QString::fromUtf8("border-image:url(:/images/textEdit.png) 10 10 10 10;\n"
+"border-top: 10px transparent;\n"
+"border-right: 10px transparent;\n"
+"border-bottom: 10px transparent;\n"
+"border-left: 10px transparent;\n"
 "color: #FFFFFF;\n"
 "font: 12pt \"\351\273\221\344\275\223\";"));
         backgroud_init_5->raise();

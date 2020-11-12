@@ -183,6 +183,28 @@ void DialogWindow::on_cacel_btn_clicked()
     this->hide();
 }
 
+void DialogWindow::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
+    {
+        QWidget *currentitem = QApplication::focusWidget();
+        if(currentitem->inherits("QPushButton"))
+        {
+            QPushButton *btn = qobject_cast<QPushButton *>(currentitem);
+            btn->click();
+        }
+    }
+
+    if(event->key() == Qt::Key_Up)
+    {
+         this->focusNextPrevChild(FALSE);//按A时焦点切换至上一部件
+    }
+    else if(event->key() == Qt::Key_Down)
+    {
+         this->focusNextPrevChild(TRUE);//按D时焦点切换至下一部件
+    }
+}
+
 void DialogWindow::on_confirm_btn_clicked()
 {
     int ret = 0;

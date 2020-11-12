@@ -78,6 +78,25 @@ void OSWindow::keyPressEvent(QKeyEvent *event)
         global->pipe->send_pipe(head, EXIT_PROGRESS_PIPE, 0);
         qApp->exit();
     }
+
+    if(event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
+    {
+        QWidget *currentitem = QApplication::focusWidget();
+        if(currentitem->inherits("QPushButton"))
+        {
+            QPushButton *btn = qobject_cast<QPushButton *>(currentitem);
+            btn->click();
+        }
+    }
+
+    if(event->key() == Qt::Key_Up)
+    {
+         this->focusNextPrevChild(FALSE);//按A时焦点切换至上一部件
+    }
+    else if(event->key() == Qt::Key_Down)
+    {
+         this->focusNextPrevChild(TRUE);//按D时焦点切换至下一部件
+    }
 }
 
 void OSWindow::on_pushButton_12_clicked()

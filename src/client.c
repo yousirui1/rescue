@@ -717,6 +717,7 @@ static int recv_down_torrent(struct client *cli)
 	int ret;
 	char torrent_file[128] = {0};
 	char task_uuid[36 + 1] = {0};
+	char uuid[36 + 1] = {0};
 
 	yzy_torrent *torrent = (yzy_torrent *)
 						&cli->data_buf[read_packet_supplementary(cli->packet) +  
@@ -733,12 +734,13 @@ static int recv_down_torrent(struct client *cli)
 	DEBUG("torrent->group_uuid %s", torrent->group_uuid);
 
     memcpy(task_uuid, torrent->task_uuid, 36);
+    memcpy(uuid, torrent->uuid, 36);
 	DEBUG("task_uuid %s", task_uuid);
 
 	char *data = &cli->data_buf[ read_packet_supplementary(cli->packet) +
 						read_packet_token(cli->packet) + sizeof(yzy_torrent)];
 
-    sprintf(torrent_file, "/root/voi_%d_%s.torrent", torrent->dif_level, torrent->uuid);
+    sprintf(torrent_file, "/root/voi_%d_%s.torrent", torrent->dif_level, uuid);
     FILE *fp = fopen(torrent_file, "wb");
     if(fp)
     {    
@@ -748,7 +750,8 @@ static int recv_down_torrent(struct client *cli)
 		
 		if(ret == torrent->data_len)
 		{
-			uint64_t offset = -1;
+			uint64_t offset = 0;
+
 			if(torrent->dif_level == 1 && get_diff_mode(torrent->group_uuid) == 1)
 			{
 #if 0
@@ -756,21 +759,21 @@ static int recv_down_torrent(struct client *cli)
 								(uint64_t)(torrent->file_size) + 1024 * 1024 * 4,  
 								torrent->real_size, torrent->sys_type, torrent->type, torrent->operate_id);
 #else
-				offset = add_qcow2(dev_info.mini_disk->dev, torrent->uuid, torrent->dif_level,
+				offset = add_qcow2(dev_info.mini_disk->dev, uuid, torrent->dif_level,
 								(uint64_t)(torrent->real_size),  
 								torrent->real_size, torrent->sys_type, torrent->type, torrent->operate_id);
 #endif
 			}
 			else
 			{
-				offset = add_qcow2(dev_info.mini_disk->dev, torrent->uuid, torrent->dif_level,
+				offset = add_qcow2(dev_info.mini_disk->dev, uuid, torrent->dif_level,
 								(uint64_t)(torrent->file_size),   
 								torrent->real_size, torrent->sys_type, torrent->type, torrent->operate_id);
 			}
-			if(offset != -1)
+			if(offset != 0)
 			{
             	struct torrent_task task = {0}; 
-            	memcpy(task.uuid, torrent->uuid, strlen(torrent->uuid));
+            	memcpy(task.uuid, torrent->uuid, 36);
             	memcpy(task.group_uuid, torrent->group_uuid, 36);
             	memcpy(task.torrent_file, torrent_file, strlen(torrent_file));
 
@@ -788,6 +791,7 @@ static int recv_down_torrent(struct client *cli)
 			else
 			{
 				DEBUG("add_qcow2 fail torrent->file_size %lld torrent->real_size %lld", torrent->file_size,torrent->real_size);
+				clear_task();
 				send_error_msg(BT_DISK_FULL_ERR);
 				return send_down_torrent(cli, task_uuid, ERROR);
 			}	

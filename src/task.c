@@ -111,11 +111,10 @@ void task_loop()
 			if(strlen(task->file_name) > 0)
 				strcpy(info->file_name, task->file_name);
 			
-			DEBUG("tftp_get !!!!!!!!!!!!!!!");
 			ret = tftp_get(task->server_ip, task->remote_file, task->local_file, buf, task->type);
 			if(ret != SUCCESS)
 			{
-				DEBUG("tftp tftp_get 1111111111111");
+				DEBUG("tftp tftp_get timeout");
 				send_error_msg(INSTALL_ERR);
 				clear_task(&task_queue);		
 				continue;
@@ -134,9 +133,7 @@ void task_loop()
 			if(task->type == 2)
 			{
             	DEBUG("install programe ok");
-		
             	conf.install_flag = 1;
-
             	exec_cmd(upgrad_sh, result);
             	if(strstr(result, "successd"))
             	{
@@ -153,7 +150,7 @@ void task_loop()
             	info->progress = 100;
             	send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
 			}
-			DEBUG("tftp_get end --------------------------");
+			DEBUG("tftp_get end ");
 		}
         de_queuePos(&task_queue);
     }  
@@ -161,6 +158,7 @@ void task_loop()
 
 void clear_task()
 {
+	stop_torrent();
 	clear_queue(&task_queue);
 }
 

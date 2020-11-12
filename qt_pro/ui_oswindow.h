@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'oswindow.ui'
 **
-** Created: Mon Nov 2 16:53:02 2020
+** Created: Wed Nov 11 21:53:11 2020
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -19,11 +19,11 @@
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
-#include <QtGui/QPushButton>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QTextEdit>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
+#include "qbutton2.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -35,20 +35,20 @@ public:
     QHBoxLayout *horizontalLayout;
     QSpacerItem *horizontalSpacer_2;
     QWidget *widget;
-    QPushButton *pushButton_11;
+    QButton2 *pushButton_11;
     QLineEdit *template_name_edit;
     QLabel *dns2_label_3;
     QLabel *dns2_label_5;
     QLineEdit *template_size_edit;
     QLabel *dns2_label_4;
     QTextEdit *dst_edit;
-    QPushButton *pushButton_12;
+    QButton2 *pushButton_12;
     QWidget *buttonLayout_2;
     QLabel *buttonLabel11_2;
     QWidget *widget_3;
-    QCheckBox *checkBox;
     QLabel *label_19;
     QLabel *label_21;
+    QCheckBox *checkBox;
     QWidget *widget_4;
     QCheckBox *checkBox_3;
     QLabel *label_3;
@@ -102,10 +102,14 @@ public:
         widget->setObjectName(QString::fromUtf8("widget"));
         widget->setMinimumSize(QSize(800, 600));
         widget->setMaximumSize(QSize(800, 600));
-        pushButton_11 = new QPushButton(widget);
+        pushButton_11 = new QButton2(widget);
         pushButton_11->setObjectName(QString::fromUtf8("pushButton_11"));
-        pushButton_11->setGeometry(QRect(270, 560, 91, 31));
-        pushButton_11->setStyleSheet(QString::fromUtf8("border-image: url(:/images/bluebutton.png);\n"
+        pushButton_11->setGeometry(QRect(270, 560, 91, 33));
+        pushButton_11->setStyleSheet(QString::fromUtf8("border-image:url(:/images/textEdit.png) 10 10 10 10;\n"
+"border-top: 10px transparent;\n"
+"border-right: 10px transparent;\n"
+"border-bottom: 10px transparent;\n"
+"border-left: 10px transparent;\n"
 "color: #FFFFFF;\n"
 "font: 12pt \"\351\273\221\344\275\223\";"));
         template_name_edit = new QLineEdit(widget);
@@ -154,10 +158,14 @@ public:
 "border-left: 10px transparent;\n"
 "color: #FFFFFF;\n"
 "font: 12pt \"\351\273\221\344\275\223\";"));
-        pushButton_12 = new QPushButton(widget);
+        pushButton_12 = new QButton2(widget);
         pushButton_12->setObjectName(QString::fromUtf8("pushButton_12"));
-        pushButton_12->setGeometry(QRect(390, 560, 91, 31));
-        pushButton_12->setStyleSheet(QString::fromUtf8("border-image: url(:/images/bluebutton.png);\n"
+        pushButton_12->setGeometry(QRect(390, 560, 91, 33));
+        pushButton_12->setStyleSheet(QString::fromUtf8("border-image:url(:/images/textEdit.png) 10 10 10 10;\n"
+"border-top: 10px transparent;\n"
+"border-right: 10px transparent;\n"
+"border-bottom: 10px transparent;\n"
+"border-left: 10px transparent;\n"
 "color: #FFFFFF;\n"
 "font: 12pt \"\351\273\221\344\275\223\";"));
         buttonLayout_2 = new QWidget(widget);
@@ -176,9 +184,6 @@ public:
         widget_3 = new QWidget(buttonLayout_2);
         widget_3->setObjectName(QString::fromUtf8("widget_3"));
         widget_3->setGeometry(QRect(0, 60, 1111, 51));
-        checkBox = new QCheckBox(widget_3);
-        checkBox->setObjectName(QString::fromUtf8("checkBox"));
-        checkBox->setGeometry(QRect(30, 20, 71, 16));
         label_19 = new QLabel(widget_3);
         label_19->setObjectName(QString::fromUtf8("label_19"));
         label_19->setGeometry(QRect(110, 10, 141, 21));
@@ -189,6 +194,10 @@ public:
         label_21->setGeometry(QRect(350, 10, 121, 21));
         label_21->setStyleSheet(QString::fromUtf8("color: #FFFFFF;\n"
 "font: 12pt \"\351\273\221\344\275\223\";"));
+        checkBox = new QCheckBox(widget_3);
+        checkBox->setObjectName(QString::fromUtf8("checkBox"));
+        checkBox->setGeometry(QRect(30, 10, 71, 16));
+        checkBox->setChecked(true);
         widget_4 = new QWidget(buttonLayout_2);
         widget_4->setObjectName(QString::fromUtf8("widget_4"));
         widget_4->setGeometry(QRect(0, 0, 1111, 51));
@@ -332,6 +341,12 @@ public:
 
         verticalLayout->addWidget(bottomWidget);
 
+        QWidget::setTabOrder(template_name_edit, template_size_edit);
+        QWidget::setTabOrder(template_size_edit, dst_edit);
+        QWidget::setTabOrder(dst_edit, pushButton_11);
+        QWidget::setTabOrder(pushButton_11, pushButton_12);
+        QWidget::setTabOrder(pushButton_12, checkBox);
+        QWidget::setTabOrder(checkBox, checkBox_3);
 
         retranslateUi(OSWindow);
 
@@ -354,9 +369,9 @@ public:
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", 0, QApplication::UnicodeUTF8));
         pushButton_12->setText(QApplication::translate("OSWindow", "\347\241\256\350\256\244", 0, QApplication::UnicodeUTF8));
         buttonLabel11_2->setText(QString());
-        checkBox->setText(QString());
         label_19->setText(QApplication::translate("OSWindow", "<html><head/><body><p align=\"center\">01</p></body></html>", 0, QApplication::UnicodeUTF8));
         label_21->setText(QApplication::translate("OSWindow", "<html><head/><body><p align=\"center\">1714MB</p></body></html>", 0, QApplication::UnicodeUTF8));
+        checkBox->setText(QString());
         checkBox_3->setText(QString());
         label_3->setText(QApplication::translate("OSWindow", "<html><head/><body><p align=\"center\">\347\263\273\347\273\237\345\272\217\345\217\267</p></body></html>", 0, QApplication::UnicodeUTF8));
         label_18->setText(QString());

@@ -100,7 +100,10 @@ int safe_poll(struct pollfd *ufds, nfds_t nfds, int timeout)
     {   
         int n = poll(ufds, nfds, timeout);
         if(n >= 0) 
+		{
+			DEBUG("safe_poll n %d", n);
             return n;
+		}
         /* Make sure we inch towards completion */
         if(timeout > 0)
             timeout--;
@@ -111,7 +114,8 @@ int safe_poll(struct pollfd *ufds, nfds_t nfds, int timeout)
          * I doubt many callers would handle this correctly */
         if(errno == ENOMEM)
             continue;
-        DEBUG("poll error");
+
+		DEBUG("safe_poll n %d", n);
         return n;
     }
 }
@@ -291,7 +295,9 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
 
         /* Was it final ACK? then exit */
         if (finished && (opcode == TFTP_ACK))
+		{
             goto ret;
+		}
 
  recv_again:
         /* Receive packet */
@@ -415,11 +421,13 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
                     //G_error_pkt_reason = ERR_WRITE;
                     goto send_err_pkt;
                 }
-                if (sz != blksize) {
-                    finished = 1;
-                }
                 //IF_FEATURE_TFTP_PROGRESS_BAR(G.pos += sz;)
 				download_size += sz;
+
+                if (download_size == file_size && file_size != 0) {
+					DEBUG("finish set 1");
+                    finished = 1;
+                }
 				tftp_progress_update(file_size, download_size, pipe_buf, type);
                 continue; /* send ACK */
             }
@@ -443,6 +451,7 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
     close(socket_fd);
     free(xbuf);
     free(rbuf);
+	DEBUG("finished %d", finished);
     return finished == 0; /* returns 1 on failure */
 
  send_read_err_pkt:
@@ -453,6 +462,7 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
     //G.error_pkt[1] = TFTP_ERROR;
     //xsendto(socket_fd, G.error_pkt, 4 + 1 + strlen(G_error_pkt_str),
      ;//       &peer_lsa->u.sa, peer_lsa->len);
+	DEBUG("EXIT_FAILURE");
     return EXIT_FAILURE;
 }
 

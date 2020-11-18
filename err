@@ -1,16 +1,33 @@
 cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
+In file included from ./src/tftp.c:1:0:
+./src/tftp.c: In function ‘tftp_progress_update’:
+./include/base.h:45:21: warning: format ‘%d’ expects argument of type ‘int’, but argument 3 has type ‘long unsigned int’ [-Wformat=]
+         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
+                     ^
+./src/tftp.c:32:3: note: in expansion of macro ‘DEBUG’
+   DEBUG("tftp info->progress %d", info->progress);
+   ^
+./src/tftp.c: In function ‘safe_poll’:
+./src/tftp.c:115:29: error: ‘ret’ undeclared (first use in this function)
+   DEBUG("safe_poll ret %d", ret);
+                             ^
+./include/base.h:45:80: note: in definition of macro ‘DEBUG’
+         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
+                                                                                ^
+./src/tftp.c:115:29: note: each undeclared identifier is reported only once for each function it appears in
+   DEBUG("safe_poll ret %d", ret);
+                             ^
+./include/base.h:45:80: note: in definition of macro ‘DEBUG’
+         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
+                                                                                ^
 ./src/tftp.c: In function ‘tftp_get’:
-./src/tftp.c:242:31: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 3 has type ‘long int’ [-Wformat=]
+./src/tftp.c:246:31: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 3 has type ‘long int’ [-Wformat=]
              cp += sprintf(cp, "%llu", (off_t)st.st_size) + 1;
                                ^
-./src/tftp.c:287:50: error: ‘buf’ undeclared (first use in this function)
-   tftp_progress_update(file_size, download_size, buf, type);
-                                                  ^
-./src/tftp.c:287:50: note: each undeclared identifier is reported only once for each function it appears in
-./src/tftp.c:346:31: warning: unused variable ‘errcode_str’ [-Wunused-variable]
+./src/tftp.c:351:31: warning: unused variable ‘errcode_str’ [-Wunused-variable]
              static const char errcode_str[] =
                                ^
-./src/tftp.c:223:2: warning: label ‘add_blksize_opt’ defined but not used [-Wunused-label]
+./src/tftp.c:227:2: warning: label ‘add_blksize_opt’ defined but not used [-Wunused-label]
   add_blksize_opt:
   ^
 make: *** [tftp.o] Error 1

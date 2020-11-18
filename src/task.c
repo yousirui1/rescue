@@ -111,6 +111,7 @@ void task_loop()
 			if(strlen(task->file_name) > 0)
 				strcpy(info->file_name, task->file_name);
 			
+			DEBUG("tftp_get down--------------------------- !!!!!!!!!!!!!!");
 			ret = tftp_get(task->server_ip, task->remote_file, task->local_file, buf, task->type);
 			if(ret != SUCCESS)
 			{

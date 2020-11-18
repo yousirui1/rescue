@@ -202,13 +202,11 @@ static int send_upgrad(struct client *cli)
 	return SUCCESS;
 }
 
-
 static int recv_upgrad(struct client *cli)
 {
 	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char*)(buf));
-	DEBUG("%s", buf);
 	if(root)
 	{
 		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
@@ -751,7 +749,7 @@ static int recv_down_torrent(struct client *cli)
 		if(ret == torrent->data_len)
 		{
 			uint64_t offset = 0;
-
+#if 0
 			if(torrent->dif_level == 1 && get_diff_mode(torrent->group_uuid) == 1)
 			{
 #if 0
@@ -765,6 +763,7 @@ static int recv_down_torrent(struct client *cli)
 #endif
 			}
 			else
+#endif
 			{
 				offset = add_qcow2(dev_info.mini_disk->dev, uuid, torrent->dif_level,
 								(uint64_t)(torrent->file_size),   

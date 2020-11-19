@@ -21,7 +21,6 @@ void *thread_qt(void *param)
 
    	set_pipe(pipe_qt);
 	set_config(&conf);
-	DEBUG("%s", conf.netcard.ip);
     create_window(0);
     return (void *)0;
 }

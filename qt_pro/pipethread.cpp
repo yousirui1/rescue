@@ -130,7 +130,6 @@ void PipeThread::process_pipe(unsigned char *msg, int len)
 
 void PipeThread::run()
 {
-    DEBUG("---------- pipe thread run %d %d", pipe_qt[0], pipe_qt[1]);
     int ret, maxfd = -1, nready;
     unsigned char buf[DATA_SIZE] = {0};
     fd_set fds;

@@ -42,36 +42,10 @@ static void process_event_msg(char *buf, int len)
 			send_pipe(buf, PROGRESS_PIPE, len, PIPE_QT);
 			break;
 		}
-#if 0
-		case ERROR_PIPE:
-		{
-			char *msg = malloc(HEAD_LEN + strlen(err_msg_desc[INSTALL_ERR] + 1));			
-			if(msg)
-			{
-				memcpy(&msg[HEAD_LEN], err_msg_desc[INSTALL_ERR], strlen(err_msg_desc[INSTALL_ERR]));
-				//send_pipe(msg, INSTALL_ERROR_PIPE, strlen(err_msg_desc[INSTALL_ERR], PIPE_QT);
-				free(msg);
-			}
-		}
-		case BT_OS_PROGRESS_PIPE:
-		{
-
-		}
-		case BT_OS_ERROR_PIPE:
-		{
-			char *msg = malloc(HEAD_LEN + strlen(err_msg_desc[INSTALL_ERR] + 1));			
-			if(msg)
-			{
-				memcpy(&msg[HEAD_LEN], err_msg_desc[INSTALL_ERR], strlen(err_msg_desc[INSTALL_ERR]));
-				//send_pipe(msg, INSTALL_ERROR_PIPE, strlen(err_msg_desc[INSTALL_ERR], PIPE_QT);
-				free(msg);
-			}
-		}
-#endif
 		case REBOOT_PIPE:
 		{
 			DEBUG("server send msg reboot");
-			stop_torrent();
+			//stop_torrent();
 			send_upload_log(&m_client);
 			client_disconnect();
 			sync();
@@ -81,7 +55,7 @@ static void process_event_msg(char *buf, int len)
 		case SHUTDOWN_PIPE:
 		{
 			DEBUG("server send msg shutdown");
-			stop_torrent();
+			//stop_torrent();
 			send_upload_log(&m_client);
 			client_disconnect();
 			sync();
@@ -132,7 +106,7 @@ static void process_qt_msg(char *buf, int len)
 		{
 			DEBUG("qt send pipe reboot msg");
 
-			stop_torrent();
+			//stop_torrent();
 			send_upload_log(&m_client);
 			client_disconnect();
 			sync();
@@ -203,6 +177,16 @@ void event_loop(int network_fd)
 			{
 				client_disconnect();
 				client_connect();
+			}
+
+			if(!online)
+			{
+				client_disconnect();
+				client_connect();
+			}
+			else
+			{
+				online = 0;
 			}
 			last_time = current_time;
 		}

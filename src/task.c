@@ -27,7 +27,13 @@ void task_loop()
     		char buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};
     		progress_info *info = (progress_info *)&buf[HEAD_LEN];
             struct torrent_task * task = (struct torrent_task *)index->pBuf;
-            ret = start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name, (uint64_t)task->offset * 512); 
+            //ret = start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name, 
+			//							(uint64_t)task->offset * 512); 
+
+			add_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name,
+																(uint64_t)task->offset * 512);	
+			pthread_cond_wait(&bt_cond, &bt_mtx);
+			
 			DEBUG("task bt %s ret: %d", task->torrent_file, ret);
 			if(ret != SUCCESS)			//下载失败
 			{
@@ -159,7 +165,7 @@ void task_loop()
 
 void clear_task()
 {
-	stop_torrent();
+	//stop_torrent();
 	clear_queue(&task_queue);
 }
 

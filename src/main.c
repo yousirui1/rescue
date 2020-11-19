@@ -5,13 +5,15 @@ int pipe_event[2];
 int pipe_tcp[2];
 int pipe_udp[2];
 int pipe_qt[2];
+int pipe_bt[2];
 
 struct config conf = {0};
 time_t current_time;
 const char program_name[] = "rescue";
 char config_file[128] = "config.ini";
 
-pthread_t pthread_qt, pthread_event, pthread_task;
+pthread_t pthread_qt, pthread_event, pthread_task, pthread_bt;
+int online = 0;
 
 static void do_exit()
 {
@@ -96,6 +98,17 @@ int init_pipe()
 
     fcntl(pipe_event[0], F_SETFL, O_NONBLOCK);
     fcntl(pipe_event[1], F_SETFL, O_NONBLOCK);
+
+	/* create pipe to give main thread infomation */
+    if(socketpair(AF_UNIX, SOCK_SEQPACKET, 0, pipe_bt) < 0)
+    {   
+        DEBUG("create client pipe err %s", strerror(errno));
+        return ERROR;
+    }   
+
+    fcntl(pipe_bt[0], F_SETFL, O_NONBLOCK);
+    fcntl(pipe_bt[1], F_SETFL, O_NONBLOCK);
+
     return SUCCESS;
 }
 
@@ -109,6 +122,8 @@ void close_pipe()
     close_fd(pipe_udp[1]);
     close_fd(pipe_qt[0]);
     close_fd(pipe_qt[1]);
+	close_fd(pipe_bt[0]);
+	close_fd(pipe_bt[1]);
 }
 
 int main(int argc, char *argv[])
@@ -148,6 +163,13 @@ int main(int argc, char *argv[])
 	{
 		DIE("create qt thread ret: %d error: %s", ret, strerror(ret));
 	}	
+	
+	ret = pthread_create(&pthread_bt, NULL, thread_bt, NULL);
+	if(0 != ret)
+	{
+		DIE("create bt thread ret: %d error: %s", ret, strerror(ret));
+	}
+
 	client_connect();
 	do_exit();
 	close_pipe();

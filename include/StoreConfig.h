@@ -46,7 +46,7 @@ typedef struct _YZY_QCOW_ENTRY
     uint64_t    realLba;  //qcow容量
 	uint8_t 	flag;
 	uint32_t	operate_id;
-	uint8_t		R1;
+	uint8_t		diff_mode;
 	uint16_t	R2;
     uint64_t    R4;          //保留
 } YZY_QCOW_ENTRY, *PYZY_QCOW_ENTRY;

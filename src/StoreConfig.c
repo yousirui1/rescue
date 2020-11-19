@@ -256,10 +256,12 @@ static int UpdateStoreEntry(PYZY_QCOW_ENTRY qe, uint32_t difLevel, PYZYGUID name
 	qe->flag = 0;
     qe->realLba = realLba;
 	qe->operate_id = 0;
+	qe->diff_mode = 0;		//未设置0 1 覆盖模式 2 增量模式
     return 0;
 }
 
-static int AddStoreEntry(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint64_t sizeLba, uint64_t realLba, int type, PYZY_QCOW_ENTRY *diskList, uint32_t count) //锟铰斤拷位锟矫达拷0锟斤拷始锟斤拷锟斤拷锟叫讹拷写锟斤拷锟斤拷锟斤拷锟斤拷锟饺?锟斤拷位锟斤拷偏锟斤拷
+static int AddStoreEntry(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint64_t sizeLba, uint64_t realLba, int type, 
+							PYZY_QCOW_ENTRY *diskList, uint32_t count) 
 {
     uint64_t diskSizeLba;
     if (storeDrv.pStoreCfg->qcowCount >= YZY_MAX_STORE_QCOW_ENTRY)
@@ -271,18 +273,7 @@ static int AddStoreEntry(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, ui
     if (count > 0)
     {
         PYZY_QCOW_ENTRY pLastQe = diskList[count - 1];
-
-        DEBUG("count %d", count);   
         diskSizeLba = GetDiskSizeLba(diskName);
-        DEBUG("diskName %16X", diskName);
-        DEBUG("diskSizeLba %ldd", diskSizeLba);
-        DEBUG("pLastQe->startLba %lld", pLastQe->startLba);
-        DEBUG("pLastQe->endLba %lld", pLastQe->endLba);
-        DEBUG("pLastQe->realLba %lld", pLastQe->realLba);
-        DEBUG("diskSizeLba %lu", diskSizeLba);
-        DEBUG("sizeLba %lu",  sizeLba);
-        DEBUG("pLastQe->endLba %lu", pLastQe->endLba);
-        //diskSizeLba = GetDiskSizeLba(diskName);
         if (pLastQe->endLba + sizeLba > diskSizeLba)
         {
             return -2; //超出硬盘容量
@@ -395,7 +386,8 @@ static void ScanSpaceFormInterval(uint64_t sizeLba, PYZYGUID diskName, int64_t *
 }
 
 // 如果中间空出来40G，可以放入两个20G
-static int AllocStore(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint64_t sizeLba, uint64_t realLba, uint8_t type, PYZY_QCOW_ENTRY* ppQe)
+static int AllocStore(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint64_t sizeLba, uint64_t realLba, 
+						uint8_t type, PYZY_QCOW_ENTRY* ppQe)
 {
     uint64_t iStart, iEnd;
     int ret;
@@ -434,7 +426,8 @@ static int AllocStore(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint6
 
 // sizeLba: 保留大小
 // realLba: 实际大小
-static int AllocStoreSpace(uint32_t difLevel, YZYGUID name, YZYGUID diskName, uint64_t sizeLba, uint64_t realLba, uint8_t type, PYZY_QCOW_ENTRY* ppQe)
+static int AllocStoreSpace(uint32_t difLevel, YZYGUID name, YZYGUID diskName, uint64_t sizeLba, uint64_t realLba, 
+							uint8_t type,  PYZY_QCOW_ENTRY* ppQe)
 {
     int ret = AllocStore(difLevel, &name, &diskName, sizeLba, realLba, type, ppQe);
     if (ret == 0)

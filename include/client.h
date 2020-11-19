@@ -1,9 +1,6 @@
 #ifndef __CLIENT_H__
 #define __CLIENT_H__
 
-
-
-
 #define CLIENT_BUF 1024 * 1024
 #define IPADDR_LEN 128
 
@@ -39,6 +36,21 @@ struct client
     int max_size;
 
     time_t last_time;
+};
+
+
+struct desktop_group
+{
+	uint8_t diff_mode;
+	uint8_t auto_update;
+	//uint8_t max_diff;
+
+	char desktop_group_uuid[40];
+	char desktop_group_name[128];
+	
+	char os_uuid[3][40];
+	char data_uuid[3][40];
+	char share_uuid[40]	
 };
 
 

@@ -81,22 +81,15 @@ int init_qcow2(PedDevice *dev, int flag)
 }
 
 uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, uint64_t realLba, uint32_t stype, 
-					uint32_t disk_type, uint32_t operate_id)
+					uint32_t disk_type, uint32_t operate_id, uint8_t diff_mode)
 {
 	int ret;
     YZY_QCOW_ENTRY  *pQe;
 
-	DEBUG("sizeLba %lld", sizeLba);
-	DEBUG("realLba %lld", realLba);
 	YZYGUID uuid = {0};
 	str2uuid(name, &uuid);
 	char temp[32] = {0};
 	uuid2str(&uuid, temp);
-
-	DEBUG("temp %s", temp);
-	DEBUG("diff %d", diff);
-	DEBUG("name %s", name);
-	DEBUG("disk_type %d", disk_type);
 
 	uint64_t space_size  = available_space(dev->disk_name);
 	DEBUG("space_size %llu", space_size);
@@ -117,6 +110,7 @@ uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, 
 		pQe->stype = stype;
 		pQe->flag = 1;
 		pQe->operate_id = operate_id;
+		pQe->diff_mode = diff_mode;
     	//storeDrv.save(dev);
 		return GetQcowLba(pQe);
 	}
@@ -189,6 +183,7 @@ void print_qcow2(PedDevice *dev)
 
 	    DEBUG("pQe->diffLevel %lu", pQe->difLevel);
 	    DEBUG("pQe->operate_id %lu", pQe->operate_id);
+	    DEBUG("pQe->operate_id %d", pQe->diff_mode);
 		DEBUG("--------------------------------------------");
 		//if(pQe->difLevel == 1)
     }
@@ -262,6 +257,16 @@ int get_operate_qcow2(char *name, uint32_t diff)
 	else
 		return -1;
 }
+
+int get_diff_mode_qcow2(char *name)
+{
+	PYZY_QCOW_ENTRY pQe = scan_qcow2(name, 1);			//只有diff 1 存在
+	if(pQe)
+		return pQe->diff_mode;
+	else
+		return 0;
+}
+
 
 int set_boot_qcow2(PedDevice *dev, uint32_t diff, int disk_type, char *name)
 {

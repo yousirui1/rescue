@@ -9,6 +9,7 @@ extern int pipe_qt[2];
 extern time_t current_time;
 extern struct config conf;
 extern char config_file[128];
+extern int online;
 
 void *thread_event(void *param);
 
@@ -39,5 +40,10 @@ void err_msg(const char *fmt, ...);
 
 /* socket.c */
 int send_pipe(char *buf, short cmd, int size, int type);
+
+extern pthread_mutex_t bt_mtx;
+extern pthread_cond_t bt_cond;
+
+void *thread_bt(void *param);
 
 #endif

@@ -529,11 +529,7 @@ PedDevice *linux_new(const char *path)
 
 	if(!linux_open(dev))
 		goto error_free_path;
-
-	DEBUG("_device_probe_geometry");
 	_device_probe_geometry(dev);
-	
-
 
 #ifdef ENABLE_DEVICE_MAPPER
 	//dm_udev_set_sync_support(1);

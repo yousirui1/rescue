@@ -309,7 +309,6 @@ void Uploadwindow::setProgressValue(struct progress_info *info)
                 }
                 else if(remain_time < 3600 * 24 && remain_time > 3600 )
                 {
-                    //ui->i_remain_time_label->setText(QString("%1小时%2分钟").arg(remain_time / 3600, (remain_time % 3600)));
                     ui->i_remain_time_label->setText(QString("%1小时").arg(remain_time / 3600));
                 }
                 else if(remain_time < 3600 && remain_time > 60 )

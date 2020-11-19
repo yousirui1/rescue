@@ -124,7 +124,6 @@ static void find_all_disks()
 			DEBUG("cat /sys/block/%s/removable %s",d->d_name, result);
 			sprintf(buf, "/dev/%s", d->d_name);
 			dev = linux_new(buf);
-			DEBUG("----------------------");
 
 			if(!dev || dev->length <= 0)
 			{
@@ -155,7 +154,6 @@ static void find_all_disks()
 					dev_info.mini_disk = &(dev_info.disks[dev_info.disk_count]);
 
 				/* p2v only disk have window boot */	
-				DEBUG("---------- dev->path %s boot_flag %d", dev->path, dev->boot_flag);
 				if(dev->boot_flag)
 				{
 					DEBUG("have boot flag dev: %s",dev->path);
@@ -283,8 +281,6 @@ void init_device()
     
 	if(dev_info.mini_disk)
 	{
-		DEBUG("-----------%s  dev_info.mini_disk init_qcow2 ---------- %d ",dev_info.mini_disk->dev->path, dev_info.mini_disk->disk_ready);
-
 		init_qcow2(dev_info.mini_disk->dev, dev_info.mini_disk->disk_ready);	
 		//terminal->disk_size = dev_info.mini_disk->total_space;
 		terminal->disk_size = available_space(dev_info.mini_disk->dev->disk_name);
@@ -320,8 +316,6 @@ int mount_boot()
 	{
     	sprintf(cmd, mount_sh, dev_info.mini_disk->name);
 	}
-	DEBUG("cmd %s", cmd);
-
     exec_cmd(cmd, result);
     if(strstr(result, "successd"))
     {   

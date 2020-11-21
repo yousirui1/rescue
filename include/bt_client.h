@@ -9,15 +9,14 @@ extern "C"
 #include "base.h"
 #include "packet.h"
 
-//int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t physical_offset);
-
-
+void clear_torrent();
+int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t physical_offset);
 
 //int add_torrent(char *torrent, const char *save_path, char *file_name, uint64_t physical_offset);
-int add_torrent(const char *torrent, const char *save_path, char *file_name,  uint64_t physical_offset);
+//int add_torrent(const char *torrent, const char *save_path, char *file_name,  uint64_t physical_offset);
+void bt_client();
 
-void clear_torrent();
-void stop_bt();
+void stop_torrent();
 
 //void *thread_bt(void *param);
 

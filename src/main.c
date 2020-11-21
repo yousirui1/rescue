@@ -148,6 +148,8 @@ int main(int argc, char *argv[])
 	init_device();
 	init_config();
 
+	bt_client();
+
 	ret = pthread_create(&pthread_event, NULL, thread_event, NULL);
 	if(0 != ret)
 	{
@@ -164,11 +166,13 @@ int main(int argc, char *argv[])
 		DIE("create qt thread ret: %d error: %s", ret, strerror(ret));
 	}	
 	
+#if 0
 	ret = pthread_create(&pthread_bt, NULL, thread_bt, NULL);
 	if(0 != ret)
 	{
 		DIE("create bt thread ret: %d error: %s", ret, strerror(ret));
 	}
+#endif
 
 	client_connect();
 	do_exit();

@@ -45,5 +45,6 @@ extern pthread_mutex_t bt_mtx;
 extern pthread_cond_t bt_cond;
 
 void *thread_bt(void *param);
+extern int download_finish;
 
 #endif

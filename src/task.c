@@ -22,71 +22,65 @@ void task_loop()
         }   
 
         index = de_queue(&task_queue);
+
+
         if(index->ucType == 0x00)
         {   
     		char buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};
     		progress_info *info = (progress_info *)&buf[HEAD_LEN];
             struct torrent_task * task = (struct torrent_task *)index->pBuf;
-            //ret = start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name, 
-			//							(uint64_t)task->offset * 512); 
-
-			add_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name,
-																(uint64_t)task->offset * 512);	
-			pthread_cond_wait(&bt_cond, &bt_mtx);
+            ret = start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name, 
+										(uint64_t)task->offset * 512); 
 			
-			DEBUG("task bt %s ret: %d", task->torrent_file, ret);
+			//add_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name,
+			//													(uint64_t)task->offset * 512);	
+
+			DEBUG("task file %s  uuid: %s diff %d ret: %d", task->torrent_file, task->uuid, task->diff, ret);
 			if(ret != SUCCESS)			//下载失败
 			{
 				DEBUG("del qcow2 uuid %s diff %d", task->uuid, task->diff);	
 				del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
 				//del_diff_qcow2(dev_info.mini_disk->dev, task->uuid);
-				DEBUG("clear_task !!!!!!!!!!!!!!!");
 				clear_task(&task_queue);		
-				if(ret == 2)	//timeout 
-				{
-					//DEBUG("Download Timeout");
-					DEBUG("Timeout redown group_uuid %s task->uuid %s", task->group_uuid, task->uuid);
-					switch(task->diff)
-					{
-						case 0:
-							send_get_diff_torrent(&m_client, task->group_uuid, task->uuid, 0);
-						case 1:
-                    		send_get_diff_torrent(&m_client, task->group_uuid, task->uuid, 1);
-						case 2:
-                    		send_get_diff_torrent(&m_client, task->group_uuid, task->uuid, 2);
-						default:
-							break;
-					}
-				}
+					
+				strcpy(info->state, "finished");
+				info->type = 0;
+	
+				strcpy(info->file_name, task->file_name);
+				sscanf(task->torrent_file, "/root/%s", info->image_name);
+	            info->progress = 0;
+	            send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
 				continue;
 			}
-			save_qcow2(dev_info.mini_disk->dev);
-
-            if(task->diff != 0)
-            {   
-                if(change_back_file_qcow2(dev_info.mini_disk->dev, task->uuid ,task->diff) == SUCCESS)
-                {   
-					set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
-					DEBUG("change_back_file_qcow2 ok !!!");
-                }   
-				else
-				{
-					DEBUG("change_back_file error del_qcow2 uuid %s diff %d", task->uuid, task->diff);
-					del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
-				}
-            }   
 			else
-				set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
-			
-			strcpy(info->state, "finished");
-			info->type = 0;
-
-			strcpy(info->file_name, task->file_name);
-			sscanf(task->torrent_file, "/root/%s", info->image_name);
-            info->progress = 100;
-            send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
-			DEBUG("task->diff %d", task->diff);
-			DEBUG("task->uuid %s", task->uuid);
+			{
+				save_qcow2(dev_info.mini_disk->dev);
+	            if(task->diff != 0)
+	            {   
+	                if(change_back_file_qcow2(dev_info.mini_disk->dev, task->uuid ,task->diff) == SUCCESS)
+	                {   
+						set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
+						DEBUG("change_back_file_qcow2 ok !!!");
+	                }   
+					else
+					{
+						DEBUG("change_back_file error del_qcow2 uuid %s diff %d", task->uuid, task->diff);
+						del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
+					}
+	            }   
+				else
+					set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
+				
+				strcpy(info->state, "finished");
+				info->type = 0;
+	
+				strcpy(info->file_name, task->file_name);
+				sscanf(task->torrent_file, "/root/%s", info->image_name);
+	            info->progress = 100;
+	            send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
+				DEBUG("task->diff %d", task->diff);
+				DEBUG("task->uuid %s", task->uuid);
+			}
         }   
         else if(index->ucType == 0x02)
         {   
@@ -117,7 +111,6 @@ void task_loop()
 			if(strlen(task->file_name) > 0)
 				strcpy(info->file_name, task->file_name);
 			
-			DEBUG("tftp_get down--------------------------- !!!!!!!!!!!!!!");
 			ret = tftp_get(task->server_ip, task->remote_file, task->local_file, buf, task->type);
 			if(ret != SUCCESS)
 			{
@@ -165,8 +158,9 @@ void task_loop()
 
 void clear_task()
 {
-	//stop_torrent();
 	clear_queue(&task_queue);
+	stop_torrent();
+	clear_torrent();
 }
 
 void *thread_task(void *param)

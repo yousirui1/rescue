@@ -45,7 +45,7 @@ static void process_event_msg(char *buf, int len)
 		case REBOOT_PIPE:
 		{
 			DEBUG("server send msg reboot");
-			//stop_torrent();
+			stop_torrent();
 			send_upload_log(&m_client);
 			client_disconnect();
 			sync();
@@ -55,7 +55,7 @@ static void process_event_msg(char *buf, int len)
 		case SHUTDOWN_PIPE:
 		{
 			DEBUG("server send msg shutdown");
-			//stop_torrent();
+			stop_torrent();
 			send_upload_log(&m_client);
 			client_disconnect();
 			sync();
@@ -106,7 +106,7 @@ static void process_qt_msg(char *buf, int len)
 		{
 			DEBUG("qt send pipe reboot msg");
 
-			//stop_torrent();
+			stop_torrent();
 			send_upload_log(&m_client);
 			client_disconnect();
 			sync();
@@ -179,14 +179,14 @@ void event_loop(int network_fd)
 				client_connect();
 			}
 
-			if(!online)
+			if(online <= 0)
 			{
 				client_disconnect();
 				client_connect();
 			}
 			else
 			{
-				online = 0;
+				online --;		//3个包
 			}
 			last_time = current_time;
 		}

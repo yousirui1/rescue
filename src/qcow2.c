@@ -277,8 +277,18 @@ int set_boot_qcow2(PedDevice *dev, uint32_t diff, int disk_type, char *name)
 	str2uuid(name, &uuid);
 
 	pQe = storeDrv.scan(diff, &uuid);
-	storeDrv.setBoot(disk_type, pQe);
-	storeDrv.save(dev);
+
+	if(pQe)
+	{
+		storeDrv.setBoot(disk_type, pQe);
+		storeDrv.save(dev);
+		return SUCCESS;
+	}
+	else
+	{
+		DEBUG("pQe no found error");
+		return ERROR;
+	}
 }
 
 

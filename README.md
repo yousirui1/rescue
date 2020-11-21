@@ -33,4 +33,6 @@ build-lib:
 	apt-get install libpng12-dev
 	apt-get install libxml2-dev
 	apt-get install libfreetype6-dev
-	
+
+
+

@@ -48,8 +48,8 @@ struct desktop_group
 	char desktop_group_uuid[40];
 	char desktop_group_name[128];
 	
-	char os_uuid[3][40];
-	char data_uuid[3][40];
+	char os_uuid[40];
+	char data_uuid[40];
 	char share_uuid[40]	
 };
 

@@ -115,7 +115,6 @@ int safe_poll(struct pollfd *ufds, nfds_t nfds, int timeout)
         if(errno == ENOMEM)
             continue;
 
-		DEBUG("safe_poll n %d", n);
         return n;
     }
 }

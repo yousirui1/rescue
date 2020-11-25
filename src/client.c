@@ -764,6 +764,7 @@ static int send_down_torrent(struct client *cli, char *task_uuid, int flag)
 	return ret;
 }
 
+
 static int recv_down_torrent(struct client *cli)
 {
 	int ret;
@@ -825,6 +826,7 @@ static int recv_down_torrent(struct client *cli)
 			memcpy(temp_uuid, current_group->os_uuid, 36);
 		}
 #endif
+
 		if (ret == torrent->data_len)
 		{
 			uint64_t offset = 0;

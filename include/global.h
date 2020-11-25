@@ -23,7 +23,7 @@ void clear_task();
 
 /* shell.c */
 extern char mount_sh[];
-extern char mount_nv_sh[];
+extern char mount_mmc_sh[];
 extern char umount_sh[];
 extern char install_sh[];
 extern char install_sh_1[];

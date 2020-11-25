@@ -4,10 +4,10 @@
 //#include "file.h"
 
 #define YZY_STORE_TAG "yzyVOI"
-#define YZY_MAX_STORE_QCOW_ENTRY 20 //两K可存放的条目数
-#define YZY_MAX_STORE_BUFF_LEN 2048
-#define YZY_MAX_STORE_NAME_LEN 24
-#define YZY_MAX_DISK_COUNT 10
+#define YZY_MAX_STORE_QCOW_ENTRY 100   //两K可存放的条目数
+#define YZY_MAX_STORE_BUFF_LEN 10240   
+#define YZY_MAX_STORE_NAME_LEN 24   
+#define YZY_MAX_DISK_COUNT     10    
 
 #define yzy_file_t  void *
 
@@ -63,8 +63,8 @@ typedef struct _YZY_STORE_CONFIG
     uint32_t            dataLevel; 
     uint32_t            shareLevel; 
     uint8_t             isEditMode;  //是否为编辑模式
-    uint8_t             r0; 
-    uint16_t            r1; 
+    uint8_t				isRestore;		//是否还原，0：不还原；1：还原
+    uint16_t            clientId; 		//终端ID
 
     YZY_DISK_ITEM       diskItem[YZY_MAX_DISK_COUNT]; //物理硬盘大小
     uint64_t            serverIP;
@@ -75,6 +75,16 @@ typedef struct _YZY_STORE_CONFIG
     uint64_t            dns2;
     uint8_t             domain[32];
     uint8_t             computerName[32];
+    uint64_t            topServerIP; //顶层服务IP
+    uint64_t            teacherIP;//教师机IP
+    uint16_t            classId; //教室号[1..9999]
+    uint8_t             channelId; //频道号 [1..100]
+    uint8_t             isTeacher; //是否为教师机 0否 1是
+
+    uint32_t            R0;
+    uint64_t            R2;
+    uint64_t            R3;
+    uint64_t            R4;
     struct _YZY_QCOW_ENTRY   entry[];  //一直存到168扇区，除第一个外每个扇区保存 个
 }YZY_STORE_CONFIG,*PYZY_STORE_CONFIG;
 

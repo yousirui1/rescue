@@ -109,8 +109,13 @@ static void find_all_disks()
         	STRPREFIX (d->d_name, "sd") ||
         	STRPREFIX (d->d_name, "ubd") ||
         	STRPREFIX (d->d_name, "vd") ||
+        	STRPREFIX (d->d_name, "mmcblk1") ||
         	STRPREFIX (d->d_name, "nvme0n1"))
 		{
+
+			if(STRPREFIX (d->d_name, "mmcblk1boot") || STRPREFIX (d->d_name, "mmcblk1rpmb"))
+				continue;
+
 			if(device_contains(d->d_name, root_device))
 				continue;
 
@@ -307,10 +312,11 @@ int mount_boot()
     char cmd[MAX_BUFLEN] = {0};
 
 	DEBUG("dev_info.mini_disk->name %s", dev_info.mini_disk->name);	
-	if(STRPREFIX(dev_info.mini_disk->name, "nvme0n1"))
+
+	if(STRPREFIX(dev_info.mini_disk->name, "mmcblk1") || STRPREFIX(dev_info.mini_disk->name, "nvme0n1"))
 	{
 		DEBUG("dev_info.mini_disk->name %s", dev_info.mini_disk->name);	
-    	sprintf(cmd, mount_nv_sh, dev_info.mini_disk->name);
+    	sprintf(cmd, mount_mmc_sh, dev_info.mini_disk->name);
 	}
 	else
 	{
@@ -382,7 +388,7 @@ int format_disk(const char *path)
     sleep(1);
     exec_cmd("mdev -s", result); 
 
-	if(STRPREFIX(path, "/dev/nvme0n1"))
+	if(STRPREFIX(path, "/dev/nvme0n1") || STRPREFIX(path, "/dev/mmcblk1"))
 	{
     	sprintf(cmd, "mkfs.vfat %sp1", path);
 	}

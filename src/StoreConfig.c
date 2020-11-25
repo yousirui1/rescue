@@ -19,8 +19,9 @@
 
 #define yzy_offsetof(s,m) offsetof(s,m)
 
-uint8_t gStoreBuf[YZY_MAX_STORE_BUFF_LEN];
-uint32_t gStoreBufLen = YZY_MAX_STORE_BUFF_LEN;
+//uint8_t gStoreBuf[YZY_MAX_STORE_BUFF_LEN];
+uint8_t* gStoreBuf = NULL;
+uint8_t* gRebuildBuf = NULL;
 
 //crc//////////////////////////////////
 uint32_t POLYNOMIAL = 0xEDB88320;
@@ -144,8 +145,10 @@ static uint32_t GetDiskList(PYZYGUID diskName, PYZY_QCOW_ENTRY *diskList)
 
 uint64_t GetDiskSizeLba(PYZYGUID diskName)
 {
-	int i;
-	if (diskName == NULL)
+    int i;
+	if (!storeDrv.pStoreCfg) return 0;
+
+    if (diskName == NULL)
         return storeDrv.pStoreCfg->diskItem[0].diskSizeLba;
     for (i = 0; i < YZY_MAX_DISK_COUNT; i++)
     {
@@ -197,6 +200,13 @@ int AddDisk(PYZYGUID diskName, uint64_t size_lba)
 //gpt头disk_guid
 static int InitStoreConfig()
 {
+    if (!gStoreBuf)
+    {
+        gStoreBuf = (uint8_t*)malloc(YZY_MAX_STORE_BUFF_LEN);
+        if (!gStoreBuf) 
+			return -2;
+    }
+    storeDrv.pStoreCfg = (PYZY_STORE_CONFIG)gStoreBuf;
     memset(storeDrv.pStoreCfg, 0, sizeof(YZY_STORE_CONFIG));
     memcpy(&storeDrv.pStoreCfg->tag, "yzyVOI", 6);
     storeDrv.pStoreCfg->qcowCount = 0;
@@ -206,10 +216,14 @@ static int InitStoreConfig()
 
 void RebuildStoreConfig() //剔除已删除的项目,位置排序，以便空隙查找
 {
-    uint8_t rebuildBuf[YZY_MAX_STORE_BUFF_LEN];
-
-    PYZY_STORE_CONFIG pConfig = (PYZY_STORE_CONFIG)rebuildBuf;
-    memcpy(rebuildBuf, storeDrv.pStoreCfg, yzy_offsetof(YZY_STORE_CONFIG, entry));
+    if (!gRebuildBuf)
+    {
+        gRebuildBuf = (uint8_t *)malloc(YZY_MAX_STORE_BUFF_LEN);
+        if (!gRebuildBuf) 
+			return;
+    }
+	PYZY_STORE_CONFIG pConfig = (PYZY_STORE_CONFIG)gRebuildBuf;
+    memcpy(gRebuildBuf, storeDrv.pStoreCfg, yzy_offsetof(YZY_STORE_CONFIG, entry));
     uint32_t j = 0;
 	uint32_t i;
     for (i = 0; i < storeDrv.pStoreCfg->qcowCount; i++) //剔除已删除的项目
@@ -221,7 +235,7 @@ void RebuildStoreConfig() //剔除已删除的项目,位置排序，以便空隙查找
         j++;
     }
     pConfig->qcowCount = j;
-    memcpy(gStoreBuf, rebuildBuf, yzy_offsetof(YZY_STORE_CONFIG, entry)); //恢复头
+    memcpy(gStoreBuf, gRebuildBuf, yzy_offsetof(YZY_STORE_CONFIG, entry)); //恢复头
 
     for (j = 0; j < pConfig->qcowCount; j++)
     {
@@ -294,6 +308,9 @@ static int AddStoreEntry(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, ui
 static int DeleteStoreEntry(uint32_t difLevel, PYZYGUID name)
 {
 	uint32_t i;
+    if (!storeDrv.pStoreCfg) 
+		return -2;
+	
     for (i = 0; i < storeDrv.pStoreCfg->qcowCount; i++)
     {
         PYZY_QCOW_ENTRY pQe = &storeDrv.pStoreCfg->entry[i];
@@ -310,6 +327,9 @@ static int DeleteStoreEntry(uint32_t difLevel, PYZYGUID name)
 static PYZY_QCOW_ENTRY ScanStoreEntry(uint32_t difLevel, PYZYGUID name)
 {
 	uint32_t i;
+    if (!storeDrv.pStoreCfg) 
+		return NULL;
+	
     for (i = 0; i < storeDrv.pStoreCfg->qcowCount; i++)
     {
         PYZY_QCOW_ENTRY pQe = &storeDrv.pStoreCfg->entry[i];
@@ -385,6 +405,34 @@ static void ScanSpaceFormInterval(uint64_t sizeLba, PYZYGUID diskName, int64_t *
     }
 }
 
+static uint64_t  ScanSpace(PYZYGUID diskName, uint64_t* maxInterval, uint64_t* last)
+{
+    uint64_t  l,diskSize;
+    YZY_QCOW_ENTRY Qe = { 0 };
+    PYZY_QCOW_ENTRY pQe0;
+    PYZY_QCOW_ENTRY pQe1;
+    PYZY_QCOW_ENTRY diskList[YZY_MAX_STORE_QCOW_ENTRY];
+    if (!storeDrv.pStoreCfg) return 0;
+    uint32_t count = GetDiskList(diskName, diskList);
+    *maxInterval = 0;
+    *last = 0;
+    for (uint32_t i = 0; i < count; i++) //从两个文件间空隙alloc
+    {   
+        if (i == 0)  pQe0 = &Qe;//从0开始          
+        else pQe0 = diskList[i - 1]; 
+
+        pQe1 = diskList[i];
+        l = (pQe1->startLba - pQe0->endLba);
+        if ( *maxInterval < l)    
+            *maxInterval = l;
+    
+        if (*last < pQe1->endLba)
+            *last = pQe1->endLba;
+    }   
+    diskSize = GetDiskSizeLba(diskName);
+    *last = diskSize - *last; //磁盘剩余
+    return diskSize;
+}
 // 如果中间空出来40G，可以放入两个20G
 static int AllocStore(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint64_t sizeLba, uint64_t realLba, 
 						uint8_t type, PYZY_QCOW_ENTRY* ppQe)
@@ -429,6 +477,7 @@ static int AllocStore(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint6
 static int AllocStoreSpace(uint32_t difLevel, YZYGUID name, YZYGUID diskName, uint64_t sizeLba, uint64_t realLba, 
 							uint8_t type,  PYZY_QCOW_ENTRY* ppQe)
 {
+    if (!storeDrv.pStoreCfg) return -2;
     int ret = AllocStore(difLevel, &name, &diskName, sizeLba, realLba, type, ppQe);
     if (ret == 0)
     {
@@ -441,33 +490,7 @@ static int AllocStoreSpace(uint32_t difLevel, YZYGUID name, YZYGUID diskName, ui
     return ret;
 }
 
-static uint64_t  ScanSpace(PYZYGUID diskName, uint64_t* maxInterval, uint64_t* last)
-{
-    uint64_t  l,diskSize;
-    YZY_QCOW_ENTRY Qe = { 0 };
-    PYZY_QCOW_ENTRY pQe0;
-    PYZY_QCOW_ENTRY pQe1;
-    PYZY_QCOW_ENTRY diskList[YZY_MAX_STORE_QCOW_ENTRY];
-    uint32_t count = GetDiskList(diskName, diskList);
-    *maxInterval = 0;
-    *last = 0;
-    for (uint32_t i = 0; i < count; i++) //从两个文件间空隙alloc
-    {   
-        if (i == 0)  pQe0 = &Qe;//从0开始          
-        else pQe0 = diskList[i - 1]; 
 
-        pQe1 = diskList[i];
-        l = (pQe1->startLba - pQe0->endLba);
-        if ( *maxInterval < l)    
-            *maxInterval = l;
-    
-        if (*last < pQe1->endLba)
-            *last = pQe1->endLba;
-    }   
-    diskSize = GetDiskSizeLba(diskName);
-    *last = diskSize - *last; //磁盘剩余
-    return diskSize;
-}
 
 uint64_t GetBackLba()
 {
@@ -480,16 +503,25 @@ int LoadFormOffset(yzy_file_t hd, uint64_t offset)
     if (ret == -1)
 	{
 		DEBUG("yzy_file_read error");
-        return -1;
+        ret=  -1;
+        goto err;
 	}
 
     if (memcmp(&storeDrv.pStoreCfg->tag, "yzyVOI", 6) != 0)
-        return 1;
-
+	{
+        ret =  1;
+        goto err;
+    }
     if (VerifyCrc() == 0)
-        return 2;
+	{
+        ret = 2;
+        goto err;
+    }
 
     return 0;
+err:
+    memset(gStoreBuf, 0, YZY_MAX_STORE_BUFF_LEN);
+    return ret;
 }
 
 /* -1 read disk error
@@ -498,12 +530,18 @@ int LoadFormOffset(yzy_file_t hd, uint64_t offset)
  */
 int LoadStoreConfig(yzy_file_t hd)
 {
+	if (!gStoreBuf)
+    {
+        gStoreBuf = (uint8_t *)malloc(YZY_MAX_STORE_BUFF_LEN);
+        if (!gStoreBuf) return -2;
+    }
+
+	storeDrv.pStoreCfg = (PYZY_STORE_CONFIG)gStoreBuf;
     if (storeDrv.storeLba == 0)
 	{
 		DEBUG("storeDrv.storeLba == 0 ");
         return -1;
 	}
-
     int ret = LoadFormOffset(hd, storeDrv.storeLba * FILESECBYTES);
 
     if (ret != 0)
@@ -514,6 +552,7 @@ int LoadStoreConfig(yzy_file_t hd)
 
 int SaveStoreConfig(yzy_file_t hd)
 {
+    if (!storeDrv.pStoreCfg) return -2;
     if (storeDrv.storeLba == 0)
 	{
         return -1;
@@ -521,10 +560,10 @@ int SaveStoreConfig(yzy_file_t hd)
     RebuildStoreConfig();
     SetCrc();
 
-    int ret = yzy_file_write(hd, storeDrv.storeLba * FILESECBYTES, gStoreBuf, gStoreBufLen);
+    int ret = yzy_file_write(hd, storeDrv.storeLba * FILESECBYTES, gStoreBuf, YZY_MAX_STORE_BUFF_LEN);
 
-    ret = yzy_file_write(hd, GetBackLba() * FILESECBYTES, gStoreBuf, gStoreBufLen); //write backup
-    if (ret == gStoreBufLen)
+    ret = yzy_file_write(hd, GetBackLba() * FILESECBYTES, gStoreBuf, YZY_MAX_STORE_BUFF_LEN); //write backup
+    if (ret == (int)YZY_MAX_STORE_BUFF_LEN)
         return 0;
     return -1;
 }
@@ -541,6 +580,8 @@ uint64_t GetQcowLba(PYZY_QCOW_ENTRY pQe)
 
 void SetBoot(int idx, PYZY_QCOW_ENTRY pQe)
 {
+    if (!storeDrv.pStoreCfg) return;
+
     if (idx == 0)
     {
         storeDrv.pStoreCfg->currBoot = pQe->uuQcow;
@@ -573,7 +614,7 @@ uint64_t available_space(PYZYGUID diskName)
 
 StoreDriver storeDrv = {
     0,
-    (PYZY_STORE_CONFIG)gStoreBuf,
+    NULL,
     SetStoreLba,
     GetQcowLba,
     InitStoreConfig,

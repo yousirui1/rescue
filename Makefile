@@ -93,9 +93,9 @@ $(exeobj):$(mainobj) $(cppobj) $(p2vobj) #$(btobj)
 	$(CP) $(outdir)/$(exeobj) /home/ysr/ftp/
 
 pack:
-	sudo $(CP) $(outdir)/$(exeobj) /mnt/initrd/root
-	sudo $(CP) $(libdir)/libqt.so.1 /mnt/initrd/root/lib
-	sudo $(CP) $(libdir)/libtorrent.so /mnt/initrd/root/lib
+	sudo $(CP) $(outdir)/$(exeobj)  /opt/rootfs/initrd_voi/root/
+	sudo $(CP) $(libdir)/libqt.so.1 /opt/rootfs/initrd_voi/root/lib
+	sudo $(CP) $(libdir)/libtorrent.so /opt/rootfs/initrd_voi/root//lib
 
 clean:
 	rm -f *.o $(outdir)/$(exeobj) $(outdir)/*.dll $(outdir)/*.a $(OBJ_DIR)/*.o 

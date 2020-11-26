@@ -32,47 +32,47 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    configwindow.cpp \
-    uploadwindow.cpp \
-    oswindow.cpp \
-    dialogwindow.cpp \
-    external.cpp \
-    globalapplication.cpp \
-    pipethread.cpp \
-    global.cpp \
-    QRoundProgressBar.cpp \
-    qbutton.cpp \
-    qbutton2.cpp
-    #downloadwindow.cpp
+        configwindow.cpp \
+        uploadwindow.cpp \
+        oswindow.cpp \
+        dialogwindow.cpp \
+        external.cpp \
+        globalapplication.cpp \
+        pipethread.cpp \
+        global.cpp \
+        QRoundProgressBar.cpp \
+        qbutton.cpp \
+        qbutton2.cpp
+        #downloadwindow.cpp
 
 #operatetimeouttimer.cpp \
 HEADERS += \
         mainwindow.h \
-    configwindow.h \
-    uploadwindow.h \
-    oswindow.h \
-    dialogwindow.h \
-    external.h \
-    globalapplication.h \
-    pipethread.h \
-    global.h \
-    QRoundProgressBar.h \
-    qbutton.h \
-    qbutton2.h
-    #downloadwindow.h
+        configwindow.h \
+        uploadwindow.h \
+        oswindow.h \
+        dialogwindow.h \
+        external.h \
+        globalapplication.h \
+        pipethread.h \
+        global.h \
+        QRoundProgressBar.h \
+        qbutton.h \
+        qbutton2.h
+        #downloadwindow.h
 
 # operatetimeouttimer.h \
 
 FORMS += \
         mainwindow.ui \
-    configwindow.ui \
-    uploadwindow.ui \
-    oswindow.ui \
-    dialogwindow.ui
-    #downloadwindow.ui
+        configwindow.ui \
+        uploadwindow.ui \
+        oswindow.ui \
+        dialogwindow.ui
+        #downloadwindow.ui
 
 RESOURCES += \
-    images.qrc
+        images.qrc
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

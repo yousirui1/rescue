@@ -10,7 +10,7 @@ extern "C"
 #include "packet.h"
 
 void clear_torrent();
-int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t physical_offset);
+int start_torrent(char *torrent, char *save_path, char *file_name, int diff_mode, uint64_t physical_offset);
 
 //int add_torrent(char *torrent, const char *save_path, char *file_name, uint64_t physical_offset);
 //int add_torrent(const char *torrent, const char *save_path, char *file_name,  uint64_t physical_offset);

@@ -92,6 +92,13 @@ Uploadwindow::Uploadwindow(QWidget *parent) :
     logo_label->setGeometry(30, 30, 164,47);
     logo_label->show();
 
+    QLabel *ver_label = new QLabel(this);
+    ver_label->setText(QString("v%1.%2.%3").arg(global->conf.major_ver).arg(0).arg(global->conf.minor_ver));
+    ver_label->setStyleSheet("color: #FFFFFF;"
+                             "font: 12pt '黑体';");
+    ver_label->setGeometry(210, 45, 164, 47);
+    ver_label->show();
+
     ui->i_progress_t_label->hide();
     ui->i_progress_label->hide();
     ui->i_remain_time_t_label->hide();
@@ -100,6 +107,8 @@ Uploadwindow::Uploadwindow(QWidget *parent) :
     ui->i_upload_rate_label->hide();
     ui->i_download_rate_t_label->hide();
     ui->i_download_rate_label->hide();
+    ui->i_diff_mode_label->hide();
+    ui->i_diff_mode_t_label->hide();
 }
 
 Uploadwindow::~Uploadwindow()
@@ -282,9 +291,27 @@ void Uploadwindow::setProgressValue(struct progress_info *info)
         ui->i_upload_rate_label->show();
         ui->i_download_rate_t_label->show();
         ui->i_download_rate_label->show();
+        ui->i_diff_mode_t_label->show();
+        ui->i_diff_mode_label->show();
 
         ui->i_upload_rate_label->setText("0kB/s");
         ui->i_download_rate_label->setText("0kB/s");
+
+        int diff_mode = *(int *)&(info->storage[0]);
+
+        DEBUG("diff_mode %d", diff_mode);
+        if(diff_mode == 1)
+        {
+            ui->i_diff_mode_label->setText("覆盖");
+        }
+        else if(diff_mode == 2)
+        {
+            ui->i_diff_mode_label->setText("增量");
+        }
+        else
+        {
+            ui->i_diff_mode_label->setText("-");
+        }
 
         QString state;
         unsigned long long remain_time = 0;
@@ -335,6 +362,19 @@ void Uploadwindow::setProgressValue(struct progress_info *info)
             ui->i_upload_rate_label->setText("0kB/s");
             ui->i_download_rate_label->setText("0kB/s");
             ui->i_remain_time_label->setText(tr("-秒"));
+
+
+            ui->i_progress_t_label->hide();
+            ui->i_progress_label->hide();
+            ui->i_remain_time_t_label->hide();
+            ui->i_remain_time_label->hide();
+            ui->i_upload_rate_t_label->hide();
+            ui->i_upload_rate_label->hide();
+            ui->i_download_rate_t_label->hide();
+            ui->i_download_rate_label->hide();
+
+            ui->i_diff_mode_label->hide();
+            ui->i_diff_mode_t_label->hide();
         }
         else if(STRPREFIX(info->state, "seeding"))
         {

@@ -16,40 +16,6 @@ void loadFont(QString fontFileName)
     qDebug()<<"index ID:"<<index;
 }
 
-#if 0
-class mPushButton : public QPushButton
-{
-        Q_OBJECT
-
- public:
-       mPushButton(QWidget *parent=0);
-       ~mPushButton();
- protected:
-       virtual void focusInEvent(QFocusEvent *e);
-       virtual void focusOutEvent(QFocusEvent *e);
-};
-
-
-mPushButton::mPushButton(QWidget *parent):QPushButton(parent)
-{
-
-}
-
-mPushButton::~mPushButton()
-{
-
-}
-
-void mPushButton::focusInEvent(QFocusEvent *e)
-{
-
-}
-
-void mPushButton::focusOutEvent(QFocusEvent *e)
-{
-
-}
-#endif
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MainWindow)
@@ -65,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     global->setDesktopRect(QApplication::desktop()->availableGeometry());
+
+
 
     loadFont("/opt/freetype2/font/pin.ttf");
     stackLayout = new QStackedLayout();
@@ -116,6 +84,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->netstate_label->setText(ip_state);
     this->neticon_label->setPixmap(QPixmap::fromImage(icon_img));
     this->netpoint_label->setPixmap(QPixmap::fromImage(point_img));
+
+
 
     mainLayout = new QVBoxLayout;
     mainLayout->addLayout(stackLayout);

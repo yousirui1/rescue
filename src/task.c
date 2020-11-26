@@ -23,13 +23,12 @@ void task_loop()
 
         index = de_queue(&task_queue);
 
-
         if(index->ucType == 0x00)
         {   
     		char buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};
     		progress_info *info = (progress_info *)&buf[HEAD_LEN];
             struct torrent_task * task = (struct torrent_task *)index->pBuf;
-            ret = start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name, 
+            ret = start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name, task->diff_mode,
 										(uint64_t)task->offset * 512); 
 			
 			//add_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name,

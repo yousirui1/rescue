@@ -92,8 +92,8 @@ struct progress_info{
 
     int type;
 
-    char image_name[36];
-    char storage[36];
+    char image_name[128];
+    char storage[128];
 };
 
 

@@ -160,6 +160,7 @@ int main(int argc, char *argv[])
 	{
 		DIE("create qt thread ret: %d error: %s", ret, strerror(ret));
 	}
+
 	ret = pthread_create(&pthread_task, NULL, thread_task, NULL);
 	if(0 != ret)
 	{

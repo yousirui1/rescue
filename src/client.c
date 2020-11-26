@@ -771,7 +771,6 @@ static int recv_down_torrent(struct client *cli)
 	char torrent_file[128] = {0};
 	char task_uuid[36 + 1] = {0};
 	char uuid[36 + 1] = {0};
-	//int current_group = -1;
 	struct desktop_group *current_group = NULL;
 
 	yzy_torrent *torrent = (yzy_torrent *)&cli->data_buf[read_packet_supplementary(cli->packet) +
@@ -812,27 +811,12 @@ static int recv_down_torrent(struct client *cli)
 		fflush(fp);
 		fclose(fp);
 
-#if 0
-		if (torrent->type == 1)
-		{
-			memcpy(temp_uuid, current_group->share_uuid, 36);
-		}
-		else if (torrent->type == 2)
-		{
-			memcpy(temp_uuid, current_group->data_uuid, 36);
-		}
-		else
-		{
-			memcpy(temp_uuid, current_group->os_uuid, 36);
-		}
-#endif
-
 		if (ret == torrent->data_len)
 		{
 			uint64_t offset = 0;
 			if (torrent->dif_level == 1)
 			{
-				if (current_group->diff_mode == 1)
+				if (current_group->diff_mode == 1) //增量模式
 				{
 					DEBUG("------------- diff mode 1 --------------");
 #if 0
@@ -856,7 +840,7 @@ static int recv_down_torrent(struct client *cli)
 			else
 			{
 				offset = add_qcow2(dev_info.mini_disk->dev, uuid, torrent->dif_level,
-								   (uint64_t)(torrent->file_size),
+								   (uint64_t)(torrent->file_size) + 1024 * 2,
 								   torrent->real_size, torrent->sys_type, torrent->type, torrent->operate_id, 0);
 			}
 
@@ -869,6 +853,7 @@ static int recv_down_torrent(struct client *cli)
 
 				if (torrent->dif_level == 3)
 					torrent->dif_level = 2;
+				
 
 				if (torrent->type == 0)
 				{
@@ -884,6 +869,7 @@ static int recv_down_torrent(struct client *cli)
 				}
 
 				task.diff = torrent->dif_level;
+				task.diff_mode = current_group->diff_mode + 1;
 				task.disk_type = torrent->type;
 				task.offset = offset;
 				en_queue(&task_queue, (char *)&task, sizeof(struct torrent_task), 0x0);

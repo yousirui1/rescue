@@ -19,6 +19,7 @@ static time_t last_time;
 static progress_info *info = NULL;
 static char pipe_buf[HEAD_LEN + sizeof(progress_info) + 1];
 static int run_flag = 0;
+static int total_done_count = 0;
 
 // return the name of a torrent status enum
 char const* state(lt::torrent_status::state_t s)
@@ -80,19 +81,26 @@ void stop_torrent()
     DEBUG("recv msg stop bt download task");
 }
 
-int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t physical_offset) try
+void destory_bt()
+{
+	//m_ses->abort();
+}
+
+
+int start_torrent(char *torrent, char *save_path, char *file_name, int diff_mode, uint64_t physical_offset) try
 {
     int ret = 1;
     info = (progress_info *)&pipe_buf[HEAD_LEN];
     memset(info, 0, sizeof(progress_info));
     info->type = 0x00;
+	*(int *)&(info->storage[0]) = diff_mode;
+
+
     if(file_name)
         strcpy(info->file_name, file_name);
     sscanf(torrent, "/root/%s", info->image_name);
 
     lt::settings_pack pack;
-
-    DEBUG("bt torrent %s", info->image_name);
 
     lt::add_torrent_params params;
     params.save_path = save_path;
@@ -100,6 +108,7 @@ int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t phys
     params.ti->set_physicaldrive_offset(physical_offset);
     params.download_limit = 0;
     params.upload_limit = 0;
+	total_done_count = 0;
 
     /* this is the handle we'll set once we get the notification of it being added */
     //ses.async_add_torrent(std::move(params));
@@ -144,26 +153,31 @@ int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t phys
                 if(current_time - last_time >= 1)
                 { 
                     lt::torrent_status const & s = st->status[0];
-                    DEBUG("%s download rate %lu KB/s, total_download %lu KB, uprate %lu KB/s, total_up %lu KB, progress %d",
-                        state(s.state), s.download_payload_rate / 1000, s.total_done / 1000, s.upload_rate/1000,
-                        s.total_upload / 1000, s.progress_ppm / 10000);
-                    strcpy(info->state, state(s.state));
-                    info->file_size = s.total_wanted;
-                    info->progress = s.progress_ppm / 10000;
-                    info->download_rate = s.download_payload_rate;
-                    info->upload_rate = s.upload_rate;
-                    info->total_size = s.total_done;
-                    send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
+
+                    DEBUG("id % lu %s download rate %lu KB/s, total_download %llu, total_wanted %llu, "
+							"uprate %lu KB/s, total_up %lu KB, progress %d", 
+						s.handle.id(), state(s.state), s.download_payload_rate / 1000, s.total_done, s.total_wanted,
+						s.upload_rate/1000, s.total_upload / 1000, s.progress_ppm / 10000);
                     last_time = current_time;
 
-					if(STRPREFIX(info->state, "seeding") && current_id == s.handle.id())
-                    {   
-                        DEBUG("torrent seeding state");
-						info->progress = 100;			
-						ret = SUCCESS;
-                		run_flag = 0;
-                    }
+					if(current_id == s.handle.id())
+					{
+				  		strcpy(info->state, state(s.state));
+                    	info->file_size = s.total_wanted;
+                    	info->progress = s.progress_ppm / 10000;
+                    	info->download_rate = s.download_payload_rate;
+                    	info->upload_rate = s.upload_rate;
+                    	info->total_size = s.total_done;
 
+						if(STRPREFIX(state(s.state), "seeding") ||(s.total_done == s.total_wanted && total_done_count ++ >= 30))
+						{
+							ret = SUCCESS;
+							info->progress = 100;			
+                			run_flag = 0;
+						}
+
+                    	send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
+					}
                 }
             }
         }
@@ -195,6 +209,43 @@ void stop_torrent()
 	write(pipe_bt[1], &s, sizeof(s));
 }
 
+					if(STRPREFIX(state(s.state), "seeding"))
+                    {   
+						if(current_id == s.handle.id())
+						{
+			         		strcpy(info->state, state(s.state));
+                    		info->file_size = s.total_wanted;
+                    		info->progress = s.progress_ppm / 10000;
+                    		info->download_rate = s.download_payload_rate;
+                    		info->upload_rate = s.upload_rate;
+                    		info->total_size = s.total_done;
+
+							ret = SUCCESS;
+							info->progress = 100;			
+                			run_flag = 0;
+
+							DEBUG("sending finish done");
+						}
+                    }
+					else		//"check download"
+					{
+                    	strcpy(info->state, state(s.state));
+                    	info->file_size = s.total_wanted;
+                    	info->progress = s.progress_ppm / 10000;
+                    	info->download_rate = s.download_payload_rate;
+                    	info->upload_rate = s.upload_rate;
+                    	info->total_size = s.total_done;
+
+						if(s.total_done == s.total_wanted)
+						{
+							if(total_done_count ++ >= 30)
+							{
+								run_flag = 0;
+								DEBUG("download timeout finish ");
+							}
+						}
+                    	send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
+					}
 
 int start_torrent(char *torrent, char *save_path, char *file_name, uint64_t physical_offset) try
 {

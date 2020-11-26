@@ -54,6 +54,14 @@ OSWindow::OSWindow(QWidget *parent) :
                                "}");
     logo_label->setGeometry(30, 30, 164,47);
     logo_label->show();
+
+    QLabel *ver_label = new QLabel(this);
+    ver_label->setText("v2.0.0");
+    ver_label->setStyleSheet("color: #FFFFFF;"
+                             "font: 12pt '黑体';");
+    ver_label->setGeometry(210, 45, 164, 47);
+    ver_label->show();
+
     dialog_ui->hide();
 }
 

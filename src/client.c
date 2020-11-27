@@ -814,27 +814,47 @@ static int recv_down_torrent(struct client *cli)
 		if (ret == torrent->data_len)
 		{
 			uint64_t offset = 0;
+			struct torrent_task task = {0};
+
+			if (torrent->type == 0)
+			{
+				sprintf(task.file_name, "%s_系统盘_%d", current_group->desktop_group_name, torrent->dif_level);
+			}
+			else if (torrent->type == 1)
+			{
+				sprintf(task.file_name, "%s_数据盘_%d", current_group->desktop_group_name, torrent->dif_level);
+			}
+			else if (torrent->type == 2)
+			{
+             	if(torrent->operate_id == get_operate_qcow2(uuid, 0)) //共享盘已存在不再下载
+             	{    
+                 	DEBUG("share disk data found operated equal: %d", torrent->operate_id);
+					return SUCCESS;
+             	}   
+				else
+				{
+					strcpy(task.file_name, "共享盘");
+                    del_qcow2(dev_info.mini_disk->dev, uuid, 0);
+                    del_diff_qcow2(dev_info.mini_disk->dev, uuid);
+				}
+				
+			}
+
 			if (torrent->dif_level == 1)
 			{
 				if (current_group->diff_mode == 1) //增量模式
 				{
 					DEBUG("------------- diff mode 1 --------------");
-#if 0
-					offset = add_qcow2(dev_info.mini_disk->dev, torrent->uuid, torrent->dif_level,
-								(uint64_t)(torrent->file_size) + 1024 * 1024 * 4,  
-								torrent->real_size, torrent->sys_type, torrent->type, torrent->operate_id);
-#else
 					offset = add_qcow2(dev_info.mini_disk->dev, uuid, torrent->dif_level,
-									   (uint64_t)(torrent->real_size),
-									   torrent->real_size, torrent->sys_type, torrent->type, torrent->operate_id, INCRMENT_MODE);
-#endif
+									   (uint64_t)(torrent->real_size),torrent->real_size, torrent->sys_type, torrent->type, 
+										torrent->operate_id, INCRMENT_MODE);
 				}
 				else
 				{
 					DEBUG("---------- diff mode 0 --------------");
 					offset = add_qcow2(dev_info.mini_disk->dev, uuid, torrent->dif_level,
-									   (uint64_t)(torrent->file_size) + 1024 * 2,
-									   torrent->real_size, torrent->sys_type, torrent->type, torrent->operate_id, COVERAGE_MODE);
+									   (uint64_t)(torrent->file_size) + 1024 * 2, torrent->real_size, torrent->sys_type, 
+										torrent->type, torrent->operate_id, COVERAGE_MODE);
 				}
 			}
 			else
@@ -846,7 +866,6 @@ static int recv_down_torrent(struct client *cli)
 
 			if (offset != 0)
 			{
-				struct torrent_task task = {0};
 				memcpy(task.uuid, torrent->uuid, 36);
 				memcpy(task.group_uuid, torrent->group_uuid, 36);
 				memcpy(task.torrent_file, torrent_file, strlen(torrent_file));
@@ -854,20 +873,6 @@ static int recv_down_torrent(struct client *cli)
 				if (torrent->dif_level == 3)
 					torrent->dif_level = 2;
 				
-
-				if (torrent->type == 0)
-				{
-					sprintf(task.file_name, "%s_系统盘_%d", current_group->desktop_group_name, torrent->dif_level);
-				}
-				else if (torrent->type == 1)
-				{
-					sprintf(task.file_name, "%s_数据盘_%d", current_group->desktop_group_name, torrent->dif_level);
-				}
-				else if (torrent->type == 2)
-				{
-					strcpy(task.file_name, "共享盘");
-				}
-
 				task.diff = torrent->dif_level;
 				task.diff_mode = current_group->diff_mode + 1;
 				task.disk_type = torrent->type;
@@ -1290,7 +1295,7 @@ static int recv_get_diff_torrent(struct client *cli)
 	return SUCCESS;
 }
 
-int send_get_diff_torrent(struct client *cli, char *group_uuid, char *diff_uuid, int diff)
+int send_get_diff_torrent(struct client *cli, char *group_uuid, char *diff_uuid, int diff, int type)
 {
 	int ret;
 	if (cli->data_buf)
@@ -1303,6 +1308,7 @@ int send_get_diff_torrent(struct client *cli, char *group_uuid, char *diff_uuid,
 		cJSON_AddStringToObject(root, "desktop_group_uuid", group_uuid);
 		cJSON_AddStringToObject(root, "diff_disk_uuid", diff_uuid);
 		cJSON_AddNumberToObject(root, "diff_level", diff);
+		cJSON_AddNumberToObject(root, "diff_disk_type", type);
 
 		cli->data_buf = cJSON_Print(root);
 		cli->data_size = strlen(cli->data_buf);
@@ -1403,7 +1409,7 @@ static int recv_get_desktop_group_list(struct client *cli)
 								del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 0);
 								del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
 
-								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 0);
+								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 0, type->valueint);
 							}
 						}
 
@@ -1416,8 +1422,8 @@ static int recv_get_desktop_group_list(struct client *cli)
 								{
 									DEBUG("update qcow2 %s no find diff 1 update diff 1 and 2 ", uuid->valuestring);
 									del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
-									send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
-									send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
+									send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1, type->valueint);
+									send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2, type->valueint);
 									//if(desktop_group_name)
 									//	strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
 								}
@@ -1430,8 +1436,8 @@ static int recv_get_desktop_group_list(struct client *cli)
 										DEBUG("diff mode %d no equal %d update diff 1 and 2",
 											  get_diff_mode_qcow2(uuid->valuestring), diff_mode->valueint);
 										del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
-										send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
-										send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
+										send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1, type->valueint);
+										send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2, type->valueint);
 										//if(desktop_group_name)
 										//	strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
 										continue;
@@ -1451,7 +1457,7 @@ static int recv_get_desktop_group_list(struct client *cli)
 										{
 											DEBUG("update qcow2 %s no find 2 update diff only 1 ", uuid->valuestring);
 											del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
-											send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
+											send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1, type->valueint);
 
 											//	if(desktop_group_name)
 											//		strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
@@ -1474,7 +1480,7 @@ static int recv_get_desktop_group_list(struct client *cli)
 												DEBUG("update qcow2 %s download diff 3 for commit ", uuid->valuestring);
 												del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4);
 												del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5);
-												send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 3);
+												send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 3, type->valueint);
 
 												//if(desktop_group_name)
 												//	strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
@@ -1483,8 +1489,8 @@ static int recv_get_desktop_group_list(struct client *cli)
 											{
 												DEBUG("update qcow2 %s download diff 1 and 2 no commit ", uuid->valuestring);
 												del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
-												send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1);
-												send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
+												send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1, type->valueint);
+												send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2, type->valueint);
 												//if(desktop_group_name)
 												//	strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
 											}
@@ -1495,7 +1501,7 @@ static int recv_get_desktop_group_list(struct client *cli)
 											del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 3);
 											del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4);
 											del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5);
-											send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2);
+											send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2, type->valueint);
 
 											//if(desktop_group_name)
 											//	strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);

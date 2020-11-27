@@ -169,6 +169,10 @@ void print_qcow2(PedDevice *dev)
     uint32_t i;
 
 	init_qcow2(dev, 1);
+
+	if (!storeDrv.pStoreCfg) 
+		return -2;
+
     for (i = 0; i < storeDrv.pStoreCfg->qcowCount; i++)
     {
         PYZY_QCOW_ENTRY pQe = &storeDrv.pStoreCfg->entry[i];

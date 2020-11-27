@@ -7,6 +7,6 @@ void get_version(int *major, int *minor)
 //	*minor = 6;
 #else		//正式版本号
 	*major = 2;
-	*minor = 2;
+	*minor = 3;
 #endif
 }

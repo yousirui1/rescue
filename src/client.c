@@ -154,7 +154,7 @@ static int recv_heartbeat(struct client *cli)
 			if (!data)
 				return ERROR;
 
-			online = 2;
+			//online = 2;
 
 			cJSON *date_time = cJSON_GetObjectItem(data, "datetime");
 			DEBUG("data_time: %s", date_time->valuestring);
@@ -672,12 +672,12 @@ static int recv_desktop(struct client *cli)
 	int ret = ERROR;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char *)(buf));
-	//DEBUG("%s", buf);
 	update_desktop(buf);
 	if (root)
 	{
 		cJSON *desktop = cJSON_GetObjectItem(root, "desktop");
 		cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
+		//cJSON *torrent_count = cJSON_GetObjectItem(root, "torrent_count");
 		if (desktop)
 		{
 			cJSON *desktop_group_name = cJSON_GetObjectItem(desktop, "desktop_group_name");
@@ -1332,7 +1332,6 @@ static int recv_get_desktop_group_list(struct client *cli)
 	int ret;
 	char *buf = &cli->data_buf[read_packet_token(cli->packet)];
 	cJSON *root = cJSON_Parse((char *)(buf));
-	//DEBUG("%s", buf);
 
 	if (root)
 	{
@@ -1388,9 +1387,6 @@ static int recv_get_desktop_group_list(struct client *cli)
 						if (!max_diff || !uuid || !dif_level || !prefix || !real_size || !reserve_size || !type || !operate_id)
 							continue;
 
-						if (dif_level->valueint >= 3) //防止数据越界
-							continue;
-
 						if (type->valueint == 0)
 						{
 							memcpy(m_group[i].os_uuid, uuid->valuestring, 36);
@@ -1409,7 +1405,8 @@ static int recv_get_desktop_group_list(struct client *cli)
 								del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 0);
 								del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
 
-								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 0, type->valueint);
+								send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 0, 
+														type->valueint);
 							}
 						}
 
@@ -1422,10 +1419,10 @@ static int recv_get_desktop_group_list(struct client *cli)
 								{
 									DEBUG("update qcow2 %s no find diff 1 update diff 1 and 2 ", uuid->valuestring);
 									del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
-									send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1, type->valueint);
-									send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2, type->valueint);
-									//if(desktop_group_name)
-									//	strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
+									send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1, 
+															type->valueint);
+									send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2, 
+															type->valueint);
 								}
 								else //存在 1
 								{
@@ -1436,10 +1433,10 @@ static int recv_get_desktop_group_list(struct client *cli)
 										DEBUG("diff mode %d no equal %d update diff 1 and 2",
 											  get_diff_mode_qcow2(uuid->valuestring), diff_mode->valueint);
 										del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
-										send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1, type->valueint);
-										send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2, type->valueint);
-										//if(desktop_group_name)
-										//	strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
+										send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1, 
+																type->valueint);
+										send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2, 
+																type->valueint);
 										continue;
 									}
 
@@ -1457,18 +1454,16 @@ static int recv_get_desktop_group_list(struct client *cli)
 										{
 											DEBUG("update qcow2 %s no find 2 update diff only 1 ", uuid->valuestring);
 											del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
-											send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1, type->valueint);
+											send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1, 
+																	type->valueint);
 
-											//	if(desktop_group_name)
-											//		strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
 										}
 									}
 									else //存在 1 2
 									{
 										DEBUG("dif_level->valueint %d", dif_level->valueint);
 										DEBUG("operate_id->valueint %d", operate_id->valueint);
-										DEBUG("dif_level_next->valueint %d", dif_level_next->valueint);
-										DEBUG("operate_id_next->valueint %d", operate_id_next->valueint);
+										DEBUG("uuid->valuestring %s", uuid->valuestring);
 										if (operate_id->valueint != get_operate_qcow2(uuid->valuestring, 1)) //1 操作号不同
 										{
 											if (diff_mode->valueint && operate_id->valueint == get_operate_qcow2(uuid->valuestring, 1) + 1 &&
@@ -1480,19 +1475,18 @@ static int recv_get_desktop_group_list(struct client *cli)
 												DEBUG("update qcow2 %s download diff 3 for commit ", uuid->valuestring);
 												del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4);
 												del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5);
-												send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 3, type->valueint);
+												send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring,
+																		 3, type->valueint);
 
-												//if(desktop_group_name)
-												//	strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
 											}
 											else
 											{
 												DEBUG("update qcow2 %s download diff 1 and 2 no commit ", uuid->valuestring);
 												del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
-												send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1, type->valueint);
-												send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2, type->valueint);
-												//if(desktop_group_name)
-												//	strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
+												send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring,
+																		 1, type->valueint);
+												send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring,
+																		 2, type->valueint);
 											}
 										}
 										else if (operate_id_next->valueint != get_operate_qcow2(uuid->valuestring, 2)) //1 相同 2 不同
@@ -1501,10 +1495,9 @@ static int recv_get_desktop_group_list(struct client *cli)
 											del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 3);
 											del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 4);
 											del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 5);
-											send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2, type->valueint);
+											send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2, 
+																	type->valueint);
 
-											//if(desktop_group_name)
-											//	strcpy(m_desktop_group_name[current_group++], desktop_group_name->valuestring);
 										}
 										else
 										{
@@ -1946,6 +1939,23 @@ static int process_msg(struct client *cli)
 	return ret;
 }
 
+void clean_client(void *arg)
+{
+	DEBUG("11 -------------  clean_client ------------------- 11");
+	struct client *current = (struct client * )arg;
+	close_fd(server_s);
+
+	if (current->head_buf)
+		free(current->head_buf);
+	if (current->packet)
+		free(current->packet);
+
+	current->head_buf = NULL;
+	current->packet = NULL;
+
+	current->login_flag = 0;
+}
+
 static int tcp_loop(int sockfd)
 {
 	int ret;
@@ -1968,6 +1978,8 @@ static int tcp_loop(int sockfd)
 	char *tmp = &buf[HEAD_LEN];
 	struct client *current = &m_client;
 
+	pthread_cleanup_push(clean_client, (void *)current);
+
 	for (;;)
 	{
 		tv.tv_sec = 1;
@@ -1983,6 +1995,7 @@ static int tcp_loop(int sockfd)
 				break;
 			}
 		}
+		DEBUG("tcp loop ---------------------- !!!!!!!!!!!!!");
 		nready = ret;
 		/* pipe msg */
 		if (FD_ISSET(pipe_tcp[0], &reset))
@@ -2102,6 +2115,7 @@ static int tcp_loop(int sockfd)
 			}
 		}
 	}
+	pthread_cleanup_pop(0);
 	close_fd(sockfd);
 	if (current->head_buf)
 		free(current->head_buf);
@@ -2137,8 +2151,10 @@ int init_client()
 	}
 	memset(&m_client, 0, sizeof(struct client));
 	m_client.fd = server_s;
-	m_client.head_buf = malloc(HEAD_LEN + 1);
-	m_client.packet = malloc(PACKET_LEN + 1);
+	if(!m_client.head_buf)
+		m_client.head_buf = malloc(HEAD_LEN + 1);
+	if(!m_client.packet)
+		m_client.packet = malloc(PACKET_LEN + 1);
 	memset(m_client.packet, 0, PACKET_LEN);
 
 	ret = send_login(&m_client);
@@ -2156,7 +2172,7 @@ int init_client()
 		return ERROR;
 	}
 
-	online = 2;
+	//online = 2;
 	//desktop_list = listCreate();
 	return SUCCESS;
 }
@@ -2180,6 +2196,9 @@ void *thread_client(void *param)
 	}
 	sched.sched_priority = SCHED_PRIORITY_CLIENT;
 	ret = pthread_attr_setschedparam(&st_attr, &sched);
+
+	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);	//线程可以被取消掉
+	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);//立即退出
 
 	ret = init_client();
 	if (ret != SUCCESS)

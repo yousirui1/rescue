@@ -159,7 +159,7 @@ void clear_task()
 {
 	clear_queue(&task_queue);
 	stop_torrent();
-	clear_torrent();
+	//clear_torrent();
 }
 
 void *thread_task(void *param)

@@ -131,7 +131,7 @@ void PipeThread::process_pipe(unsigned char *msg, int len)
 void PipeThread::run()
 {
     int ret, maxfd = -1, nready;
-    unsigned char buf[DATA_SIZE] = {0};
+    unsigned char buf[1024 * 10] = {0};
     fd_set fds;
 
     FD_ZERO(&fds);
@@ -157,7 +157,9 @@ void PipeThread::run()
             ret = read(pipe_qt[0], (unsigned char *)buf, sizeof(buf));
             if(ret >= HEAD_LEN)
             {
+				DEBUG("qt process_pipe start");
                 process_pipe(buf, ret);
+				DEBUG("qt process_pipe end");
             }
             if(ret == 1 && buf[0] == 'S')
             {

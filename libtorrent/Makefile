@@ -37,7 +37,8 @@ libobj = libtorrent.so
 mainobj =
 #		  client_test.o session_view.o torrent_view.o print.o
 
-cppobj = client.o add_torrent_params.o     error_code.o               part_file.o               socket_type.o \
+# test client.o
+cppobj = add_torrent_params.o     error_code.o               part_file.o               socket_type.o \
 alert.o                  escape_string.o            path.o                    socks5_stream.o	\
 alert_manager.o          ffs.o                      pe_crypto.o               stack_allocator.o \
 announce_entry.o         file.o                     peer_class.o              stat_cache.o \

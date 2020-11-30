@@ -24,6 +24,7 @@ static void do_exit()
 
     pthread_join(pthread_event, &tret);
     DEBUG("pthread_exit %d event", (int *)tret);
+
 }
 
 static void sig_quit_listen(int e)
@@ -148,13 +149,14 @@ int main(int argc, char *argv[])
 	init_device();
 	init_config();
 
-	bt_client();
+	//bt_client();
 
 	ret = pthread_create(&pthread_event, NULL, thread_event, NULL);
 	if(0 != ret)
 	{
 		DIE("create  tcp thread ret: %d error: %s", ret, strerror(ret));
 	}
+
 	ret = pthread_create(&pthread_qt, NULL, thread_qt, NULL);
 	if(0 != ret)
 	{

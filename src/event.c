@@ -14,6 +14,8 @@ extern struct device_info dev_info;
 
 #define IFF_LOWER_UP    0x10000
 
+static int first = 1;
+
 
 static void process_event_msg(char *buf, int len)
 {
@@ -22,6 +24,8 @@ static void process_event_msg(char *buf, int len)
 		case CLIENT_CONNECT_PIPE:
 		{
 			void *tret = NULL;
+			//char s = 'S';
+			//write(pipe_tcp[1], &s, 1);
 			pthread_cancel(pthread_client);
 			pthread_join(pthread_client, &tret);
 			DEBUG("pthread_exit client ret:%d", (int *)tret);
@@ -31,6 +35,8 @@ static void process_event_msg(char *buf, int len)
 		case CLIENT_DISCONNECT_PIPE:
 		{
 			void *tret = NULL;
+			//char s = 'S';
+			//write(pipe_tcp[1], &s, 1);
 			pthread_cancel(pthread_client);
 			pthread_join(pthread_client, &tret);
 			DEBUG("pthread_exit client ret:%d", (int *)tret);
@@ -38,8 +44,11 @@ static void process_event_msg(char *buf, int len)
 		}
 		case PROGRESS_PIPE:
 		{
+			DEBUG("send PROGRESS_PIPE to server");
 			send_p2v_progress(&m_client, &buf[HEAD_LEN]);
+			DEBUG("send PROGRESS_PIPE to QT");
 			send_pipe(buf, PROGRESS_PIPE, len, PIPE_QT);
+			DEBUG("send PROGRESS_PIPE end");
 			break;
 		}
 		case REBOOT_PIPE:
@@ -105,7 +114,6 @@ static void process_qt_msg(char *buf, int len)
 		case REBOOT_PIPE:
 		{
 			DEBUG("qt send pipe reboot msg");
-
 			stop_torrent();
 			send_upload_log(&m_client);
 			client_disconnect();
@@ -203,6 +211,11 @@ void event_loop(int network_fd)
                 if(buf[0] == 'S')
                 {   
                     DEBUG("event thread pipe msg exit");
+					//write(pipe_tcp[1], buf, 1);
+					void *tret = NULL;
+					pthread_cancel(pthread_client);
+					pthread_join(pthread_client, &tret);
+		
 					write(pipe_qt[1], buf, 1);
                     break;
                 }    

@@ -435,6 +435,7 @@ add_desktop:
 }
 
 
+#if 0
 void init_test()
 {
 	
@@ -455,3 +456,4 @@ void init_test()
     sync();
     reboot(RB_AUTOBOOT);    
 }
+#endif

@@ -26,8 +26,6 @@ char *p[20];
      //                 m_mac[3], m_mac[4], m_mac[5]);
 
 
-
-
 	pid_t pid = fork();
 	if(pid < 0)
 	{

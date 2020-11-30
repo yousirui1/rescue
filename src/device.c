@@ -556,6 +556,29 @@ int install_programe()
 
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #if 0
 	//if(SUCCESS == tftp_get(server->ip, "vmlinuz-5.2.8-lfs-9.0", "/boot/linux/vmlinuz-5.2.8-lfs-9.0", buf , 1))
 	{

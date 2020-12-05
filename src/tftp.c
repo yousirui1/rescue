@@ -1,5 +1,6 @@
 #include "base.h"
-#include "packet.h"
+
+//#include "packet.h"
 #include "tftp.h"
 
 static time_t last_time;
@@ -31,7 +32,7 @@ static void tftp_progress_update(uint64_t file_size, uint64_t download_size, cha
 		}
 		DEBUG("tftp info->progress %d", info->progress);
 		last_time = current_time;
-		send_pipe(pipe_buf, PROGRESS_PIPE, sizeof(progress_info), PIPE_QT);
+		send_pipe(pipe_buf, PROGRESS_PIPE, sizeof(progress_info), PIPE_UI);
 	}
 }
 static void tftp_progress_init(void)
@@ -60,50 +61,54 @@ static int tftp_blksize_check(const char *blksize_str, int maxsize)
 }
 
 static char *tftp_get_option(const char *option, char *buf, int len)
-{   
-    int opt_val = 0;
-    int opt_found = 0;
-    int k;
-    
-    /* buf points to:
-     * "opt_name<NUL>opt_val<NUL>opt_name2<NUL>opt_val2<NUL>..." */
-    
-    while (len > 0) {
-        /* Make sure options are terminated correctly */
-        for (k = 0; k < len; k++) {
-            if (buf[k] == '\0') {
-                goto nul_found;
-            }
-        }
-        return NULL;
- nul_found:
-        if (opt_val == 0) { /* it's "name" part */
-            if (strcasecmp(buf, option) == 0) {
-                opt_found = 1;
-            }
-        } else if (opt_found) {
-            return buf;
-        }
-        
-        k++;
-        buf += k;
-        len -= k;
-        opt_val ^= 1;
-    }
-    
-    return NULL;
+{
+	int opt_val = 0;
+	int opt_found = 0;
+	int k;
+
+	/* buf options to:
+	 * "opt_name<NUL>opt_val<NUL>opt_name2<NUL>opt_val2<NUL>..." */
+
+	while(len > 0)
+	{
+		/* Make sure options are terminated correctly */
+		for(k = 0; k < len; k++)
+		{
+			if(buf[k] == '\0')
+			{
+				goto nul_found;
+			}
+		}
+		return NULL;
+nul_found:
+		if(opt_val == 0)	//it's "name" part
+		{
+			if(strcasecmp(buf, option) == 0)
+			{
+				opt_found = 1;
+			}	
+		}
+		else if(opt_found)
+		{
+			return buf;
+		}
+		k++;
+		buf += k;
+		len -= k;
+		opt_val ^= 1;	
+	}
+	return NULL;
 }
 
 int safe_poll(struct pollfd *ufds, nfds_t nfds, int timeout)
-{   
+{
     for(;;)
-    {   
+    {
         int n = poll(ufds, nfds, timeout);
-        if(n >= 0) 
-		{
-			DEBUG("safe_poll n %d", n);
+        if(n >= 0)
+        {
             return n;
-		}
+        }
         /* Make sure we inch towards completion */
         if(timeout > 0)
             timeout--;
@@ -146,7 +151,7 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
 
     int want_transfer_size = 1;
     uint64_t file_size = 0;
-	uint64_t download_size = 0;
+    uint64_t download_size = 0;
     int first = 1;
 
     open_mode = O_WRONLY | O_TRUNC | O_CREAT;
@@ -220,20 +225,23 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
         goto send_pkt;
 
     /* Need to add option to pkt */
-    if ((&xbuf[io_bufsize - 1] - cp) < sizeof("blksize NNNNN tsize ") + sizeof(off_t)*3) {
+    if ((&xbuf[io_bufsize - 1] - cp) < sizeof("blksize NNNNN tsize ") + sizeof(off_t)*3) 
+	{
         DEBUG("remote filename is too long");
         goto ret;
     }
     expect_OACK = 1;
 
  add_blksize_opt:
-        if (blksize != TFTP_BLKSIZE_DEFAULT) {
+        if (blksize != TFTP_BLKSIZE_DEFAULT) 
+		{
             /* add "blksize", <nul>, blksize, <nul> */
             strcpy(cp, "blksize");
             cp += sizeof("blksize");
             cp += snprintf(cp, 6, "%d", blksize) + 1;
         }
-        if (want_transfer_size) {
+		if(want_transfer_size)
+		{
             /* add "tsize", <nul>, size, <nul> (see RFC2349) */
             /* if tftp and downloading, we send "0" (since we opened local_fd with O_TRUNC)
              * and this makes server to send "tsize" option with the size */
@@ -251,7 +259,7 @@ int tftp_get(char *server_ip, char *remote_file, char *local_file, char *pipe_bu
             file_size = st.st_size;
             if (remote_file && st.st_size)
                 tftp_progress_init();
-        }
+		}
         /* First packet is built, so skip packet generation */
         goto send_pkt;
 

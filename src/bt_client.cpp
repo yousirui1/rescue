@@ -13,9 +13,9 @@
 
 
 time_t last_time;
-static progress_info *info = NULL;
-static char pipe_buf[HEAD_LEN + sizeof(progress_info) + 1];
 static int run_flag = 0;
+static char pipe_buf[HEAD_LEN + sizeof(progress_info) + 1]; 
+static progress_info *info = (progress_info *)&pipe_buf[HEAD_LEN];
 
 // return the name of a torrent status enum
 char const* state(lt::torrent_status::state_t s)
@@ -59,23 +59,25 @@ std::string add_suffix_float(double val, char const* suffix)
 void stop_torrent()
 {
 	run_flag = 0;
+	info->progress = 0;
 	DEBUG("recv msg stop bt download task");
 }
 
 int start_torrent(char *torrent, char *save_path, char *file_name, int diff_mode, uint64_t physical_offset) try
 {
-	int ret = 1;
-	info = (progress_info *)&pipe_buf[HEAD_LEN];
+	int ret = ERROR;
+	
 	memset(info, 0, sizeof(progress_info));
 	info->type = 0x00;
 	*(int *)&(info->storage[0]) = diff_mode;
-	if(file_name)
-		strcpy(info->file_name, file_name);
+			
 	sscanf(torrent, "/root/%s", info->image_name);
+    if(file_name)
+        strcpy(info->file_name, file_name);	
 
     lt::settings_pack pack;
 
-	DEBUG("bt torrent %s", info->image_name);
+	DEBUG("torrent %s", torrent);
 
  	pack.set_int(lt::settings_pack::alert_mask
                 , lt::alert_category::error
@@ -129,6 +131,7 @@ int start_torrent(char *torrent, char *save_path, char *file_name, int diff_mode
 			{
 				DEBUG("download finish done");
 				ret = SUCCESS;
+				info->progress = 100;
 				run_flag = 0;
 			}
 			if(lt::alert_cast<lt::torrent_error_alert>(a))
@@ -153,14 +156,24 @@ int start_torrent(char *torrent, char *save_path, char *file_name, int diff_mode
                     	state(s.state), s.download_payload_rate / 1000, s.total_done / 1000, s.upload_rate/1000, 
 						s.total_upload / 1000, s.progress_ppm / 10000);
 
-					strcpy(info->state, state(s.state));
-					info->file_size = s.total_wanted;
-					info->progress = s.progress_ppm / 10000;
-					info->download_rate = s.download_payload_rate;
-					info->upload_rate = s.upload_rate;
-					info->total_size = s.total_done;
-					send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
+
+                    strcpy(info->state, state(s.state));
+                    info->file_size = s.total_wanted;
+                    info->progress = s.progress_ppm / 10000;
+                    info->download_rate = s.download_payload_rate;
+                    info->upload_rate = s.upload_rate;
+                    info->total_size = s.total_done;
+                    send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
+                    last_time = current_time;
+
 					last_time = current_time;
+					if(s.total_done == s.total_wanted)
+					{
+						DEBUG("download finish done");
+						info->progress = 100;
+						ret = SUCCESS;
+						run_flag = 0;
+					}
 				}
 			}	
 		}
@@ -169,10 +182,10 @@ int start_torrent(char *torrent, char *save_path, char *file_name, int diff_mode
 	 	 * state output for the torrent */
 		ses.post_torrent_updates();
 	}
+
 	strcpy(info->state, "finished");
 	send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
 	ses.abort();
-	DEBUG("bt finished download %s", file_name);
 	return ret;
 }
 catch(std::exception &e)

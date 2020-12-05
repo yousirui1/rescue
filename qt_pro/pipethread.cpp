@@ -112,7 +112,7 @@ void PipeThread::process_pipe(unsigned char *msg, int len)
             struct progress_info *info = (struct progress_info *)tmp;
             if(!global->download_flag)  //上传
             {
-                memcpy(info->filename, global->template_i.template_name, sizeof(global->template_i.template_name));
+                memcpy(info->file_name, global->template_i.template_name, sizeof(global->template_i.template_name));
             }
             global->setProgressValue(info);
             break;

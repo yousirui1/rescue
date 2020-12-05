@@ -1,15 +1,18 @@
 #ifndef __GLOBAL_H__
 #define __GLOBAL_H__
 
+#include "queue.h"
+#include "device.h"
+
 /* main.c */
-extern int pipe_event[2];
-extern int pipe_tcp[2];
-extern int pipe_udp[2];
-extern int pipe_qt[2];
 extern time_t current_time;
 extern struct config conf;
 extern char config_file[128];
-extern int online;
+extern int pipe_event[2];
+extern int pipe_tcp[2];
+extern int pipe_ui[2];
+extern int pipe_task[2];
+struct sock_udp create_udp(char *ip, int port, int mreq_flag);
 
 void *thread_event(void *param);
 
@@ -20,7 +23,7 @@ extern struct client m_client;
 /* task.c */
 void *thread_task(void *param);
 void clear_task();
-
+extern QUEUE task_queue;
 /* shell.c */
 extern char mount_sh[];
 extern char mount_mmc_sh[];
@@ -30,9 +33,11 @@ extern char install_sh_1[];
 extern char upgrad_sh[];
 extern const char err_msg_desc[][128] ;
 
-/* window.c */
-void *thread_qt(void *param);
+/* ui.c */
+void *thread_ui(void *param);
 
+/* device.c */
+extern struct device_info dev_info;
 
 /* log.c */
 void log_msg(const char *fmt, ...);

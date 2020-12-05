@@ -1,6 +1,6 @@
 #include "base.h"
 
-void *thread_qt(void *param)
+void *thread_ui(void *param)
 {
     int ret;
     pthread_attr_t st_attr;
@@ -19,7 +19,7 @@ void *thread_qt(void *param)
     sched.sched_priority = SCHED_PRIORITY_EVENT;
     ret = pthread_attr_setschedparam(&st_attr, &sched);
 
-   	set_pipe(pipe_qt);
+   	set_pipe(pipe_ui);
 	set_config(&conf);
     create_window(0);
     return (void *)0;

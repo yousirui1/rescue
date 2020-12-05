@@ -149,6 +149,7 @@ struct progress_info{
     unsigned long long upload_rate;
     unsigned long long total_size;      //下载总大小
     unsigned long long file_size;
+	unsigned long long download_size;	// 已下载大小
     
     int type;
     

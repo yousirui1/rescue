@@ -136,11 +136,13 @@ void Uploadwindow::showEvent(QShowEvent *e)
 
 void Uploadwindow::keyPressEvent(QKeyEvent *event)
 {
+#if 0
     if (event->key() == Qt::Key_F2)
     {
        dialog_ui->setType(DIALOG_NET);
        dialog_ui->show();
     }
+#endif
 
     if (event->key() == Qt::Key_F8)
     {
@@ -234,6 +236,7 @@ void Uploadwindow::Reboot()
 
 void Uploadwindow::setProgressValue(struct progress_info *info)
 {
+    DEBUG("info->progress %d", info->progress);
     if(info->type == 2) //安装或更新
     {
          ui->i_status_label->show();
@@ -258,7 +261,7 @@ void Uploadwindow::setProgressValue(struct progress_info *info)
              }
          }
         if(info->progress != 100)
-            state += QString(info->filename);
+            state += QString(info->file_name);
 
         progress->setValue((double)info->progress);
         ui->i_status_label->setText(state);
@@ -277,7 +280,7 @@ void Uploadwindow::setProgressValue(struct progress_info *info)
            QTimer::singleShot(5000, this, SLOT(Reboot()));
         }
         progress->setValue((double)info->progress);
-        state += QString(info->filename);
+        state += QString(info->file_name);
         ui->i_status_label->setText(state);
     }
     else
@@ -381,7 +384,7 @@ void Uploadwindow::setProgressValue(struct progress_info *info)
             state = tr("上传模板中: ");
         }
         progress->setValue((double)info->progress);
-        state += QString(info->filename);
+        state += QString(info->file_name);
         ui->i_status_label->setText(state);
     }
 }

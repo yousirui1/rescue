@@ -80,21 +80,22 @@ struct hwinfo
     unsigned int down_desktop;
 };
 
-
 struct progress_info{
-    char filename[36];
     char state[12];
     unsigned int long progress;
     unsigned long long download_rate;
     unsigned long long upload_rate;
     unsigned long long total_size;      //下载总大小
     unsigned long long file_size;
-
+    unsigned long long download_size;
+    
     int type;
-
+    
+    char file_name[128];
     char image_name[128];
     char storage[128];
 };
+
 
 
 struct template_info{

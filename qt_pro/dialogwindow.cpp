@@ -271,7 +271,6 @@ void DialogWindow::on_confirm_btn_clicked()
         return;
     }
 
-
     Global *global = Global::getGlobal();
 
     QByteArray ba_ip = ui->ip_edit->text().toLatin1();
@@ -281,7 +280,6 @@ void DialogWindow::on_confirm_btn_clicked()
     QByteArray ba_nds2 = ui->dns2_edit->text().toLatin1();
     QByteArray ba_server_ip = ui->server_ip_edit->text().toLatin1();
 
-    //
     struct config *conf = &(global->conf);
 
     conf->netcard.is_dhcp = dhcp_flag;
@@ -305,7 +303,6 @@ void DialogWindow::on_confirm_btn_clicked()
     memcpy(conf->server.ip, ba_server_ip.data(), ba_server_ip.length());
 
     memset(conf->terminal.name, 0, sizeof(conf->terminal.name));
-
 
     char *buf = (char *)malloc(sizeof(struct config) + HEAD_LEN +1);
 
@@ -373,7 +370,7 @@ void DialogWindow::slots_dhcpable()
 
 void DialogWindow::on_error_confirm_btn_clicked()
 {
-    Global *global = Global::getGlobal();
-    global->setDisplay(0);
+    //Global *global = Global::getGlobal();
+    //global->setDisplay(0);
     this->hide();
 }

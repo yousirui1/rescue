@@ -1,17 +1,20 @@
 #include "base.h"
-#include "config.h"
+#include "configs.h"
 #include "cJSON.h"
 #include <sys/reboot.h>
+
+struct config conf = {0};
+char config_file[128] = "config.ini";
 
 
 int send_config_pipe()
 {
 	char pipe_buf[HEAD_LEN + sizeof(struct config)] = {0};	
 	memcpy(&pipe_buf[HEAD_LEN], &conf, sizeof(struct config));
-	return send_pipe(pipe_buf, UPDATE_CONFIG_PIPE, sizeof(struct config), PIPE_QT);
+	return send_pipe(pipe_buf, UPDATE_CONFIG_PIPE, sizeof(struct config), PIPE_UI);
 }
 
-void init_config()
+void init_configs()
 {
     char buf[128] = {0};
 	int flag = 0;

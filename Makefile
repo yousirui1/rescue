@@ -35,8 +35,8 @@ dllobj =
 
 libobj = 
 
-mainobj = main.o tools.o log.o inirw.o device.o qcow2.o linux.o gpt.o StoreConfig.o event.o socket.o cJSON.o client.o window.o\
-		  queue.o task.o shell.o config.o error.o  version.o tftp.o arp.o adlist.o
+mainobj = main.o tools.o log.o inirw.o device.o qcow2.o linux.o gpt.o StoreConfig.o event.o socket.o cJSON.o client.o ui.o \
+		  queue.o task.o shell.o configs.o error.o  version.o tftp.o
 
 cppobj = bt_client.o
 

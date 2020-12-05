@@ -1,54 +1,37 @@
-#include "base.h"
-#include "client.h"
-#include "device.h"
 #include <linux/netlink.h>
 #include <arpa/inet.h>
 #include <linux/rtnetlink.h>
 #include <sys/reboot.h>
 
-pthread_t pthread_client;
-
-extern struct client m_client;
-
-extern struct device_info dev_info;
+#include "base.h"
+#include "socket.h"
+#include "client.h"
+#include "device.h"
 
 #define IFF_LOWER_UP    0x10000
 
-static int first = 1;
+extern struct device_info dev_info;
 
+static pthread_t pthread_client;
+static time_t last_time;
 
-static void process_event_msg(char *buf, int len)
+static void process_event_msg(char *buf, int length)
 {
 	switch(read_msg_order(buf))
 	{
 		case CLIENT_CONNECT_PIPE:
 		{
 			void *tret = NULL;
-			//char s = 'S';
-			//write(pipe_tcp[1], &s, 1);
 			pthread_cancel(pthread_client);
 			pthread_join(pthread_client, &tret);
 			DEBUG("pthread_exit client ret:%d", (int *)tret);
 			pthread_create(&pthread_client, NULL, thread_client, NULL);
 			break;
 		}
-		case CLIENT_DISCONNECT_PIPE:
-		{
-			void *tret = NULL;
-			//char s = 'S';
-			//write(pipe_tcp[1], &s, 1);
-			pthread_cancel(pthread_client);
-			pthread_join(pthread_client, &tret);
-			DEBUG("pthread_exit client ret:%d", (int *)tret);
-			break;
-		}
 		case PROGRESS_PIPE:
 		{
-			DEBUG("send PROGRESS_PIPE to server");
-			send_p2v_progress(&m_client, &buf[HEAD_LEN]);
-			DEBUG("send PROGRESS_PIPE to QT");
-			send_pipe(buf, PROGRESS_PIPE, len, PIPE_QT);
-			DEBUG("send PROGRESS_PIPE end");
+			send_progress(&m_client, &buf[HEAD_LEN]);
+			send_pipe(buf, PROGRESS_PIPE, length, PIPE_UI);
 			break;
 		}
 		case REBOOT_PIPE:
@@ -56,7 +39,6 @@ static void process_event_msg(char *buf, int len)
 			DEBUG("server send msg reboot");
 			stop_torrent();
 			send_upload_log(&m_client);
-			client_disconnect();
 			sync();
 			reboot(RB_AUTOBOOT);				
 			break;
@@ -66,7 +48,6 @@ static void process_event_msg(char *buf, int len)
 			DEBUG("server send msg shutdown");
 			stop_torrent();
 			send_upload_log(&m_client);
-			client_disconnect();
 			sync();
 			reboot(RB_POWER_OFF);				
 			break;
@@ -74,7 +55,7 @@ static void process_event_msg(char *buf, int len)
 	}	
 }
 
-static void process_qt_msg(char *buf, int len)
+static void process_ui_msg(char *buf, int length)
 {
 	int ret;
 	
@@ -88,16 +69,15 @@ static void process_qt_msg(char *buf, int len)
 		case INIT_PIPE:
 		{
 			init_qcow2(dev_info.mini_disk->dev, 0);
-			client_disconnect();
+			client_reconnect();
 			remove("/boot/conf/config.ini");
 			sync();
 			reboot(RB_AUTOBOOT);				
 		}
 		case UPDATE_CONFIG_PIPE:
 		{
-			update_config(buf, len);		
-			client_disconnect();
-			client_connect();
+			update_config(buf, length);		
+			client_reconnect();
 			break;
 		}
 		case P2V_OS_PIPE:
@@ -116,7 +96,7 @@ static void process_qt_msg(char *buf, int len)
 			DEBUG("qt send pipe reboot msg");
 			stop_torrent();
 			send_upload_log(&m_client);
-			client_disconnect();
+			client_reconnect();
 			sync();
 			reboot(RB_AUTOBOOT);				
 		}
@@ -125,38 +105,35 @@ static void process_qt_msg(char *buf, int len)
 	}
 }
 
-void event_loop(int network_fd)
+void event_loop()
 {
-    int sockfd = 0, maxfd = 0;
-    int i, nready, ret;
-    struct timeval tv;
-    fd_set reset, allset;
-    FD_ZERO(&allset);
-
-    FD_SET(pipe_tcp[1], &allset);
-    //FD_SET(pipe_udp[1], &allset);
-    FD_SET(pipe_qt[1], &allset);
-    FD_SET(pipe_event[0], &allset);
-    FD_SET(network_fd, &allset);
-
-    maxfd = maxfd > pipe_tcp[1] ? maxfd : pipe_tcp[1];
-    //maxfd = maxfd > pipe_udp[1] ? maxfd : pipe_udp[1];
-    maxfd = maxfd > pipe_qt[1] ? maxfd : pipe_qt[1];
-    maxfd = maxfd > pipe_event[0] ? maxfd : pipe_event[0];
-    maxfd = maxfd > pipe_event[0] ? maxfd : pipe_event[0];
-    maxfd = maxfd > network_fd ? maxfd : network_fd;
-
+	int netfd, maxfd = -1;
+	int i, nready, ret;
     char buf[DATA_SIZE] = {0};
-    char *tmp = &buf[HEAD_LEN];
-    int value = 0;
-    time_t last_time = current_time;
 
-    struct sockaddr_nl addr;
-    struct nlmsghdr *nh;
-    struct ifinfomsg *ifinfo;
-    struct rtattr *attr;
-    int net_stat = 0;
-    int len = 1024;
+	struct timeval tv;
+	tv.tv_sec = 1;
+	tv.tv_usec = 0;	
+	
+	fd_set reset, allset;
+	FD_ZERO(&allset);
+
+	netfd = get_netcard_state();
+	
+	FD_SET(pipe_tcp[1], &allset);
+	FD_SET(pipe_task[1], &allset);
+	FD_SET(pipe_ui[1], &allset);
+	FD_SET(pipe_event[0], &allset);
+	FD_SET(netfd, &allset);	
+
+	maxfd = maxfd > pipe_tcp[1] ? maxfd : pipe_tcp[1];
+	maxfd = maxfd > pipe_task[1] ? maxfd : pipe_task[1];
+	maxfd = maxfd > pipe_ui[1] ? maxfd : pipe_ui[1];
+	maxfd = maxfd > pipe_event[0] ? maxfd : pipe_event[0];
+	maxfd = maxfd > netfd ? maxfd : netfd;
+
+	last_time = current_time;
+    pthread_create(&pthread_client, NULL, thread_client, NULL);
 
     for(;;)
     {
@@ -181,21 +158,11 @@ void event_loop(int network_fd)
 		if(current_time - last_time >= TIME_OUT)
 		{
 			ret = send_heartbeat(&m_client);
-			if(ret != SUCCESS)
+			if(ret != SUCCESS || m_client.online <= 0)
 			{
-				client_disconnect();
-				client_connect();
+				client_reconnect();					
 			}
-
-			if(online <= 0)
-			{
-				client_disconnect();
-				client_connect();
-			}
-			else
-			{
-				online --;		//3个包
-			}
+			m_client.online --;		//3个包
 			last_time = current_time;
 		}
 	
@@ -210,32 +177,37 @@ void event_loop(int network_fd)
             {   
                 if(buf[0] == 'S')
                 {   
-                    DEBUG("event thread pipe msg exit");
-					//write(pipe_tcp[1], buf, 1);
 					void *tret = NULL;
 					pthread_cancel(pthread_client);
 					pthread_join(pthread_client, &tret);
-		
-					write(pipe_qt[1], buf, 1);
+					
+					write(pipe_ui[1], buf, 1); 
+                	write(pipe_task[1], buf, 1);
+                    DEBUG("event thread pipe msg exit");
                     break;
                 }    
             }   
             if(--nready <= 0)
                 continue;
 		}	
-		if(FD_ISSET(pipe_qt[1], &reset))
+		if(FD_ISSET(pipe_ui[1], &reset))
 		{
-			ret = read(pipe_qt[1], (void *)buf, sizeof(buf));
+			ret = read(pipe_ui[1], (void *)buf, sizeof(buf));
 			if(ret >= HEAD_LEN)
 			{
-				process_qt_msg(buf, ret);
+				process_ui_msg(buf, ret);
 			}
 			if(--nready <= 0)
 				continue;			
 		}
-		if(FD_ISSET(network_fd, &reset))
+		if(FD_ISSET(netfd, &reset))
 		{
-			ret = read(network_fd, (void *)buf, sizeof(buf));
+			int len = 1024;
+		    struct nlmsghdr *nh;
+    		struct ifinfomsg *ifinfo;
+    		struct rtattr *attr;
+
+			ret = read(netfd, (void *)buf, sizeof(buf));
 			for(nh = (struct nlmsghdr *)buf; NLMSG_OK(nh, ret); nh = NLMSG_NEXT(nh,ret))
 			{
 				if(nh->nlmsg_type == NLMSG_DONE) 
@@ -250,12 +222,11 @@ void event_loop(int network_fd)
 						(ifinfo->ifi_flags & IFF_LOWER_UP) ? "up" : "down" );
 				if(ifinfo->ifi_flags & IFF_LOWER_UP)		//UP
 				{
-					client_connect();	
+					client_reconnect();	
 				}
 				else										//down
 				{
-					client_disconnect();
-					send_pipe(buf, CLIENT_DOWN_PIPE, 0, PIPE_QT);
+					send_pipe(buf, CLIENT_DOWN_PIPE, 0, PIPE_UI);
 				}
 				attr = (struct rtattr*)(((char*)nh) + NLMSG_SPACE(sizeof(*ifinfo)));
 				for(; RTA_OK(attr, len); attr = RTA_NEXT(attr, len))
@@ -271,7 +242,7 @@ void event_loop(int network_fd)
                 continue;
 		}
 	}
-	close_fd(network_fd);
+	close_fd(netfd);
 }
 
 void *thread_event(void *param)
@@ -293,6 +264,6 @@ void *thread_event(void *param)
     sched.sched_priority = SCHED_PRIORITY_EVENT;
     ret = pthread_attr_setschedparam(&st_attr, &sched);
 
-    event_loop(get_netcard_state());
+    event_loop();
     return (void *)ret;
 }

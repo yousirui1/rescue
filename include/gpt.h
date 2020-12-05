@@ -1,8 +1,6 @@
 #ifndef BLOCK_GPT
 #define BLOCK_GPT
 
-
-
 #ifndef FALSE
 #define FALSE (0)
 #endif
@@ -13,9 +11,7 @@
 typedef unsigned short      CHAR16;
 typedef char                CHARN;
 
-
 #define STR(x) x
-
 
 #define copy_guid(destguid, srcguid) (memcpy(destguid, srcguid, 16))
 #define guids_are_equal(guid1, guid2) (memcmp(guid1, guid2, 16) == 0)
@@ -114,7 +110,5 @@ int def_write_sector(void* hd, uint64_t lba, uint8_t* buffer);
 int read_mbr(DiskDriver* pdd);
 int read_gpt(DiskDriver* pdd);
 int scan_yzy_gpt(DiskDriver* pdd);
-
-
 
 #endif

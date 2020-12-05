@@ -1,0 +1,30 @@
+cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
+In file included from ./include/global.h:5:0,
+                 from ./include/base.h:39,
+                 from ./src/tftp.c:1:
+./include/device.h:86:1: warning: useless storage class specifier in empty declaration
+ };
+ ^
+In file included from ./src/tftp.c:1:0:
+./src/tftp.c: In function ‘tftp_progress_update’:
+./include/base.h:46:21: warning: format ‘%d’ expects argument of type ‘int’, but argument 3 has type ‘long unsigned int’ [-Wformat=]
+         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
+                     ^
+./src/tftp.c:33:3: note: in expansion of macro ‘DEBUG’
+   DEBUG("tftp info->progress %d", info->progress);
+   ^
+./src/tftp.c:35:61: error: ‘PIPE_QT’ undeclared (first use in this function)
+   send_pipe(pipe_buf, PROGRESS_PIPE, sizeof(progress_info), PIPE_QT);
+                                                             ^
+./src/tftp.c:35:61: note: each undeclared identifier is reported only once for each function it appears in
+./src/tftp.c: In function ‘tftp_get’:
+./src/tftp.c:256:31: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 3 has type ‘long int’ [-Wformat=]
+             cp += sprintf(cp, "%llu", (off_t)st.st_size) + 1;
+                               ^
+./src/tftp.c:361:31: warning: unused variable ‘errcode_str’ [-Wunused-variable]
+             static const char errcode_str[] =
+                               ^
+./src/tftp.c:235:2: warning: label ‘add_blksize_opt’ defined but not used [-Wunused-label]
+  add_blksize_opt:
+  ^
+make: *** [tftp.o] Error 1

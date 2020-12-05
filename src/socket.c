@@ -1,6 +1,12 @@
 #include "base.h"
-#include "packet.h"
+#include "socket.h"
 #include "client.h"
+
+/* pipe */
+int pipe_event[2] = {-1};
+int pipe_tcp[2] = {-1};
+int pipe_ui[2] = {-1};
+int pipe_task[2] = {-1};
 
 /* packet msg */
 unsigned short read_packet_order(unsigned char *buf)
@@ -49,32 +55,8 @@ void set_request_head(char *buf, char encrypt_flag, short cmd, int data_size)
     head->data_size = data_size;
 }
 
-/* buf packet 
- * cmd  1000
- * data_type ox00:二进制数据 0x01:json 0x02:protobuf
- */
-void set_packet_head(char *buf, int cmd, int data_size, char data_type, int req_flag)
-{
-    yzy_packet *packet = (yzy_packet *)buf;
-    packet->version_chief = 1;
-    packet->version_sub = 0;
-    packet->service_code = cmd;
-    packet->request_code = 0;
-    packet->dataSize = data_size;
-    packet->dataType = data_type;
-    packet->encoding = 0x00;
-	if(conf.install_flag)
-    	packet->clientType = 0x02;
-	else
-    	packet->clientType = 0x05;
-	
-    if(req_flag)
-        packet->reqOrRes = 0x02;
-    else
-        packet->reqOrRes = 0x01;
-    packet->supplementary = 0x00;
-}    
-
+   
+#if 0
 int send_request(struct client *cli)
 {
     int ret = ERROR;
@@ -85,22 +67,8 @@ int send_request(struct client *cli)
         ret = send_msg(cli->fd, cli->data_buf, cli->data_size);
     return ret;
 }
+#endif
 
-int send_packet(struct client *cli)
-{
-    int ret;
-    if (!cli || !cli->fd)
-        return ERROR;
-
-    ret = send_msg(cli->fd, cli->packet, PACKET_LEN);
-
-    if(cli->token && cli->token_size < DATA_SIZE && cli->token_size > 0)
-        ret = send_msg(cli->fd, cli->token, cli->token_size);
-
-    if(cli->data_buf && cli->data_size > 0)
-        ret = send_msg(cli->fd, cli->data_buf, cli->data_size);
-    return ret;
-}
 
 /* 发送数据 */
 int send_msg(const int fd, const char *buf, const int len)
@@ -172,14 +140,11 @@ int send_pipe(char *buf, short cmd, int size, int type)
     set_request_head(buf, 0x0, cmd, size);
     switch(type)
     {    
-        case PIPE_QT:
-            ret = write(pipe_qt[1], buf, size + HEAD_LEN);
+        case PIPE_UI:
+            ret = write(pipe_ui[1], buf, size + HEAD_LEN);
             break;
         case PIPE_TCP:
             ret = write(pipe_tcp[1], buf, size + HEAD_LEN);
-            break;
-        case PIPE_UDP:
-            ret = write(pipe_udp[1], buf, size + HEAD_LEN);
             break;
 		case PIPE_EVENT:
             ret = write(pipe_event[1], buf, size + HEAD_LEN);
@@ -197,12 +162,58 @@ int set_network(const char *ip, const char *netmask)
 	exec_cmd(cmd, result);
 }
 
-#if 0
-int create_udp()
+/* --------- pipe ----------- */
+int init_pipe()
 {
+    /* create pipe to give main thread infomation */
+    if(socketpair(AF_UNIX, SOCK_SEQPACKET, 0, pipe_ui) < 0)
+    {   
+        DIE("create ui pipe error: %s", strerror(errno));
+    }   
 
+    fcntl(pipe_ui[0], F_SETFL, O_NONBLOCK);
+    fcntl(pipe_ui[1], F_SETFL, O_NONBLOCK);
+
+    /* create pipe to give main thread infomation */
+    if(socketpair(AF_UNIX, SOCK_SEQPACKET, 0, pipe_tcp) < 0)
+    {   
+        DIE("create tcp pipe error: %s", strerror(errno));
+    }   
+
+    fcntl(pipe_tcp[0], F_SETFL, O_NONBLOCK);
+    fcntl(pipe_tcp[1], F_SETFL, O_NONBLOCK);
+
+    /* create pipe to give main thread infomation */
+    if(socketpair(AF_UNIX, SOCK_SEQPACKET, 0, pipe_event) < 0)
+    {   
+        DIE("create event pipe error: %s", strerror(errno));
+    }   
+
+    fcntl(pipe_event[0], F_SETFL, O_NONBLOCK);
+    fcntl(pipe_event[1], F_SETFL, O_NONBLOCK);
+
+    /* create pipe to give main thread infomation */
+    if(socketpair(AF_UNIX, SOCK_SEQPACKET, 0, pipe_task) < 0)
+    {   
+       	DIE("create task pipe error: %s", strerror(errno));
+    }   
+    fcntl(pipe_task[0], F_SETFL, O_NONBLOCK);
+    fcntl(pipe_task[1], F_SETFL, O_NONBLOCK);
+    return SUCCESS;
 }
-#endif
+
+void close_pipe()
+{
+    close_fd(pipe_event[0]);
+    close_fd(pipe_event[1]);
+    close_fd(pipe_tcp[0]);
+    close_fd(pipe_tcp[1]);
+    close_fd(pipe_ui[0]);
+    close_fd(pipe_ui[1]);
+    close_fd(pipe_task[0]);
+    close_fd(pipe_task[1]);
+}
+
 
 struct sock_udp create_udp(char *ip, int port, int mreq_flag)
 {
@@ -367,4 +378,77 @@ int connect_server(int fd, const char *ip, int port, int count)
         }
     }
     return SUCCESS;
+}
+/*
+ * YZY PACKET 
+ * cmd CODE
+ * data_type: 0x00 二进制数据, 0x01 JSON, 0x02 protobuf
+ * req_flag: 0 主动发送 1 被动应答
+ */
+void set_packet_head(char *buf, int cmd, int data_size, char data_type, int req_flag)
+{
+    yzy_packet *packet = (yzy_packet *)buf;
+    packet->version_chief = 1;
+    packet->version_sub = 0;
+    packet->service_code = cmd;
+    packet->request_code = 0;
+    packet->dataSize = data_size;
+    packet->dataType = data_type;
+    packet->encoding = 0x00;
+    if(conf.install_flag)
+        packet->clientType = 0x02;
+    else
+        packet->clientType = 0x05;
+    
+    if(req_flag)
+        packet->reqOrRes = 0x02;
+    else
+        packet->reqOrRes = 0x01;
+    packet->supplementary = 0x00;
+} 
+
+int set_packet_token(struct client *cli)
+{
+    if (cli->token)
+        free(cli->token);
+    cli->token = malloc(read_packet_token(cli->recv_head) + 1);
+    cli->token_size = read_packet_token(cli->recv_head);
+    memcpy(cli->token, cli->recv_buf, cli->token_size);
+
+	memcpy(cli->send_head, cli->recv_head, PACKET_LEN);
+
+	return SUCCESS;
+}
+
+
+/*
+ * req_flag: 0 主动发送 1 被动应答
+ */
+int send_packet(struct client *cli, int req_flag)
+{
+    int ret;
+    if (!cli || !cli->fd)
+        return ERROR;
+
+	if(req_flag)	//recv
+	{
+    	ret = send_msg(cli->fd, cli->recv_head, PACKET_LEN);
+
+    	if(cli->token && cli->token_size < DATA_SIZE && cli->token_size > 0)
+        	ret = send_msg(cli->fd, cli->token, cli->token_size);
+
+    	if(cli->recv_buf && cli->recv_size > 0)
+        	ret = send_msg(cli->fd, cli->recv_buf, cli->recv_size);
+	}
+	else			//send
+	{
+    	ret = send_msg(cli->fd, cli->send_head, PACKET_LEN);
+
+    	if(cli->token && cli->token_size < DATA_SIZE && cli->token_size > 0)
+        	ret = send_msg(cli->fd, cli->token, cli->token_size);
+
+    	if(cli->send_buf && cli->send_size > 0)
+        	ret = send_msg(cli->fd, cli->send_buf, cli->send_size);
+	}
+    return ret;
 }

@@ -28,16 +28,18 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <sys/reboot.h>
 //#include <net/if.h>
 
 #include <dirent.h>
 #include <assert.h>
 #include <uuid/uuid.h>
 
-#include "config.h"
+#include "configs.h"
 #include "socket.h"
 #include "global.h"
 #include "error.h"
+
 
 #define __DEBUG__
 #ifdef __DEBUG__
@@ -72,12 +74,14 @@
 #define SUCCESS 0
 #define ERROR 	1
 
-#define SCHED_PRIORITY_EVENT 0
-#define SCHED_PRIORITY_CLIENT 1
-#define SCHED_PRIORITY_TASKT 2
-#define SCHED_PRIORITY_TORRENT 3
+#define SERVER_PORT 50007
 
-#define MAX_BUFLEN      1024
+#define SCHED_PRIORITY_EVENT    0
+#define SCHED_PRIORITY_CLIENT   1
+#define SCHED_PRIORITY_TASKT    2
+#define SCHED_PRIORITY_UI       3
+
+#define MAX_BUFLEN      1024 * 1024
 #define MAX_FILENAMELEN 256
 #define MAX_CONFIGLEN   1024
 
@@ -85,6 +89,5 @@
 
 #define COVERAGE_MODE 1
 #define INCRMENT_MODE 2
-
 
 #endif

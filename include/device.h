@@ -70,7 +70,6 @@ struct _PedDevice {
     PedCHSGeometry bios_geom;
     short host, did;
 
-    //void *    
     int fd;
     int major;
     int minor;
@@ -78,9 +77,7 @@ struct _PedDevice {
     char *dmtype;
 
 	uint8_t disk_name[16];
-	//uint64_t startLba;	
 	uint8_t boot_flag;		
-    //bl
 };
 
 typedef enum disk_type {
@@ -105,8 +102,6 @@ struct device_info
 {
     /* disk */
     int disk_count;
-	//int mini_disk;
-	//int usb_disk;
     disk_param *mini_disk;
     disk_param *usb_disk;
 	disk_param *boot_disk;

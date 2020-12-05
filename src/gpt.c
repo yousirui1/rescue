@@ -145,12 +145,16 @@ int def_read_sector(void* hd, uint64_t lba, uint8_t* buffer)
 }
 int def_write_sector(void* hd, uint64_t lba, uint8_t* buffer)
 {
-#if 0
-    int ret =  yzy_file_write(hd, lba * FILESECBYTES, buffer, FILESECBYTES);
-    if (ret == FILESECBYTES)
-        return 0;
-    return -1;
-#endif
+	PedDevice  *dev = (PedDevice *)hd;
+
+	assert(!dev->external_mode);
+    assert(dev->open_count > 0); 
+	
+	if(linux_write(dev, buffer, lba, 1)) 
+    {   
+        return -1;
+    }   
+	return 0;
 }
 
 
@@ -206,227 +210,7 @@ int _device_seek(int fd, PedSector sector)
     return lseek(fd, pos, SEEK_SET) == pos;
 }
 
-
-
-int write_qcow2(char *dst_path, char *src_path)
-{
-#if 0
-    int ret;
-
-	DiskDriver dd;
-	DiskDriver *pdd = &dd;
-	
-	memset(pdd, 0, sizeof(DiskDriver));
-	pdd->hd = (void *)linux_new(dst_path);
-
-	read_mbr(pdd);
-	read_gpt(pdd);
-
-	QcowEntry* pQe;
-
-	PedDevice *dev = (PedDevice *)pdd->hd;
-	//DEBUG("%d", pdd->gpt_parts[pdd->gpt_part_count].end_lba);
-
-	//storeDrv.init();
-
-	storeDrv.setLba(pdd->gpt_parts[pdd->gpt_part_count - 1].end_lba);
-	storeDrv.load(dev);
-	
-	FILE *fp = fopen(src_path, "rb");
-    if(!fp)
-    {   
-        DEBUG("open %s error", src_path);
-        return;
-    }   
-    
-    fseek(fp, 0, SEEK_END);
-    uint64_t fileSize = ftell(fp);
-    DEBUG("fileSize %d", fileSize);
-
-    fseek(fp, 0, SEEK_SET);
-	
-	uint64_t sizeLba;
-	uint64_t realLba;
-	sizeLba = fileSize / 512;
-	realLba = sizeLba;
-	
-	storeDrv.alloc("win10-data", sizeLba, realLba, 2, &pQe);
-	strcpy(storeDrv.pStoreCfg->currData, "win10-data");
-
-	DEBUG("sizeLba %d startLba %d", sizeLba, pQe->startLba);	
-	DEBUG("type %d endLba %d realLba %d", pQe->type, pQe->endLba, pQe->realLba);	
-	DEBUG("GetQcowLba(pQe) %d", GetQcowLba(pQe));
-	DEBUG("currentBoot name %s", storeDrv.pStoreCfg->currBoot);
-    
-	_device_seek(dev->fd, GetQcowLba(pQe));
-
-	DEBUG("GetQcowLba(pQe) %d", GetQcowLba(pQe));
-	char buf[4096] = {0};
-
-	int count = 0;
-
-#if 0
-    for (uint64_t i = 0; i < fileSize + 4095;)
-    {   
-		//DEBUG("");
-        ret = fread(buf, 1, 4096, fp);
-        if (ret < 0)
-        {   
-            DEBUG("fread error");   
-        }   
-        write_sector(dev->fd, buf, 8); 
-        i += 4096;
-	
-		//if(fileSize < 102400)
-
-    }	   
-#endif
-	DEBUG("write ok");
-   
-    fseek(fp, 0, SEEK_END);
-    fileSize = ftell(fp);
-    DEBUG("fileSize %d", fileSize);
-
-    fseek(fp, 0, SEEK_SET);
-	
-	sizeLba = fileSize / 512;
-	realLba = sizeLba;
-	
-	storeDrv.alloc("win10-share", sizeLba, realLba, 2, &pQe);
-	strcpy(storeDrv.pStoreCfg->shareData, "win10-share");
-
-	DEBUG("sizeLba %d startLba %d", sizeLba, pQe->startLba);	
-	DEBUG("type %d endLba %d realLba %d", pQe->type, pQe->endLba, pQe->realLba);	
-	DEBUG("GetQcowLba(pQe) %d", GetQcowLba(pQe));
-	DEBUG("currentBoot name %s", storeDrv.pStoreCfg->currBoot);
-    
-	_device_seek(dev->fd, GetQcowLba(pQe));
-
-	DEBUG("GetQcowLba(pQe) %d", GetQcowLba(pQe));
-
-#if 0
-    for (uint64_t i = 0; i < fileSize + 4095;)
-    {   
-		//DEBUG("");
-        ret = fread(buf, 1, 4096, fp);
-        if (ret < 0)
-        {   
-            DEBUG("fread error");   
-        }   
-        write_sector(dev->fd, buf, 8); 
-        i += 4096;
-		//if(fileSize < 102400)
-    }	   
-#endif
-	DEBUG("write ok");
-	
-	storeDrv.save(dev);	
-
-#if 0
-	DEBUG("sizeLba %d startLba %d", sizeLba, pQe->startLba);	
-	DEBUG("type %d endLba %d realLba %d", pQe->type, pQe->endLba, pQe->realLba);	
-	DEBUG("GetQcowLba(pQe) %d", GetQcowLba(pQe));
-	DEBUG("currentBoot name %s", storeDrv.pStoreCfg->currBoot);
-
-    
-	_device_seek(dev->fd, GetQcowLba(pQe));
-
-	DEBUG("GetQcowLba(pQe) %d", GetQcowLba(pQe));
-	char buf[4096] = {0};
-
-	int count = 0;
-
-    for (uint64_t i = 0; i < fileSize + 4095;)
-    {   
-		//DEBUG("");
-        ret = fread(buf, 1, 4096, fp);
-        if (ret < 0)
-        {   
-            DEBUG("fread error");   
-        }   
-        write_sector(dev->fd, buf, 8); 
-        i += 4096;
-	
-		//if(fileSize < 102400)
-
-    }	   
-	DEBUG("write ok");
-	strcpy(storeDrv.pStoreCfg->currBoot, "win10");
-	strcpy(storeDrv.pStoreCfg->currData, "win10-data");
-	strcpy(storeDrv.pStoreCfg->currData, "win10-share");
-	
-#endif
-	//storeDrv.save(dev);	
-
-
-	//uint64_t startLba = storeDrv.getQcowLba(pQe);
-#if 0
-	storeDrv.init();
-	storeDrv.setLba(pdd->gpt_parts[pdd->gpt_part_count - 1].end_lba);
-	
-	DEBUG(" qcow2 offset %d", pdd->gpt_parts[pdd->gpt_part_count - 1].end_lba);
-	FILE *fp = fopen(src_path, "rb");
-    if(!fp)
-    {   
-        DEBUG("open %s error", src_path);
-        return;
-    }   
-    
-    fseek(fp, 0, SEEK_END);
-    uint64_t fileSize = ftell(fp);
-    DEBUG("fileSize %d", fileSize);
-
-    fseek(fp, 0, SEEK_SET);
-	
-	uint64_t sizeLba;
-	 uint64_t realLba;
-	sizeLba = fileSize / 512;
-	realLba = sizeLba;
-	
-	storeDrv.alloc("win10", sizeLba, realLba, 1, &pQe);
-	
-	DEBUG("sizeLba %d startLba %d", sizeLba, pQe->startLba);	
-	DEBUG("type %d endLba %d realLba %d", pQe->type, pQe->endLba, pQe->realLba);	
-	//uint64_t startLba = storeDrv.getQcowLba(pQe);
-    
-	//PedDevice *dev = (PedDevice *)pdd->hd;
-
-	_device_seek(dev->fd, GetQcowLba(pQe));
-
-	DEBUG("GetQcowLba(pQe) %d", GetQcowLba(pQe));
-	char buf[4096] = {0};
-
-	int count = 0;
-
-    for (uint64_t i = 0; i < fileSize + 4095;)
-    {   
-		//DEBUG("");
-        ret = fread(buf, 1, 4096, fp);
-        if (ret < 0)
-        {   
-            DEBUG("fread error");   
-        }   
-        write_sector(dev->fd, buf, 8); 
-        i += 4096;
-	
-		//if(fileSize < 102400)
-
-    }	   
-	DEBUG("write ok");
-	
-	strcpy(storeDrv.pStoreCfg->currBoot, "win10");
-	storeDrv.save(dev);	
-	//strcpy_s(storeDrv.pStoreCfg->currBoot, MAX_STORE_NAME_LEN, "win10");
-	
-
-	//storeDrv.load()
-#endif
-#endif
-
-    //1：系统盘base，2：数据盘base，3：系统差异盘，4：数据差异盘
-}
-
-
+//1：系统盘base，2：数据盘base，3：系统差异盘，4：数据差异盘
 int read_mbr(DiskDriver* pdd)
 {
     uint32_t               status;
@@ -462,7 +246,6 @@ int read_mbr(DiskDriver* pdd)
     }
 
     // check if used
-    //used = FALSE;
 	used = 0;
     for (i = 0; i < 4; i++) {
         if (table[i].start_lba > 0 && table[i].size > 0) {
@@ -541,7 +324,6 @@ int read_gpt(DiskDriver* pdd)
     if (status != 0)
         return status;
 
-
     // check signature
     header = (GPT_HEADER *)sector;
     if (header->signature != 0x5452415020494645ULL) {
@@ -613,6 +395,5 @@ int scan_yzy_gpt(DiskDriver* pdd)
     }
     return -1;
     //  rootPathName = 0x001dd914 "\\\\?\\Volume{34e9d950-d1e7-4639-bd71-3c0b5da8865b}\\"
-
 }
 

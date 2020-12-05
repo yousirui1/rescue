@@ -1,5 +1,5 @@
-#ifndef __CONFIG_H__
-#define __CONFIG_H__
+#ifndef __CONFIGS_H__
+#define __CONFIGS_H__
 
 #define CONFIG_FILE "config.ini"
 
@@ -75,9 +75,6 @@
 #define SHARE_REAL_SIZE_KEY "share_real"
 #define SHARE_RESERVE_SIZE_KEY "share_resver"
 
-
-
-
 struct terminal_info{
     unsigned int id;
     unsigned char name[128];
@@ -90,8 +87,6 @@ struct terminal_info{
     unsigned long long memory;
     unsigned long long disk_size;
 };
-
-typedef struct terminal_info terminal_info;
 
 struct netcard_param{
     char is_dhcp;                   //0 不启动 1 启动
@@ -106,13 +101,13 @@ struct netcard_param{
     //char desc[128];               //网卡描述 厂商信息
 };
 
-typedef struct netcard_param netcard_param;
-
 struct server_info {
     unsigned char ip[32];
     unsigned int port;
 };
 
+typedef struct terminal_info terminal_info;
+typedef struct netcard_param netcard_param;
 typedef struct server_info server_info;
 
 struct config{

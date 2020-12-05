@@ -77,8 +77,6 @@ ConfigWindow::ConfigWindow(QWidget *parent) :
     connect(ui->auto_in_cloud_radio,SIGNAL(clicked(bool)),
              this,SLOT(slots_dhcpable()));
 
-
-
     ui->deskconfig_widget->hide();
     ui->netconfig_widget->show();
 
@@ -204,8 +202,6 @@ void ConfigWindow::keyPressEvent(QKeyEvent *event)
     {
          this->focusNextPrevChild(TRUE);//按D时焦点切换至下一部件
     }
-
-
     if(event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
     {
         QWidget *currentitem = QApplication::focusWidget();
@@ -335,8 +331,6 @@ void ConfigWindow::on_nextButton_clicked()
     else
         ui->server_ip_result_label->hide();
 
-
-
     if(!ret || global->conf.netcard.is_dhcp)
     {
         ui->netconfig_widget->hide();
@@ -370,7 +364,6 @@ void ConfigWindow::on_formatButton_clicked()
         return;
     }
 
-
     if(ui->prefix_edit->text().isEmpty())
     {
          ui->hostname_result_label->show();
@@ -387,9 +380,7 @@ void ConfigWindow::on_formatButton_clicked()
     //QByteArray ba_terminal_name = ui->hostname_edit->text().toLatin1();
 
     Global *global = Global::getGlobal();
-    //
     struct config *conf = &(global->conf);
-
 
     memset(conf->netcard.ip, 0, sizeof(conf->netcard.ip));
     memcpy(conf->netcard.ip, ba_ip.data(), ba_ip.length());
@@ -435,7 +426,6 @@ void ConfigWindow::on_formatButton_clicked()
     free(buf);
     dialog_ui->setType(DIALOG_INSTALL);
     dialog_ui->show();
-
 }
 
 void ConfigWindow::slots_dhcpable()

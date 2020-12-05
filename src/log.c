@@ -10,7 +10,7 @@ static char c_dir[MAX_FILENAMELEN];
 
 #define MAX_FILENAMELEN 256
 #define LOG_DIR  "./log"
-#define LOG_ERR_FILE "./log/virt-p2v_err.log"
+#define LOG_ERR_FILE "./log/rescue_err.log"
 
 void init_logs()
 {
@@ -78,7 +78,7 @@ void close_logs()
 
 void log_msg(const char *fmt, ...)
 {
-    char buf[2048] = {0};
+    char buf[MAX_BUFLEN] = {0};
     char *ptr = buf;
     va_list ap;
 
@@ -95,7 +95,7 @@ void log_msg(const char *fmt, ...)
 
 void err_msg(const char *fmt, ...)
 {
-    char buf[2048] = {0};
+    char buf[MAX_BUFLEN] = {0};
     char *ptr = buf;
     va_list ap;
 

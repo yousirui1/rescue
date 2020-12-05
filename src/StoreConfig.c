@@ -443,8 +443,20 @@ static int AllocStore(uint32_t difLevel, PYZYGUID name, PYZYGUID diskName, uint6
     PYZY_QCOW_ENTRY pQe = ScanStoreEntry(difLevel, name);
     if (pQe)
     {
-        *ppQe = pQe;
+    	*ppQe = pQe;
         return 0;
+#if 0
+        if((uint64_t)(pQe->endLba - pQe->startLba -  sizeLba) <= 1024 * 2 && (uint64_t)(pQe->endLba - pQe->startLba -  sizeLba) >= 0)
+        {   
+            *ppQe = pQe;
+            return 0;
+        }   
+        else
+        {   
+            DEBUG("scan pQe->sizeLba: %llu sizeLba: %llu delete", pQe->endLba - pQe->startLba, sizeLba);
+            DeleteStoreEntry(difLevel, name);
+        }   
+#endif
     }
 
     PYZY_QCOW_ENTRY diskList[YZY_MAX_STORE_QCOW_ENTRY];

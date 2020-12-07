@@ -99,6 +99,11 @@ uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, 
 		if((uint64_t)(pQe->endLba - pQe->startLba -  sizeLba) <= 1024 * 2 && 
 			(uint64_t)(pQe->endLba - pQe->startLba -  sizeLba) >= 0)
 		{
+			pQe->stype = stype;
+			pQe->flag = 1;
+			pQe->operate_id = operate_id;
+			pQe->diff_mode = diff_mode;
+
 			return GetQcowLba(pQe);
 		}
 		else
@@ -109,9 +114,9 @@ uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, 
 	}
 
 	uint64_t space_size  = available_space(dev->disk_name);
-	DEBUG("space_size %llu", space_size);
+	DEBUG("space_size %llu sizeLba %llu", space_size, sizeLba);
 
-	if((space_size - sizeLba) < (uint64_t)(20 * 1024 * 1024 * 2))
+	if(space_size < sizeLba  || (space_size - sizeLba) < (uint64_t)(20 * 1024 * 1024 * 2))
 		return 0;
 
     ret = storeDrv.alloc(diff, uuid, *(PYZYGUID)dev->disk_name, sizeLba, realLba, disk_type, &pQe);
@@ -130,7 +135,7 @@ uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, 
 		pQe->flag = 1;
 		pQe->operate_id = operate_id;
 		pQe->diff_mode = diff_mode;
-    	//storeDrv.save(dev);
+
 		return GetQcowLba(pQe);
 	}
 	else
@@ -187,6 +192,9 @@ void print_qcow2(PedDevice *dev)
 	char name[36] = {0};
     uint32_t i;
 
+    if (!storeDrv.pStoreCfg) 
+        return ;
+	
 	init_qcow2(dev, 1);
     for (i = 0; i < storeDrv.pStoreCfg->qcowCount; i++)
     {
@@ -202,7 +210,7 @@ void print_qcow2(PedDevice *dev)
 
 	    DEBUG("pQe->diffLevel %lu", pQe->difLevel);
 	    DEBUG("pQe->operate_id %lu", pQe->operate_id);
-	    DEBUG("pQe->operate_id %d", pQe->diff_mode);
+	    DEBUG("pQe->diff_mode %d", pQe->diff_mode);
 		DEBUG("--------------------------------------------");
 		//if(pQe->difLevel == 1)
     }

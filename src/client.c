@@ -1165,7 +1165,7 @@ static int recv_get_desktop_group_list(struct client *cli)
     int ret; 
     char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
     cJSON *root = cJSON_Parse((char *)(buf));
-
+	DEBUG("%s", buf);
     if (root)
     {    
         cJSON *code = cJSON_GetObjectItem(root, "code");
@@ -1194,6 +1194,7 @@ static int recv_get_desktop_group_list(struct client *cli)
                 desktop_group_name = cJSON_GetObjectItem(item, "desktop_group_name");
                 disks = cJSON_GetObjectItem(item, "disks");
                 diff_mode = cJSON_GetObjectItem(item, "diff_mode");
+				DEBUG("diff_mode %d", diff_mode->valueint);
 
                 m_group[i].auto_update = auto_update_desktop->valueint;
                 m_group[i].diff_mode = diff_mode->valueint;
@@ -1262,6 +1263,7 @@ static int recv_get_desktop_group_list(struct client *cli)
                                 else //存在 1
                                 {
                                     /* diff mode 切换 */
+									DEBUG("get_diff_mode_qcow2(uuid->valuestring) %d", get_diff_mode_qcow2(uuid->valuestring));
                                     if (get_diff_mode_qcow2(uuid->valuestring) != (diff_mode->valueint + 1))
                                     {
                                         DEBUG("diff mode %d no equal %d update diff 1 and 2",
@@ -1997,7 +1999,7 @@ int init_client()
 		return ERROR;
 	}
 
-	DEBUG("server->ip: %s server->port: %d", server->ip, server->port);
+	DEBUG("server->ip: %s server->port: %d", server->ip, 50007);
 	ret = connect_server(cli->fd, server->ip, server->port, TIME_OUT);
 	if(ret != SUCCESS)
 	{

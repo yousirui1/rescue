@@ -23,6 +23,10 @@
 uint8_t* gStoreBuf = NULL;
 uint8_t* gRebuildBuf = NULL;
 
+//uint8_t gStoreBuf[YZY_MAX_STORE_BUFF_LEN];
+//uint32_t gStoreBufLen = YZY_MAX_STORE_BUFF_LEN;
+
+
 //crc//////////////////////////////////
 uint32_t POLYNOMIAL = 0xEDB88320;
 int have_table = 0;

@@ -136,7 +136,7 @@ void init_configs()
 		}
     }
 
-    server->port = read_profile_int(SERVER_SECTION, SERVER_PORT_KEY, server->port, config_file);
+    server->port = read_profile_int(SERVER_SECTION, SERVER_PORT_KEY, SERVER_PORT, config_file);
 
     /* version */
     //conf.major_ver = read_profile_int(VERSION_SECTION, VER_MAJOR_KEY, 0, config_file);

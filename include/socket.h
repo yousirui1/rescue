@@ -147,7 +147,7 @@ typedef struct yzy_torrent{
 }yzy_torrent;
 
 #pragma pack()
-
+#if 0
 struct progress_info{
     char state[12];
     unsigned int long progress;
@@ -160,6 +160,23 @@ struct progress_info{
     int type;
     
     char file_name[128];
+    char image_name[128];
+    char storage[128];
+};
+#endif
+
+
+struct progress_info{
+    char file_name[36];
+    char state[12];
+    unsigned int long progress;
+    unsigned long long download_rate;
+    unsigned long long upload_rate;
+    unsigned long long total_size;      //下载总大小
+    unsigned long long file_size;
+
+    int type;
+
     char image_name[128];
     char storage[128];
 };

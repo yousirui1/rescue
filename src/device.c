@@ -353,7 +353,7 @@ int format_disk(const char *path)
     char result[MAX_BUFLEN] = {0};
     char cmd[MAX_BUFLEN] = {0};
 
-	umount_boot();
+//	umount_boot();
 
     sprintf(cmd, "parted -s %s mklabel gpt", path);
     DEBUG("cmd: %s", cmd);
@@ -398,7 +398,9 @@ int format_disk(const char *path)
     exec_cmd(cmd, result); 
 	DEBUG("result %s", result);
 	init_qcow2(dev_info.mini_disk->dev, 0);
+
 	return SUCCESS;
+
     if(!strlen(result))
     {   
         DEBUG("format_disk fat 1G ok");
@@ -466,7 +468,6 @@ int install_programe()
 		send_error_msg(DISK_NO_FOUND_ERR);
 		return ERROR;
 	}
-
 	sprintf(cmd, "/dev/%s", dev_info.mini_disk->name);
 	if(format_disk(cmd) != SUCCESS)
 	{
@@ -479,8 +480,9 @@ int install_programe()
 	info->type = 2;		
 	char version[32] = {0};
 	sprintf(version, "V%d.0.0.%d", conf.major_ver, conf.minor_ver);
+	
 	strcpy(info->file_name, version);
-
+	DEBUG("file_name %s", info->file_name);
 	send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_UI);
 
 	umount_boot();

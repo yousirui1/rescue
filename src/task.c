@@ -12,13 +12,17 @@ unsigned char *task_queue_buf = NULL;
 
 static int task_bt(char *data, int length)
 {
-	int i, ret;
+	int i, ret = ERROR;
 	uint64_t offset = 0;
 	struct torrent_task *task = (struct torrent_task *)data;
-	char file_name[128] = {0};
-	//DEBUG("task->real_size %llu task->file_size %llu", task->real_size, task->file_size);
+	//char file_name[128] = {0};
 
-	if(task->diff == 1 && !task->diff_mode)
+	char buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};
+    progress_info *info = (progress_info *)&buf[HEAD_LEN];
+	
+	strcpy(info->file_name, task->file_name);
+	
+	if(task->diff == 1 && task->diff_mode == INCRMENT_MODE)
 	{
 		offset  = add_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff, (uint64_t)(task->real_size),
 					 task->real_size, 1, task->disk_type, task->operate_id, INCRMENT_MODE);
@@ -27,12 +31,12 @@ static int task_bt(char *data, int length)
 	{
 		offset  = add_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff,
 							(uint64_t)(task->file_size) + 1024 * 2, task->real_size, 1, 
-							task->disk_type, task->operate_id, INCRMENT_MODE);
+							task->disk_type, task->operate_id, COVERAGE_MODE);
 	}
 
 	if(offset != 0)
 	{
-		ret = start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, task->file_name, task->diff_mode,
+		ret = start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, buf, task->diff_mode,
 				(uint64_t)offset * 512);
 		if(SUCCESS == ret)
 		{
@@ -43,22 +47,26 @@ static int task_bt(char *data, int length)
 				{
 					set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
 					DEBUG("uuid: %s change_back_file_qcow2  %d -> %d ok !!!", task->uuid, task->diff, task->diff - 1);
-					return SUCCESS;
+					info->progress = 100;
+					ret = SUCCESS;
 				}
 				else
 				{
+					info->progress = 0;
 					del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
 					save_qcow2(dev_info.mini_disk->dev);
 				}
 			}	
 			else
 			{
+				info->progress = 100;
 				set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
-				return SUCCESS;
+				ret = SUCCESS;
 			}
 		}
 		else
 		{
+			info->progress = 0;
 			del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
 			save_qcow2(dev_info.mini_disk->dev);
 		}
@@ -66,8 +74,14 @@ static int task_bt(char *data, int length)
 	else
 	{
 		DEBUG("alloc qcow2 space error %d ", offset);
+		info->progress = 0;
+		send_error_msg(BT_DISK_FULL_ERR);
 	}
-	return ERROR;
+
+    strcpy(info->state, "finished");
+    send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
+
+	return ret;
 }
 	
 static void task_tftp(char *data, int length)

@@ -157,7 +157,8 @@ void event_loop()
 
 		if(current_time - last_time >= TIME_OUT)
 		{
-			ret = send_heartbeat(&m_client);
+			if(m_client.online)
+				ret = send_heartbeat(&m_client);
 			if(ret != SUCCESS || m_client.online <= 0)
 			{
 				client_reconnect();					

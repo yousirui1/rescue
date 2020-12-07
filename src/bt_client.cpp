@@ -14,8 +14,8 @@
 
 time_t last_time;
 static int run_flag = 0;
-static char pipe_buf[HEAD_LEN + sizeof(progress_info) + 1]; 
-static progress_info *info = (progress_info *)&pipe_buf[HEAD_LEN];
+//static char pipe_buf[HEAD_LEN + sizeof(progress_info) + 1]; 
+//static progress_info *info = (progress_info *)&pipe_buf[HEAD_LEN];
 
 // return the name of a torrent status enum
 char const* state(lt::torrent_status::state_t s)
@@ -59,21 +59,24 @@ std::string add_suffix_float(double val, char const* suffix)
 void stop_torrent()
 {
 	run_flag = 0;
-	info->progress = 0;
+	//info->progress = 0;
 	DEBUG("recv msg stop bt download task");
 }
 
-int start_torrent(char *torrent, char *save_path, char *file_name, int diff_mode, uint64_t physical_offset) try
+//int start_torrent(char *torrent, char *save_path, char *file_name, int diff_mode, uint64_t physical_offset) try
+int start_torrent(char *torrent, char *save_path, char *pipe_buf, int diff_mode, uint64_t physical_offset) try
 {
 	int ret = ERROR;
 	
-	memset(info, 0, sizeof(progress_info));
+ 	progress_info *info = (progress_info *)&pipe_buf[HEAD_LEN];
+	
+	//memset(info, 0, sizeof(progress_info));
 	info->type = 0x00;
 	*(int *)&(info->storage[0]) = diff_mode;
 			
 	sscanf(torrent, "/root/%s", info->image_name);
-    if(file_name)
-        strcpy(info->file_name, file_name);	
+    //if(file_name)
+    //strcpy(info->file_name, file_name);	
 
     lt::settings_pack pack;
 
@@ -131,7 +134,7 @@ int start_torrent(char *torrent, char *save_path, char *file_name, int diff_mode
 			{
 				DEBUG("download finish done");
 				ret = SUCCESS;
-				info->progress = 100;
+				info->progress = 99;
 				run_flag = 0;
 			}
 			if(lt::alert_cast<lt::torrent_error_alert>(a))
@@ -170,7 +173,7 @@ int start_torrent(char *torrent, char *save_path, char *file_name, int diff_mode
 					if(s.total_done == s.total_wanted)
 					{
 						DEBUG("download finish done");
-						info->progress = 100;
+						info->progress = 99;
 						ret = SUCCESS;
 						run_flag = 0;
 					}
@@ -183,8 +186,8 @@ int start_torrent(char *torrent, char *save_path, char *file_name, int diff_mode
 		ses.post_torrent_updates();
 	}
 
-	strcpy(info->state, "finished");
-	send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
+	//strcpy(info->state, "finished");
+	//send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
 	ses.abort();
 	return ret;
 }

@@ -122,7 +122,6 @@ static int send_pipe(char *buf, short cmd, int size)
    	return write(pipe_event[1], buf, size + HEAD_LEN); 
 }
 
-
 struct progress_info{
     char file_name[36];
     char state[12];
@@ -131,9 +130,9 @@ struct progress_info{
     unsigned long long upload_rate;
     unsigned long long total_size;      //下载总大小
     unsigned long long file_size;
-    
+
     int type;
-    
+
     char image_name[128];
     char storage[128];
 };

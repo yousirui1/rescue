@@ -3,15 +3,15 @@
 #include "cJSON.h"
 #include <sys/reboot.h>
 
-struct config conf = {0};
+struct configs conf = {0};
 char config_file[128] = "config.ini";
 
 
 int send_config_pipe()
 {
-	char pipe_buf[HEAD_LEN + sizeof(struct config)] = {0};	
-	memcpy(&pipe_buf[HEAD_LEN], &conf, sizeof(struct config));
-	return send_pipe(pipe_buf, UPDATE_CONFIG_PIPE, sizeof(struct config), PIPE_UI);
+	char pipe_buf[HEAD_LEN + sizeof(struct configs)] = {0};	
+	memcpy(&pipe_buf[HEAD_LEN], &conf, sizeof(struct configs));
+	return send_pipe(pipe_buf, UPDATE_CONFIG_PIPE, sizeof(struct configs), PIPE_UI);
 }
 
 void init_configs()
@@ -151,10 +151,10 @@ void init_configs()
 int update_config(char *buf, int len)
 {
     char *data = &buf[HEAD_LEN];
-    struct config *c = (struct config *)&data[0];
+    struct configs *c = (struct configs *)&data[0];
 
 	DEBUG("version: v%d.%d", conf.major_ver, conf.minor_ver);	
-    memcpy(&conf, c, sizeof(struct config));    
+    memcpy(&conf, c, sizeof(struct configs));    
 	DEBUG("version: v%d.%d", conf.major_ver, conf.minor_ver);	
     
     char result[MAX_BUFLEN] = {0};

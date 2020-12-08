@@ -6,7 +6,7 @@
 
 /* main.c */
 extern time_t current_time;
-extern struct config conf;
+extern struct configs conf;
 extern char config_file[128];
 extern int pipe_event[2];
 extern int pipe_tcp[2];

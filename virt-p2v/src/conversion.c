@@ -53,30 +53,7 @@
 
 #include "miniexpect.h"
 #include "p2v.h"
-
-#define HEAD_LEN 8
-#define P2V_OS_PROGRESS_PIPE 9
-
-#define DEBUG(format,...) \
-        do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-			log_msg("File: "__FILE__", Line: %05d:  " format"\r\n", __LINE__, ##__VA_ARGS__); \
-        }while(0)
-
-
-typedef enum ERR_MSG_DESC {
-    INSTALL_ERR = 0,
-    DISK_NO_FOUND_ERR,
-    U_DISK_NO_FOUD_ERR,
-    DISK_FORMAT_ERR,
-    P2V_DISK_FAST_ERR,
-    P2V_DISK_NO_FOUND_ERR,
-    P2V_NAME_ERR,
-    P2V_ERR,
-    BT_DISK_FULL_ERR, 
-}ERR_MSG_DESC;
-
-
-extern int pipe_event[2];
+#include "base.h"
 
 static void cleanup_data_conns (struct data_conn *data_conns, size_t nr);
 static void generate_name (struct config *, const char *filename);
@@ -89,6 +66,9 @@ static char *conversion_error;
 
 static void set_conversion_error (const char *fs, ...)
   __attribute__((format(printf,1,2)));
+
+static struct progress_info *info = NULL;
+static char pipe_buf[sizeof(struct progress_info) + HEAD_LEN + 1] = {0};
 
 static void
 set_conversion_error (const char *fs, ...)
@@ -115,34 +95,6 @@ get_conversion_error (void)
 {
   return conversion_error;
 }
-
-static int send_pipe(char *buf, short cmd, int size)
-{
-   	set_request_head(buf, 0x0, cmd, size);
-   	return write(pipe_event[1], buf, size + HEAD_LEN); 
-}
-
-struct progress_info{
-    char file_name[36];
-    char state[12];
-    unsigned int long progress;
-    unsigned long long download_rate;
-    unsigned long long upload_rate;
-    unsigned long long total_size;      //下载总大小
-    unsigned long long file_size;
-
-    int type;
-
-    char image_name[128];
-    char storage[128];
-};
-
-
-
-static struct progress_info *info = NULL;
-static char pipe_buf[sizeof(struct progress_info) + HEAD_LEN + 1] = {0};
-
-#define P2V_DISK_FAST_ERR 4
 
 static int notify_event(char *buf, int size)
 {
@@ -177,7 +129,7 @@ static int notify_event(char *buf, int size)
 			sscanf(&token[4], "(%f/%f)", &progress, &progress_end);
 			//DEBUG("%f", progress);
 			info->progress = (int)progress;
-			send_pipe(pipe_buf, P2V_OS_PROGRESS_PIPE, sizeof(struct progress_info));
+			send_pipe(pipe_buf, P2V_OS_PIPE, sizeof(struct progress_info), PIPE_EVENT);
 		}
 	}
 }

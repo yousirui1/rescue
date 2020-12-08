@@ -110,7 +110,7 @@ typedef struct terminal_info terminal_info;
 typedef struct netcard_param netcard_param;
 typedef struct server_info server_info;
 
-struct config{
+struct configs{
     int install_flag;
     int disk_ready;                 //裸磁盘qcow2 结构体初始化完成 
 

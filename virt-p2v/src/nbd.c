@@ -410,6 +410,7 @@ start_qemu_nbd (const char *device,
               "-p", port_str,  /* listening port */
               "-t",            /* persistent */
               "-f", "raw",     /* force raw format */
+              //"-f", "qcow2",     /* force raw format */
               "-b", ipaddr,    /* listen only on loopback interface */
               "--cache=unsafe",  /* use unsafe caching for speed */
               device,            /* a device like /dev/sda */
@@ -425,6 +426,7 @@ start_qemu_nbd (const char *device,
               "-r",            /* readonly (vital!) */
               "-t",            /* persistent */
               "-f", "raw",     /* force raw format */
+              //"-f", "qcow2",     /* force raw format */
               "--cache=unsafe",  /* use unsafe caching for speed */
               device,            /* a device like /dev/sda */
               NULL);

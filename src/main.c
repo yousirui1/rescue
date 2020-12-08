@@ -94,6 +94,12 @@ int main(int argc, char *argv[])
 	init_device();
 	init_configs();
 
+    p2v_transform("192.169.27.181", "root", "123qwe,.",
+                    "template-voi", "test",
+                    dev_info.mini_disk->dev->path);
+
+
+#if 0
 	ret = pthread_create(&pthread_event, NULL, thread_event, NULL);
 	if(SUCCESS != ret)
 	{
@@ -111,6 +117,7 @@ int main(int argc, char *argv[])
 	{
 		DIE("create task thread ret: %d error: %s", ret, strerror(ret));
 	}
+#endif
 
 	do_exit();
 	close_pipe();

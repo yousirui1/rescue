@@ -15,7 +15,6 @@ static int task_bt(char *data, int length)
 	int i, ret = ERROR;
 	uint64_t offset = 0;
 	struct torrent_task *task = (struct torrent_task *)data;
-	//char file_name[128] = {0};
 
 	char buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};
     progress_info *info = (progress_info *)&buf[HEAD_LEN];

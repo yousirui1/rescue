@@ -34,16 +34,11 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#include "base.h"
 #include "p2v.h"
 
 static void notify_ui_callback (int type, const char *data);
 static void run_command (const char *stage, const char *command);
-
-#define DEBUG(format,...) \
-        do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-            log_msg("File: "__FILE__", Line: %05d:  " format"\r\n", __LINE__, ##__VA_ARGS__); \
-        }while(0)
-
 
 /* Perform conversion using the kernel method. */
 void

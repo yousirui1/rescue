@@ -342,16 +342,6 @@ int change_back_file_qcow2(PedDevice *dev, char *name, uint32_t diff)
 
 	YZYGUID uuid = {0};
 	str2uuid(name, &uuid);
-
-#if 0
-	uint32_t base = get_minor_max_diff_qcow2(name, diff);
-	DEBUG("minor max diff %d", base);
-	if(base >= diff)
-	{
-		DEBUG("base %d > diff error %d", base, diff);
-		return ERROR;
-	}
-#endif
 	
 	YZY_QCOW_ENTRY  *pBase = storeDrv.scan(diff - 1, &uuid);
 	YZY_QCOW_ENTRY  *pDiff = storeDrv.scan(diff, &uuid);

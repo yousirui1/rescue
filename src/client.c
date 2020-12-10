@@ -88,6 +88,7 @@ int send_upload_log(struct client *cli)
     
     ret = upload_logs(&cli->send_buf, &cli->send_size);
 
+	DEBUG("------- send_upload_log ------------------");
     set_packet_head(cli->send_head, UPLOAD_LOG, cli->send_size, BYTE_TYPE, 0);
     return send_packet(cli, 0);
 }
@@ -708,8 +709,8 @@ static int recv_down_torrent(struct client *cli)
             memcpy(task.uuid, torrent->uuid, 36);
             memcpy(task.torrent_file, torrent_file, strlen(torrent_file));
 
-            if (torrent->dif_level == 3)
-                torrent->dif_level = 2;
+            //if (torrent->dif_level == 3)
+             //   torrent->dif_level = 2;
 
             task.diff = torrent->dif_level;
             task.diff_mode = current_group->diff_mode + 1;
@@ -1088,14 +1089,14 @@ static int send_reboot(struct client *cli, int batch_no, int flag)
         if (flag)
         {   
             set_packet_head(cli->recv_head, RESTART, cli->recv_size, JSON_TYPE, 1);
-            ret = send_packet(cli, 1);
             ret = send_pipe(head, REBOOT_PIPE, 0, PIPE_EVENT);
+            ret = send_packet(cli, 1);
         }
         else
         {   
             set_packet_head(cli->recv_head, SHUTDOWN, cli->recv_size, JSON_TYPE, 1);
-            ret = send_packet(cli, 1);
             ret = send_pipe(head, SHUTDOWN_PIPE, 0, PIPE_EVENT);
+            ret = send_packet(cli, 1);
         }
         cJSON_Delete(root);
     }
@@ -1121,6 +1122,7 @@ static int recv_reboot(struct client *cli, int flag)
     {
         cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
         ret = send_reboot(cli, batch_no->valueint, flag);
+		return SUCCESS;
         cJSON_Delete(root);
     }
     return ret;
@@ -1165,7 +1167,7 @@ static int recv_get_desktop_group_list(struct client *cli)
     int ret; 
     char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
     cJSON *root = cJSON_Parse((char *)(buf));
-	DEBUG("%s", buf);
+	//DEBUG("%s", buf);
     if (root)
     {    
         cJSON *code = cJSON_GetObjectItem(root, "code");
@@ -1385,7 +1387,7 @@ static int recv_upgrad(struct client *cli)
 	int ret = ERROR;
 	char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
 	cJSON *root = cJSON_Parse((char *)(buf));
-	DEBUG("%s", buf);
+	//DEBUG("%s", buf);
 	if(root)
 	{
         cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");

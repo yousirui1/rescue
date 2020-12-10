@@ -59,8 +59,8 @@ static int task_bt(char *data, int length)
 			else
 			{
 				info->progress = 100;
-				set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
 				ret = SUCCESS;
+				set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
 			}
 		}
 		else

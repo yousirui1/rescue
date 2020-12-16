@@ -71,6 +71,7 @@ typedef enum PIPE_MSG{
     REBOOT_PIPE,
     SHUTDOWN_PIPE,
     ERROR_MSG_PIPE,
+	INSTALL_DONE,
 }PIPE_MSG;
 
 typedef enum YZY_CMD

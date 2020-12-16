@@ -34,6 +34,13 @@ static void process_event_msg(char *buf, int length)
 			send_pipe(buf, PROGRESS_PIPE, length, PIPE_UI);
 			break;
 		}
+		case INSTALL_DONE:
+		{
+			DEBUG("INSTALL_DONE !!!!!!!!!!!!!!!!!!!");
+			send_pipe(buf, PROGRESS_PIPE, length, PIPE_UI);
+			download_default_os(&m_client);
+			break;
+		}
 		case REBOOT_PIPE:
 		{
 			DEBUG("server send msg reboot");

@@ -87,6 +87,7 @@ void init_configs()
 		DEBUG("set static  ip address");
 		char cmd[MAX_BUFLEN] = {0};
 		char result[MAX_BUFLEN] = {0};
+		strcpy(net->netmask, "255.255.0.0");
 		exec_cmd("udhcpc -t 1 -R -q -n ", result);		//关闭dhcp
 		sprintf(cmd, "ifconfig eth0 %s netmask %s", net->ip, net->netmask);
 		exec_cmd(cmd, result);
@@ -95,7 +96,6 @@ void init_configs()
 		DEBUG("cmd: %s", cmd);
         exec_cmd(cmd, result);
 	}
-
    
     if(read_profile_string(NET_SECTION, NET_DNS1_KEY, buf, sizeof(buf), net->dns1, config_file))
     {
@@ -174,6 +174,7 @@ int update_config(char *buf, int len)
 	{
 		if(strlen(net->ip) != 0 && strlen(net->netmask) != 0 )
 		{
+			strcpy(net->netmask, "255.255.0.0");
         	sprintf(cmd, "ifconfig eth0 %s netmask %s", net->ip, net->netmask);
         	exec_cmd(cmd, result);
         	sprintf(cmd, "route add default gw %s", net->gateway);
@@ -217,7 +218,7 @@ int save_config()
     sprintf(buf, "%d", net->is_dhcp);
     write_profile_string(NET_SECTION, NET_DHCP_KEY, buf, config_file);
     write_profile_string(NET_SECTION, NET_IP_KEY, net->ip, config_file);
-    write_profile_string(NET_SECTION, NET_NETMASK_KEY, net->netmask, config_file);
+    write_profile_string(NET_SECTION, NET_NETMASK_KEY, "255.255.248.0", config_file);
     write_profile_string(NET_SECTION, NET_GATEWAY_KEY, net->gateway, config_file);
     write_profile_string(NET_SECTION, NET_DNS1_KEY, net->dns1, config_file);
     write_profile_string(NET_SECTION, NET_DNS2_KEY, net->dns2, config_file);

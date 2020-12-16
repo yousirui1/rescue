@@ -38,6 +38,7 @@ struct desktop_group
 {
     uint8_t diff_mode;
     uint8_t auto_update;
+	uint8_t default_desktop_flag;
     //uint8_t max_diff;
 
     char group_uuid[40];

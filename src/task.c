@@ -126,14 +126,15 @@ static void task_tftp(char *data, int length)
 	            strcpy(config_file, "/boot/conf/config.ini");
 	            DEBUG("install_flag %d", conf.install_flag);
 	            save_config();
+
+	        	info->progress = 100;
+	        	send_pipe(buf, INSTALL_DONE ,sizeof(progress_info), PIPE_EVENT);
 	        }   
 	        else
 	        {   
 	            send_error_msg(INSTALL_ERR);
 				reboot(RB_AUTOBOOT);	
 	        }   
-	        info->progress = 100;
-	        send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_UI);
 	    }   
 	}
     DEBUG("tftp_get end ");

@@ -10,6 +10,7 @@ struct desktop_group m_group[MAX_GROUP] = {0};
 int first_time = 1; 	//第一次登陆
 
 static int send_get_desktop_group_list(struct client *cli);
+static int send_get_diff_torrent(struct client *cli, char *group_uuid, char *diff_uuid, int diff, int type);
 
 #if 0
 void update_desktop(char *json)
@@ -93,7 +94,28 @@ int send_upload_log(struct client *cli)
     return send_packet(cli, 0);
 }
 
+int download_default_os(struct client *cli)
+{
+	DEBUG("download_default_os !!!!!!!!!");
+	int i = 0;
+    for (i = 0; i < MAX_GROUP; i++)
+    {
+		DEBUG("m_group[i].default_desktop_flag %d", m_group[i].default_desktop_flag);
+        if (strlen(m_group[i].group_uuid) != 0 && m_group[i].default_desktop_flag)
+        {
+			DEBUG("m_group[i].os_uuid %s", m_group[i].os_uuid);
+    		 send_get_diff_torrent(cli, m_group[i].group_uuid, m_group[i].os_uuid, 0, 0);		        
+    		 send_get_diff_torrent(cli, m_group[i].group_uuid, m_group[i].os_uuid, 1, 0);		        
+    		 send_get_diff_torrent(cli, m_group[i].group_uuid, m_group[i].os_uuid, 2, 0);		        
 
+    		 send_get_diff_torrent(cli, m_group[i].group_uuid, m_group[i].data_uuid, 0, 1);		        
+    		 send_get_diff_torrent(cli, m_group[i].group_uuid, m_group[i].data_uuid, 1, 1);		        
+    		 send_get_diff_torrent(cli, m_group[i].group_uuid, m_group[i].data_uuid, 2, 1);		        
+
+    		 send_get_diff_torrent(cli, m_group[i].group_uuid, m_group[i].share_uuid, 0, 2);		        
+        }
+    }
+}
 
 static int recv_heartbeat(struct client *cli)
 {
@@ -703,7 +725,6 @@ static int recv_down_torrent(struct client *cli)
                     del_qcow2(dev_info.mini_disk->dev, uuid, 0);
                     del_diff_qcow2(dev_info.mini_disk->dev, uuid);
                 }
-
             }
 
             memcpy(task.uuid, torrent->uuid, 36);
@@ -1167,7 +1188,7 @@ static int recv_get_desktop_group_list(struct client *cli)
     int ret; 
     char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
     cJSON *root = cJSON_Parse((char *)(buf));
-	//DEBUG("%s", buf);
+	DEBUG("%s", buf);
     if (root)
     {    
         cJSON *code = cJSON_GetObjectItem(root, "code");
@@ -1196,10 +1217,12 @@ static int recv_get_desktop_group_list(struct client *cli)
                 desktop_group_name = cJSON_GetObjectItem(item, "desktop_group_name");
                 disks = cJSON_GetObjectItem(item, "disks");
                 diff_mode = cJSON_GetObjectItem(item, "diff_mode");
-				DEBUG("diff_mode %d", diff_mode->valueint);
+				default_desktop_group = cJSON_GetObjectItem(item, "default_desktop_group");
+				//DEBUG("diff_mode %d", diff_mode->valueint);
 
                 m_group[i].auto_update = auto_update_desktop->valueint;
                 m_group[i].diff_mode = diff_mode->valueint;
+				m_group[i].default_desktop_flag = default_desktop_group->valueint;
 
                 if (disks && desktop_group_uuid && desktop_group_name)
                 {    
@@ -1234,9 +1257,9 @@ static int recv_get_desktop_group_list(struct client *cli)
                         else if (type->valueint == 2)
                         {
                             memcpy(m_group[i].share_uuid, uuid->valuestring, 36); //共享盘特殊处理
-
-                            if (operate_id->valueint != get_operate_qcow2(uuid->valuestring, 0)) //暂定没有自动更新标识
+                            if (get_operate_qcow2(uuid->valuestring, 0) != operate_id->valueint) //暂定没有自动更新标识
                             {
+								DEBUG("check_os_qcow2() %d", check_os_qcow2());
 								if(check_os_qcow2() == SUCCESS)	//存在系统盘
 								{
                                 	DEBUG("update share qcow2 disk ");
@@ -1491,7 +1514,7 @@ static int recv_get_config(struct client *cli)
 
 			save_config();
 			send_config_pipe();
-			if(conf.install_flag && first_time)
+			if(first_time)
 			{
 				ret = send_get_desktop_group_list(cli);
 				first_time = 0;
@@ -1594,6 +1617,12 @@ static int send_set_update_config(struct client *cli)
         set_packet_head(cli->send_head, UPDATE_CONFIG_INTO, cli->send_size, JSON_TYPE, 0);
         ret = send_packet(cli, 0);
 
+		if(first_time)
+		{
+			ret = send_get_desktop_group_list(cli);
+			first_time = 0;
+			//ret = SUCCESS;
+		}
         cJSON_Delete(root);
 	}
     else

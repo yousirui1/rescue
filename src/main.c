@@ -31,37 +31,32 @@ static void sig_quit_listen(int e)
 
 static void usage()
 {
-    DIE("\nWhile playing:\n"
-           "q, ESC              quit\n"
-           "f                   toggle full screen\n"
-           "p, SPC              pause\n"
-           "m                   toggle mute\n"
-           "9, 0                decrease and increase volume respectively\n"
-           "/, *                decrease and increase volume respectively\n"
-           "a                   cycle audio channel in the current program\n"
-           "v                   cycle video channel\n"
-           "t                   cycle subtitle channel in the current program\n"
-           "c                   cycle program\n"
-           "w                   cycle video filters or show modes\n"
-           "s                   activate frame-step mode\n"
-           "left/right          seek backward/forward 10 seconds or to custom interval if -seek_interval is set\n"
-           "down/up             seek backward/forward 1 minute\n"
-           "page down/page up   seek backward/forward 10 minutes\n"
-           "right mouse click   seek to percentage in file corresponding to fraction of width\n"
-           "left double-click   toggle full screen\n"
+    DIE("\nYZY RESCUE LINUX:\n"
+           "t,               	set tftp server ip\n"
+           "s                   set YZY server ip\n"
+           "n,              	set nfs server rootfs \n"
+           "h                   show this helo\n"
            );
 }
 
 void parse_options(int argc, char *argv[])
 {
 	int ch;
-	while((ch = getopt(argc, argv, "t:h")) != -1)
+	while((ch = getopt(argc, argv, "t:s:n:h")) != -1)
 	{
 		switch(ch)
 		{
 			case 't':
-				DEBUG("tftp server:%s", optarg);
+				DEBUG("tftp ip:%s", optarg);
 				strcpy(conf.tftp_ip, optarg);
+				break;
+			case 's':
+				DEBUG("server ip:%s", optarg);
+				strcpy(conf.server.ip, optarg);
+				break;
+			case 'n':
+				DEBUG("nfs ip:%s", optarg);
+				strcpy(conf.nfs_ip, optarg);
 				break;
 			case 'h':
 				usage();	

@@ -212,7 +212,7 @@ void find_all_netcards()
         if(STRPREFIX(dev_info.net[i].name, "eth0"))
         {   
             memcpy(net->ip, dev_info.net[i].ip, 32);
-            memcpy(net->netmask, dev_info.net[i].netmask, 32);
+            memcpy(net->netmask, "255.255.0.0", 32);
 
 			strupr(dev_info.net[i].mac);	
 			DEBUG("mac %s", dev_info.net[i].mac);
@@ -229,6 +229,7 @@ void find_all_netcards()
 			}
         } 	
     }   
+	
 	DEBUG("net->ip %s net->netmask %s net->mac %s", net->ip, net->netmask, net->mac);
 }
 

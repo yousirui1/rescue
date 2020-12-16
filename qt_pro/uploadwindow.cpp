@@ -256,8 +256,8 @@ void Uploadwindow::setProgressValue(struct progress_info *info)
              state = tr("安装客户端: ");
              if(info->progress == 100)
              {
-                state = tr("更新客户端完成, 5秒后重启");
-                QTimer::singleShot(5000, this, SLOT(Reboot()));
+                state = tr("安装客户端完成,等待下载默认桌面");
+                //QTimer::singleShot(5000, this, SLOT(Reboot()));
              }
          }
         if(info->progress != 100)

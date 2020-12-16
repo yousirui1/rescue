@@ -32,8 +32,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     global->setDesktopRect(QApplication::desktop()->availableGeometry());
 
-
-
     loadFont("/opt/freetype2/font/pin.ttf");
     stackLayout = new QStackedLayout();
     upload_ui = new Uploadwindow();
@@ -86,7 +84,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->netpoint_label->setPixmap(QPixmap::fromImage(point_img));
 
 
-
     mainLayout = new QVBoxLayout;
     mainLayout->addLayout(stackLayout);
     setLayout(mainLayout);
@@ -100,7 +97,20 @@ MainWindow::MainWindow(QWidget *parent) :
         this->hide();
     }
     else {
-        emit display(0);
+        if(strlen(global->conf.server.ip) != 0)
+        {
+            Global *global = Global::getGlobal();
+            char head[HEAD_LEN] = {0};
+            global->pipe->send_pipe(head, INSTALL_PIPE, 0);
+            global->setDownLoadFlag(1);
+
+            emit display(2);
+            this->hide();
+        }
+        else {
+             emit display(0);
+        }
+
     }
 
 }

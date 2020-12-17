@@ -47,16 +47,25 @@ void parse_options(int argc, char *argv[])
 		switch(ch)
 		{
 			case 't':
-				DEBUG("tftp ip:%s", optarg);
-				strcpy(conf.tftp_ip, optarg);
+				if(strlen(optarg) > 8)
+				{
+					DEBUG("tftp ip:%s", optarg);
+					strcpy(conf.tftp_ip, optarg);
+				}
 				break;
 			case 's':
-				DEBUG("server ip:%s", optarg);
-				strcpy(conf.server.ip, optarg);
+				if(strlen(optarg) > 8)
+				{
+					DEBUG("server ip:%s", optarg);
+					strcpy(conf.server.ip, optarg);
+				}
 				break;
 			case 'n':
-				DEBUG("nfs ip:%s", optarg);
-				strcpy(conf.nfs_ip, optarg);
+				if(strlen(optarg) > 8)
+				{
+					DEBUG("nfs ip:%s", optarg);
+					strcpy(conf.nfs_ip, optarg);
+				}
 				break;
 			case 'h':
 				usage();	
@@ -94,13 +103,11 @@ int main(int argc, char *argv[])
 	{
 		DIE("create event thread ret: %d error: %s", ret, strerror(ret));
 	}
-
 	ret = pthread_create(&pthread_ui, NULL, thread_ui, NULL);
 	if(SUCCESS != ret)
 	{
 		DIE("create ui thread ret: %d error: %s", ret, strerror(ret));
 	}
-
 	ret = pthread_create(&pthread_task, NULL, thread_task, NULL);
 	if(SUCCESS != ret)
 	{

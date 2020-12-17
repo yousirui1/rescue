@@ -87,7 +87,7 @@ static void find_all_disks()
 	dev_t root_device = 0;
 	struct stat statbuf;
 	char buf[128] = {0};
-	char result[128] = {0};
+	char result[MAX_BUFLEN] = {0};
 	PedDevice *dev;
 	if(stat("/", &statbuf) == 0)
 		root_device = statbuf.st_dev;
@@ -122,7 +122,7 @@ static void find_all_disks()
 			strcpy(dev_info.disks[dev_info.disk_count].name, d->d_name);	
 			
 			sprintf(buf, "cat /sys/block/%s/removable", d->d_name);
-			memset(result, 0, sizeof(result));
+			//memset(result, 0, sizeof(result));
 			exec_cmd(buf, result);	
 
 			DEBUG("cat /sys/block/%s/removable %s",d->d_name, result);
@@ -171,8 +171,6 @@ static void find_all_disks()
 			dev_info.disk_count++;
 		}
 	}
-
-
 	closedir(dir);
 }
 
@@ -190,9 +188,6 @@ void find_all_netcards()
     if(ret == 1) 		//未获取ip 只扫描到loop网卡 
     {   
 		DEBUG("only find loop network");
-        //exec_cmd("udhcpc -n -i eth0", result);			//没必要尝试了
-		//exec_cmd("udhcpc -t 1 -R -q -n ", result);		//关闭dhcp
-		exec_cmd("ifconfig eth0 169.254.1.1 netmask 255.255.0.0", result);	//设置默认地址
     	ret = get_netcard_info(&dev_info.net);
     }   
 
@@ -212,7 +207,7 @@ void find_all_netcards()
         if(STRPREFIX(dev_info.net[i].name, "eth0"))
         {   
             memcpy(net->ip, dev_info.net[i].ip, 32);
-            memcpy(net->netmask, "255.255.0.0", 32);
+            memcpy(net->netmask, dev_info.net[i].netmask, 32);
 
 			strupr(dev_info.net[i].mac);	
 			DEBUG("mac %s", dev_info.net[i].mac);
@@ -246,7 +241,6 @@ void init_device()
     exec_cmd("hwinfo --short --cpu | awk '{if (NR>1) {print $0}}'", result);
     sscanf(result, "\t\t\t\t\t\t%[^\n]", terminal->cpu);
     
-    memset(result, 0, MAX_BUFLEN);
     exec_cmd("hwinfo --short --netcard | awk '{if (NR>1) {print $0}}'", result);
     sscanf(result, "%s\t\t\t\t\t\t%[^\n]",buf, terminal->netcard);
 	DEBUG("terminal->netcard %s", terminal->netcard);
@@ -337,8 +331,9 @@ int umount_boot()
     char result[MAX_BUFLEN] = {0};
     char cmd[MAX_BUFLEN] = {0};
 
-    sprintf(cmd, umount_sh, dev_info.mini_disk->name);
-    exec_cmd(cmd, result);
+	strcpy(cmd, umount_sh);
+    exec_cmd(umount_sh, result);
+
     if(strstr(result, "successd"))
     {   
 		return SUCCESS;
@@ -354,11 +349,12 @@ int format_disk(const char *path)
     char result[MAX_BUFLEN] = {0};
     char cmd[MAX_BUFLEN] = {0};
 
-//	umount_boot();
+	//umount_boot();
 
     sprintf(cmd, "parted -s %s mklabel gpt", path);
     DEBUG("cmd: %s", cmd);
     exec_cmd(cmd, result);  
+    DEBUG("result: %s", result);
     if(strstr(result, "Error"))
     {   
         DEBUG("%s", result);
@@ -368,6 +364,7 @@ int format_disk(const char *path)
     sprintf(cmd, "parted -s %s mkpart YZYVOI fat32 0%c 1.075G", path, '%');
     DEBUG("cmd: %s", cmd);
     exec_cmd(cmd, result);  
+	DEBUG("result %s", result);
     if(strstr(result, "Error"))
     {   
         DEBUG("%s", result);
@@ -377,6 +374,7 @@ int format_disk(const char *path)
     sprintf(cmd, "parted %s set 1 boot on", path);
     exec_cmd(cmd, result);  
     DEBUG("cmd: %s", cmd);
+	DEBUG("result %s", result);
     if(strstr(result, "Error"))
     {   
         DEBUG("%s", result);
@@ -395,16 +393,15 @@ int format_disk(const char *path)
     	sprintf(cmd, "mkfs.vfat %s1", path);
 	}
 
+	memset(result, 0, sizeof(result));
     DEBUG("cmd: %s", cmd);
     exec_cmd(cmd, result); 
 	DEBUG("result %s", result);
-	init_qcow2(dev_info.mini_disk->dev, 0);
-
-	return SUCCESS;
 
     if(!strlen(result))
     {   
         DEBUG("format_disk fat 1G ok");
+		init_qcow2(dev_info.mini_disk->dev, 0);
 		return SUCCESS;
     }   
     else
@@ -486,6 +483,7 @@ int install_programe()
 	DEBUG("file_name %s", info->file_name);
 	send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_UI);
 
+#if 0
 	umount_boot();
 	if(mount_boot() != SUCCESS)
 	{
@@ -493,6 +491,7 @@ int install_programe()
 		send_error_msg(INSTALL_ERR);
 		return ERROR;
 	}
+#endif
 
 #ifdef USB
 	if(!dev_info.usb_disk)

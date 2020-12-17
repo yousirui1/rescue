@@ -177,6 +177,7 @@ void exec_cmd(const char *cmd, char *result)
     char tmp[MAX_BUFLEN] = {0};
     FILE *fp;
     strcpy(tmp, cmd);
+	memset(result, 0, MAX_BUFLEN);
     if((fp = popen(tmp, "r")) != NULL)
     {   
         while(fgets(buf, MAX_BUFLEN, fp) != NULL)

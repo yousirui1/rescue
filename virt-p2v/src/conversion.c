@@ -129,7 +129,7 @@ static int notify_event(char *buf, int size)
 			sscanf(&token[4], "(%f/%f)", &progress, &progress_end);
 			//DEBUG("%f", progress);
 			info->progress = (int)progress;
-			send_pipe(pipe_buf, P2V_OS_PIPE, sizeof(struct progress_info), PIPE_EVENT);
+			send_pipe(pipe_buf, PROGRESS_PIPE, sizeof(struct progress_info), PIPE_EVENT);
 		}
 	}
 }

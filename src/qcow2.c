@@ -93,6 +93,7 @@ uint64_t add_qcow2(PedDevice *dev, char *name, uint32_t diff, uint64_t sizeLba, 
 	char temp[32] = {0};
 	uuid2str(&uuid, temp);
 
+
 	pQe = scan_qcow2(name, diff);
 	if(pQe)
 	{
@@ -163,6 +164,11 @@ void del_diff_qcow2(PedDevice *dev, char *name)
 	str2uuid(name, &uuid);
 
     uint32_t i;
+
+
+    if (!storeDrv.pStoreCfg) 
+        return ;
+
     for (i = 0; i < storeDrv.pStoreCfg->qcowCount; i++)
     {
         PYZY_QCOW_ENTRY pQe = &storeDrv.pStoreCfg->entry[i];
@@ -223,6 +229,10 @@ void print_qcow2(PedDevice *dev)
 int check_os_qcow2()
 {
     uint32_t i;
+
+    if (!storeDrv.pStoreCfg) 
+        return ERROR;
+
     for (i = 0; i < storeDrv.pStoreCfg->qcowCount; i++)
     {
         PYZY_QCOW_ENTRY pQe = &storeDrv.pStoreCfg->entry[i];
@@ -238,9 +248,12 @@ int get_max_diff_qcow2(char *name)
 	YZYGUID uuid = {0};
 	str2uuid(name, &uuid);
 
-
     uint32_t i;
 	int max_diff = -1;
+
+    if (!storeDrv.pStoreCfg) 
+        return max_diff;
+
     for (i = 0; i < storeDrv.pStoreCfg->qcowCount; i++)
     {
         PYZY_QCOW_ENTRY pQe = &storeDrv.pStoreCfg->entry[i];
@@ -263,6 +276,10 @@ int get_minor_max_diff_qcow2(char *name, uint32_t diff)
 
     uint32_t i;
 	uint32_t j;
+
+    if (!storeDrv.pStoreCfg) 
+        return -1;
+
 	for(i = --diff; i> 0 ; i--)
 	{
 		pQe = storeDrv.scan(i, &uuid);
@@ -278,6 +295,9 @@ PYZY_QCOW_ENTRY scan_qcow2(char *name, uint32_t difLevel)
     uint32_t i;
 	YZYGUID uuid = {0};
 	str2uuid(name, &uuid);
+
+    if (!storeDrv.pStoreCfg) 
+        return NULL;
 	
     for (i = 0; i < storeDrv.pStoreCfg->qcowCount; i++)
     {   

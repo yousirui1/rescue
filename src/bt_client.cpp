@@ -188,7 +188,8 @@ int start_torrent(char *torrent, char *save_path, char *pipe_buf, int diff_mode,
 
 	//strcpy(info->state, "finished");
 	//send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
-	ses.abort();
+	//ses.abort();
+	DEBUG("bt download ret : %d", ret);
 	return ret;
 }
 catch(std::exception &e)

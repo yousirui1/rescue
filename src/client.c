@@ -12,12 +12,6 @@ int first_time = 1; 	//第一次登陆
 static int send_get_desktop_group_list(struct client *cli);
 static int send_get_diff_torrent(struct client *cli, char *group_uuid, char *diff_uuid, int diff, int type);
 
-#if 0
-void update_desktop(char *json)
-{
-
-}
-#endif
 
 void client_reconnect()
 {
@@ -89,21 +83,17 @@ int send_upload_log(struct client *cli)
     
     ret = upload_logs(&cli->send_buf, &cli->send_size);
 
-	DEBUG("------- send_upload_log ------------------");
     set_packet_head(cli->send_head, UPLOAD_LOG, cli->send_size, BYTE_TYPE, 0);
     return send_packet(cli, 0);
 }
 
 int download_default_os(struct client *cli)
 {
-	DEBUG("download_default_os !!!!!!!!!");
 	int i = 0;
     for (i = 0; i < MAX_GROUP; i++)
     {
-		DEBUG("m_group[i].default_desktop_flag %d", m_group[i].default_desktop_flag);
         if (strlen(m_group[i].group_uuid) != 0 && m_group[i].default_desktop_flag)
         {
-			DEBUG("m_group[i].os_uuid %s", m_group[i].os_uuid);
     		 send_get_diff_torrent(cli, m_group[i].group_uuid, m_group[i].os_uuid, 0, 0);		        
     		 send_get_diff_torrent(cli, m_group[i].group_uuid, m_group[i].os_uuid, 1, 0);		        
     		 send_get_diff_torrent(cli, m_group[i].group_uuid, m_group[i].os_uuid, 2, 0);		        
@@ -1588,7 +1578,7 @@ static int send_set_update_config(struct client *cli)
             cJSON_AddStringToObject(root, "name", conf.terminal.name);
         cJSON_AddStringToObject(root, "ip", conf.netcard.ip);
         cJSON_AddNumberToObject(root, "is_dhcp", conf.netcard.is_dhcp);
-        cJSON_AddStringToObject(root, "mask", "255.255.255.0");
+        cJSON_AddStringToObject(root, "mask", conf.netcard.netmask);
         cJSON_AddStringToObject(root, "gateway", conf.netcard.gateway);
         cJSON_AddStringToObject(root, "dns1", conf.netcard.dns1);
         cJSON_AddStringToObject(root, "dns2", conf.netcard.dns2);

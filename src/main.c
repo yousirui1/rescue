@@ -97,17 +97,20 @@ int main(int argc, char *argv[])
 	init_pipe();
 	init_device();
 	init_configs();
+	bt_client();
 
 	ret = pthread_create(&pthread_event, NULL, thread_event, NULL);
 	if(SUCCESS != ret)
 	{
 		DIE("create event thread ret: %d error: %s", ret, strerror(ret));
 	}
+
 	ret = pthread_create(&pthread_ui, NULL, thread_ui, NULL);
 	if(SUCCESS != ret)
 	{
 		DIE("create ui thread ret: %d error: %s", ret, strerror(ret));
 	}
+
 	ret = pthread_create(&pthread_task, NULL, thread_task, NULL);
 	if(SUCCESS != ret)
 	{

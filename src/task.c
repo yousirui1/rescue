@@ -5,8 +5,6 @@
 #include "queue.h"
 #include "bt_client.h"
 
-
-
 QUEUE task_queue;
 unsigned char *task_queue_buf = NULL;
 
@@ -35,8 +33,10 @@ static int task_bt(char *data, int length)
 
 	if(offset != 0)
 	{
-		ret = start_torrent(task->torrent_file, dev_info.mini_disk->dev->path, buf, task->diff_mode,
-				(uint64_t)offset * 512);
+		if(add_torrent(task->torrent_file, dev_info.mini_disk->dev->path, (uint64_t)(offset * 512)) == SUCCESS)
+		{
+			ret = start_torrent(task->torrent_file, buf, task->diff_mode);
+
 		if(SUCCESS == ret)
 		{
 			save_qcow2(dev_info.mini_disk->dev);
@@ -54,6 +54,7 @@ static int task_bt(char *data, int length)
 					info->progress = 0;
 					del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
 					save_qcow2(dev_info.mini_disk->dev);
+					DEBUG("change back file error uuid %s diff %d", task->uuid, task->diff);
 				}
 			}	
 			else
@@ -61,7 +62,16 @@ static int task_bt(char *data, int length)
 				info->progress = 100;
 				ret = SUCCESS;
 				set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
+				DEBUG("set boot uuid: %s diff %d", task->uuid, task->diff);
 			}
+		}
+		else
+		{
+			info->progress = 0;
+			del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
+			save_qcow2(dev_info.mini_disk->dev);
+		}
+
 		}
 		else
 		{

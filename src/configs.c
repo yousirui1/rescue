@@ -26,6 +26,7 @@ void init_configs()
     netcard_param *net = &(conf.netcard);
     server_info *server = &(conf.server);
 
+
     DEBUG("config_file %s", config_file);
 	terminal->id = 1;
     /* base */
@@ -98,7 +99,7 @@ void init_configs()
         	exec_cmd(cmd, result);
 		}
 	}
-   
+
     if(read_profile_string(NET_SECTION, NET_DNS1_KEY, buf, sizeof(buf), net->dns1, config_file))
     {
 		if(strlen(buf) != 0)

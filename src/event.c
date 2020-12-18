@@ -155,7 +155,7 @@ void event_loop()
                 continue;
             else if(errno != EBADF)
             {
-                FAIL("select %s error", strerror(ret));
+                DEBUG("select %s error", strerror(ret));
                 continue;
             }
         }
@@ -165,9 +165,12 @@ void event_loop()
 		if(current_time - last_time >= TIME_OUT)
 		{
 			if(m_client.online)
+			{
 				ret = send_heartbeat(&m_client);
+			}
 			if(ret != SUCCESS || m_client.online <= 0)
 			{
+				DEBUG("send_heartbeat error reconnect server");
 				client_reconnect();					
 			}
 			m_client.online --;		//3个包
@@ -230,6 +233,7 @@ void event_loop()
 						(ifinfo->ifi_flags & IFF_LOWER_UP) ? "up" : "down" );
 				if(ifinfo->ifi_flags & IFF_LOWER_UP)		//UP
 				{
+					DEBUG("netcard restart reconnect server");
 					client_reconnect();	
 				}
 				else										//down

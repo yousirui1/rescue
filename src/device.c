@@ -188,6 +188,7 @@ void find_all_netcards()
     if(ret == 1) 		//未获取ip 只扫描到loop网卡 
     {   
 		DEBUG("only find loop network");
+		exec_cmd("ifconfig eth0 169.254.1.1 netmask 255.255.0.0", result);
     	ret = get_netcard_info(&dev_info.net);
     }   
 
@@ -236,6 +237,7 @@ void init_device()
     char result[MAX_BUFLEN] = {0};
 
 	terminal_info *terminal = &(conf.terminal);
+    //memset(t, 0, sizeof(struct device_info));
     memset(&dev_info, 0, sizeof(struct device_info));
     
     exec_cmd("hwinfo --short --cpu | awk '{if (NR>1) {print $0}}'", result);

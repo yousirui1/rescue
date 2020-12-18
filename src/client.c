@@ -12,7 +12,6 @@ int first_time = 1; 	//第一次登陆
 static int send_get_desktop_group_list(struct client *cli);
 static int send_get_diff_torrent(struct client *cli, char *group_uuid, char *diff_uuid, int diff, int type);
 
-
 void client_reconnect()
 {
     char head[HEAD_LEN] = {0}; 
@@ -1178,7 +1177,6 @@ static int recv_get_desktop_group_list(struct client *cli)
     int ret; 
     char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
     cJSON *root = cJSON_Parse((char *)(buf));
-	DEBUG("%s", buf);
     if (root)
     {    
         cJSON *code = cJSON_GetObjectItem(root, "code");
@@ -1293,6 +1291,8 @@ static int recv_get_desktop_group_list(struct client *cli)
 
                                     //item = cJSON_GetArrayItem(disks, j + 1);
                                     item = cJSON_GetArrayItem(disks, ++j);
+									operate_id_next = NULL;
+									dif_level_next = NULL;
                                     if (item) //diff level 2
                                     {
                                         dif_level_next = cJSON_GetObjectItem(item, "dif_level");
@@ -1686,7 +1686,7 @@ static int recv_login(struct client *cli)
 	int ret = ERROR;
 	char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
 	cJSON *root = cJSON_Parse((char *)(buf));
-	//DEBUG("%s", buf);
+	DEBUG("%s", buf);
 	if(root)
 	{
 		cJSON *code = cJSON_GetObjectItem(root, "code");
@@ -1983,7 +1983,7 @@ static void tcp_loop()
 				{
 					current->pos = 0;
 					current->has_read_head = 0;
-					FAIL("recv msg fail pos: %d size %d", current->pos, current->recv_size);
+					DEBUG("recv msg fail pos: %d size %d", current->pos, current->recv_size);
 					continue;
 				}
 			}
@@ -2016,12 +2016,13 @@ int init_client()
 	cli->fd = create_tcp();
 	if(-1 == cli->fd)
 	{
-		FAIL("create sockfd ret: %d error: %s", cli->fd, strerror(errno));
+		DEBUG("create sockfd ret: %d error: %s", cli->fd, strerror(errno));
 		return ERROR;
 	}
 
 	DEBUG("server->ip: %s server->port: %d", server->ip, 50007);
-	ret = connect_server(cli->fd, server->ip, server->port, TIME_OUT);
+	ret = connect_server(cli->fd, server->ip, 50007, TIME_OUT);
+	DEBUG("connect ret %d", ret);
 	if(ret != SUCCESS)
 	{
 		DEBUG("connect server ip: %s port: %d timeout 10s", server->ip, server->port);
@@ -2031,7 +2032,7 @@ int init_client()
 	ret = send_login(cli);
 	if(ret != SUCCESS)
 	{
-		FAIL("login server ip: %s port: %d error", server->ip, server->port);
+		DEBUG("login server ip: %s port: %d error", server->ip, server->port);
 		close_fd(cli->fd);
 	}
 	return ret;

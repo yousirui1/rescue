@@ -195,6 +195,52 @@ void exec_cmd(const char *cmd, char *result)
     }   
 }
 
+#if 0
+int exec_cmd_str(const char *cmd, char *result)
+{
+    char buf[MAX_BUFLEN];
+    FILE *fp;
+	memset(result, 0, MAX_BUFLEN);
+    if((fp = popen(cmd, "r")) != NULL)
+    {   
+        while(fgets(buf, MAX_BUFLEN, fp) != NULL)
+        {   
+            strcat(result, buf);
+            if(strlen(result) > MAX_BUFLEN)
+                break;
+        }   
+        pclose(fp); 
+    }   
+    else
+    {   
+        FAIL("popen cmd: %s", cmd);
+        return ERROR;
+    }   
+}
+
+int exec_cmd_bool(const char *cmd, char *result)
+{
+    char buf[MAX_BUFLEN];
+    FILE *fp;
+	memset(result, 0, MAX_BUFLEN);
+    if((fp = popen(cmd, "r")) != NULL)
+    {   
+        while(fgets(buf, MAX_BUFLEN, fp) != NULL)
+        {   
+            strcat(result, buf);
+            if(strlen(result) > MAX_BUFLEN)
+                break;
+        }   
+        pclose(fp); 
+    }   
+    else
+    {   
+        FAIL("popen cmd: %s", cmd);
+        return ERROR;
+    }   
+}
+#endif
+
 
 #define IFF_LOWER_UP	0x10000
 int get_netcard_state()

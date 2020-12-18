@@ -1,3 +1,6 @@
+## 2.10
+1. bt download 99% return bug
+
 ## 2.9
 1. netmask to server 255.255.255.0 bug
 2. 增加pxe带参数启动 存在server_ip自动安装终端和默认下载桌面

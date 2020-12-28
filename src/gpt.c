@@ -1,6 +1,7 @@
 #include "base.h"
 #include "gpt.h"
 #include "device.h"
+#include "disk.h"
 #include "StoreConfig.h"
 
 //#include "file.h"
@@ -381,7 +382,6 @@ int read_gpt(DiskDriver* pdd)
         DEBUG(" No partitions defined\n");
         return ERROR;
     }
-
     return 0;
 }
 
@@ -397,3 +397,64 @@ int scan_yzy_gpt(DiskDriver* pdd)
     //  rootPathName = 0x001dd914 "\\\\?\\Volume{34e9d950-d1e7-4639-bd71-3c0b5da8865b}\\"
 }
 
+static PedDisk *gpt_alloc(const PedDevice *dev)
+{
+#if 0
+	PedDisk *disk;
+	GPTDiskData *gpt_disk_data;
+	PedSector data_start, data_end;
+
+	disk = disk_alloc();
+
+	if(!disk)
+		goto error;
+
+	data_start = 2 + GPT_DEFAULT_PARTITION_ENTRY_ARRAY_SIZE / dev->sector_size;
+	data_end = dev->length - 2 - GPT_DEFAULT_PARTITION_ENTRY_ARRAY_SIZE / dev->sector_size;
+		
+	/* If the device is too small to have room for data, reject it */
+	if(data_end <= data_start)
+		goto error_free_disk;
+
+	disk->disk_specific = gpt_disk_data = malloc(sizeof(GPTDiskData));
+	
+	if(!disk->disk_specific)
+		goto error_free_disk;
+
+	//ped_geometry_init();
+	
+	gpt_disk_data->entry_count = GPT_DEFAULT_PARTITION_ENTRIES;
+	uuid_generate();
+	swap_uuid_and_efi_guid();
+	gpt_disk_data->pmbr_boot = 0;	
+
+	return disk;
+error_free_disk:
+	free(disk);
+error:
+	return NULL;
+#endif
+}
+
+static int gpt_read(const PedDisk *disk)
+{
+
+}
+
+
+static int gpt_write(const PedDisk *disk)
+{
+
+}
+
+/* p2v 修改gpt 分区大小和位置 */
+int modify_gpt_size(const PedDevice *dev, uint64_t sector_size)
+{
+	PedDisk *disk = gpt_alloc(dev);
+		
+	gpt_read(disk);	
+
+	//disk->size = 0;
+
+	gpt_write(disk);
+}

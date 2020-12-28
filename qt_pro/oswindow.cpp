@@ -21,6 +21,12 @@ OSWindow::OSWindow(QWidget *parent) :
     QImage icon_img;
     QImage point_img;
 
+    if(this->width() < 1024 ||this->height() < 768)
+    {   
+        this->ui->pushButton_11->setGeometry(this->width() / 2 - 45 - 91, this->height() - 140, 91, 33);
+        this->ui->pushButton_12->setGeometry(this->width() / 2 + 45 , this->height() - 140, 91, 33);
+    }  
+
     ip_state= tr("离线");
     icon_img.load(":/images/off-online.png");
     point_img.load(":/images/offline-point.png");

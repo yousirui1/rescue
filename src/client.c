@@ -110,7 +110,6 @@ static int recv_heartbeat(struct client *cli)
 {
 	int ret = ERROR;
 	char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
-	//DEBUG("%s", buf);	
 	cJSON *root = cJSON_Parse((char *)(buf));
 	if(root)
 	{
@@ -126,6 +125,10 @@ static int recv_heartbeat(struct client *cli)
             //修改时间
             ret = SUCCESS;
         }    
+		else
+		{
+			DEBUG("code error msg %s", buf);
+		}
         cJSON_Delete(root);
 	}
 	return ret;
@@ -1174,10 +1177,10 @@ static int send_get_diff_torrent(struct client *cli, char *group_uuid, char *dif
 
 static int recv_get_desktop_group_list(struct client *cli)
 {
-    int ret; 
+    int ret, current = -1;
     char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
     cJSON *root = cJSON_Parse((char *)(buf));
-	DEBUG("%s", buf);
+	//DEBUG("%s", buf);
     if (root)
     {    
         cJSON *code = cJSON_GetObjectItem(root, "code");
@@ -1242,14 +1245,28 @@ static int recv_get_desktop_group_list(struct client *cli)
                         else if (type->valueint == 1)
                         {
                             memcpy(m_group[i].data_uuid, uuid->valuestring, 36);
+                            if (scan_qcow2(uuid->valuestring, 0) == NULL) //之前没有数据盘base 0, 新增的数据盘
+                            {
+                                if(current != i && m_group[i].os_uuid && scan_qcow2(m_group[i].os_uuid, 0))
+                                {
+									DEBUG("new add data qcow2 disk");
+                                    send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 0,
+                                                            type->valueint);
+                                    send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 1,
+                                                            type->valueint);
+                                    send_get_diff_torrent(cli, desktop_group_uuid->valuestring, uuid->valuestring, 2,
+                                                            type->valueint);
+
+									current = i;
+                                }
+                            }
                         }
                         else if (type->valueint == 2)
                         {
                             memcpy(m_group[i].share_uuid, uuid->valuestring, 36); //共享盘特殊处理
                             if (get_operate_qcow2(uuid->valuestring, 0) != operate_id->valueint) //暂定没有自动更新标识
                             {
-								DEBUG("check_os_qcow2() %d", check_os_qcow2());
-								if(check_os_qcow2() == SUCCESS)	//存在系统盘
+								if(scan_qcow2(m_group[i].os_uuid, 0))	//存在系统盘
 								{
                                 	DEBUG("update share qcow2 disk ");
                                 	del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 0);
@@ -1514,6 +1531,10 @@ static int recv_get_config(struct client *cli)
 			else	
 				ret = SUCCESS;
 		}
+		else
+		{
+			DEBUG("code error msg %s", buf);
+		}
 run_out:
 		cJSON_Delete(root);
 	}
@@ -1554,6 +1575,10 @@ static int recv_set_update_config(struct client *cli)
         {
             ret = send_get_config(cli);
         }
+		else
+		{
+			DEBUG("code error msg %s", buf);
+		}
         cJSON_Delete(root);
     }
     return ret;
@@ -1604,10 +1629,10 @@ static int send_set_update_config(struct client *cli)
         
         cli->send_buf = cJSON_Print(root);
         cli->send_size = strlen(cli->send_buf);
+		//DEBUG("%s", cli->send_buf);
         
         set_packet_head(cli->send_head, UPDATE_CONFIG_INTO, cli->send_size, JSON_TYPE, 0);
         ret = send_packet(cli, 0);
-
 		if(first_time)
 		{
 			ret = send_get_desktop_group_list(cli);
@@ -1687,7 +1712,6 @@ static int recv_login(struct client *cli)
 	int ret = ERROR;
 	char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
 	cJSON *root = cJSON_Parse((char *)(buf));
-	DEBUG("%s", buf);
 	if(root)
 	{
 		cJSON *code = cJSON_GetObjectItem(root, "code");
@@ -1697,6 +1721,10 @@ static int recv_login(struct client *cli)
 			client_online();
 			set_packet_token(cli);
 			ret = send_config_version(cli);
+		}
+		else
+		{
+			DEBUG("code error msg %s", buf);
 		}
 		cJSON_Delete(root);
 	}

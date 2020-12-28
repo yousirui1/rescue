@@ -221,6 +221,20 @@ void stop_torrent()
 	DEBUG("recv msg stop bt download task");
 }
 
+
+void check_torrent(char *torrent)
+{
+    std::vector<lt::torrent_handle> torrents = m_ses->get_torrents();
+    for(auto h : torrents)
+    {   
+		if(STRPREFIX(&torrent[6], h.get_torrent_info().files().name().c_str()))
+		{
+			m_ses->remove_torrent(h);
+			break;
+		}
+	}
+}
+
 int add_torrent(char *torrent, char *save_path, uint64_t physical_offset) try
 {
     lt::add_torrent_params params;
@@ -230,6 +244,7 @@ int add_torrent(char *torrent, char *save_path, uint64_t physical_offset) try
     params.download_limit = 0;
     params.upload_limit = 0;
 
+	check_torrent(torrent);
 	if(!m_ses)
 		return ERROR;
 
@@ -308,7 +323,7 @@ int start_torrent(char *torrent, char *pipe_buf, int diff_mode) try
 					DEBUG("%s download rate %lu KB/s, total_download %lu KB, uprate %lu KB/s, total_up %lu KB, progress %d",
                     state(s.state), s.download_payload_rate / 1000, s.total_done / 1000, s.upload_rate/1000, 
                     s.total_upload / 1000, s.progress_ppm / 10000);	
-					DEBUG("torrent_id %d s.handle.id() %d", m_torrent_id, s.handle.id());
+					DEBUG("torrent_id %lu s.handle.id() %lu", m_torrent_id, s.handle.id());
 					if(m_torrent_id != 0 && m_torrent_id == s.handle.id())
 					{
 					 	strcpy(info->state, state(s.state));

@@ -123,7 +123,7 @@ struct hd_geometry {
 };
 
 
-static int _mount_table_search(const char* file_name, dev_t dev)
+int _mount_table_search(const char* file_name, dev_t dev)
 {
 	struct stat part_stat;
 	char line[512];

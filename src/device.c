@@ -288,7 +288,11 @@ void init_device()
 		DEBUG("terminal->disk_size %llu", terminal->disk_size);
         if(dev_info.mini_disk->disk_ready) // 安装ok
         {
-			umount_boot();
+			if(_mount_table_search("/boot", dev_info.mini_disk->dev))
+			{
+				umount_boot();
+			}
+
 			if(mount_boot() == SUCCESS)
 			{
 				exec_cmd("mkdir -p /boot/conf", result);
@@ -346,13 +350,17 @@ int umount_boot()
 	}
 }
 
+
 int format_disk(const char *path)
 {
     char result[MAX_BUFLEN] = {0};
     char cmd[MAX_BUFLEN] = {0};
 
-	//umount_boot();
-
+	if(_mount_table_search("/boot", dev_info.mini_disk->dev))
+	{
+		umount_boot();
+	}
+	
     sprintf(cmd, "parted -s %s mklabel gpt", path);
     DEBUG("cmd: %s", cmd);
     exec_cmd(cmd, result);  
@@ -485,15 +493,11 @@ int install_programe()
 	DEBUG("file_name %s", info->file_name);
 	send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_UI);
 
-#if 0
-	umount_boot();
-	if(mount_boot() != SUCCESS)
+	if(_mount_table_search("/boot", dev_info.mini_disk->dev))
 	{
-		DEBUG("mount error");
-		send_error_msg(INSTALL_ERR);
-		return ERROR;
+		umount_boot();
 	}
-#endif
+
 
 #ifdef USB
 	if(!dev_info.usb_disk)

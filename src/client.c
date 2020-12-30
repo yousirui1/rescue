@@ -1180,7 +1180,7 @@ static int recv_get_desktop_group_list(struct client *cli)
     int ret, current = -1;
     char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
     cJSON *root = cJSON_Parse((char *)(buf));
-	//DEBUG("%s", buf);
+	DEBUG("%s", buf);
     if (root)
     {    
         cJSON *code = cJSON_GetObjectItem(root, "code");

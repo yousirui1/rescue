@@ -10,14 +10,10 @@ enum _PedPartitionType {
     PED_PARTITION_PROTECTED         = 0x10
 };
 
-
 typedef struct _PedDisk PedDisk;
 typedef struct _PedDiskType PedDiskType;
 typedef struct _PedPartition PedPartition;
 typedef enum _PedPartitionType PedPartitionType;
-
-
-
 
 struct _PedDisk {
 	PedDevice *dev;					//the device where the partition table lies
@@ -39,7 +35,7 @@ struct _PedPartition
 	
 	/* the partition table of the partition */
 	PedDisk *disk;
-	//PedGeometry geom;			//geometry of the partition
+	PedGeometry geom;			//geometry of the partition
 
 	/* the partition number: In Linux this is the
 	 *
@@ -56,7 +52,7 @@ struct _PedPartition
 
 
 struct _PedDiskType {
-	//PedDiskType *next;
+	PedDiskType *next;
 	const char *name;
 	//PedDiskOps *const ops;
 	//PedDiskTypeFeature features

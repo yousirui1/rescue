@@ -1,6 +1,7 @@
 #include "base.h"
 #include "gpt.h"
 #include "device.h"
+#include "geom.h"
 #include "disk.h"
 #include "StoreConfig.h"
 
@@ -11,6 +12,24 @@
 #endif // _yzyUEFI_
 
 // variables
+typedef struct 
+{
+	uint32_t time_low;
+	uint16_t time_mid;
+	uint16_t time_hi_and_version;
+	uint8_t clock_seq_hi_and_reserved;
+	uint8_t clock_seq_low;
+	uint8_t node[6];
+}efi_guid_t;
+
+
+struct _GPTDiskData
+{
+	PedGeometry data_area;
+	int entry_count;
+	efi_guid_t uuid;
+	int pmbr_boot;
+};
 
 uint8_t empty_guid[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 
@@ -438,7 +457,56 @@ error:
 
 static int gpt_read(const PedDisk *disk)
 {
+	GPTDiskData *gpt_disk_data = disk->disk_specific;
+	int i;
 
+	int write_back = 0;
+
+	ped_disk_delete_all(disk);
+	
+	/* motivation: let the user decide about the pmbr... during
+	 * ped_disk_probe(), they probably didn't get a choice .. */
+	if(!gpt_probe(disk->dev))
+		goto error;
+	
+	GuidPartitionTableHeader_t *gpt = NULL;
+	GuidPartitionTableHeader_t *primary_gpt;
+	GuidPartitionTableHeader_t *backup_gpt;
+	PedSector backup_sector_num;		
+	int read_failure = gpt_read_headers();
+	
+	if(read_failure)
+	{
+		/* This include the case in which there used to be a GPT partition
+	 	 * table here, with an alternate LBA that extended beyond the current
+		 * end-of-device. It's treated as a non-match */
+		pth_free(backup_gpt);
+		pth_free(primary_gpt);
+		return 0;
+	}
+	
+	if(primary_gpt && backup_gpt)
+	{
+		/* Both are valid */
+		if(PED_LE64_TO_CPU() < disk->dev->length - 1)
+		{
+
+		}
+	}
+	else if()
+	{
+
+	}
+	else if()
+	{
+
+	}
+	else
+	{
+
+	}
+	backup_gpt = NULL;
+	primary_gpt = NULL;
 }
 
 

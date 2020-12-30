@@ -335,7 +335,7 @@ int start_torrent(char *torrent, char *pipe_buf, int diff_mode) try
                     	send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
                     	last_time = current_time;
 
-						if(s.total_done == s.total_wanted && STRPREFIX(state(s.state), "seeding"))
+						if(s.total_done == s.total_wanted || STRPREFIX(state(s.state), "seeding"))
 						{
 							DEBUG("download finish done");
 							info->progress = 99;

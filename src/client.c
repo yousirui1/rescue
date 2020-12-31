@@ -1522,7 +1522,7 @@ static int recv_get_config(struct client *cli)
 
 			save_config();
 			send_config_pipe();
-			if(first_time)
+			if(first_time && conf.install_flag)
 			{
 				ret = send_get_desktop_group_list(cli);
 				first_time = 0;

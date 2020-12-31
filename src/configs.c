@@ -245,6 +245,8 @@ int save_config()
 
     sprintf(buf, "v%d.%d", conf.major_ver, conf.minor_ver);
     write_profile_string(VERSION_SECTION, VER_LINUX_KEY, buf, config_file);
+
+	DEBUG("save config success");
 }
 #define MAX_DESKTOP 8
 

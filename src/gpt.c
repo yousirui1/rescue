@@ -455,6 +455,7 @@ error:
 #endif
 }
 
+#if 0
 static int gpt_read(const PedDisk *disk)
 {
 	GPTDiskData *gpt_disk_data = disk->disk_specific;
@@ -526,3 +527,4 @@ int modify_gpt_size(const PedDevice *dev, uint64_t sector_size)
 
 	gpt_write(disk);
 }
+#endif

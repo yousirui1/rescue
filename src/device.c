@@ -288,8 +288,9 @@ void init_device()
 		DEBUG("terminal->disk_size %llu", terminal->disk_size);
         if(dev_info.mini_disk->disk_ready) // 安装ok
         {
-			if(_mount_table_search("/boot", dev_info.mini_disk->dev))
+			//if(_mount_table_search("/boot", dev_info.mini_disk->dev))
 			{
+				DEBUG("");
 				umount_boot();
 			}
 
@@ -321,8 +322,10 @@ int mount_boot()
 	{
     	sprintf(cmd, mount_sh, dev_info.mini_disk->name);
 	}
+	DEBUG("cmd: %s", cmd);
     exec_cmd(cmd, result);
-    if(strstr(result, "successd"))
+	DEBUG("result %s", result);
+    if(STRPREFIX(result, "successd"))
     {   
 		return SUCCESS;
     }   
@@ -340,7 +343,7 @@ int umount_boot()
 	strcpy(cmd, umount_sh);
     exec_cmd(umount_sh, result);
 
-    if(strstr(result, "successd"))
+    if(STRPREFIX(result, "successd"))
     {   
 		return SUCCESS;
     }   
@@ -356,7 +359,7 @@ int format_disk(const char *path)
     char result[MAX_BUFLEN] = {0};
     char cmd[MAX_BUFLEN] = {0};
 
-	if(_mount_table_search("/boot", dev_info.mini_disk->dev))
+	//if(_mount_table_search("/boot", dev_info.mini_disk->dev))
 	{
 		umount_boot();
 	}
@@ -365,27 +368,30 @@ int format_disk(const char *path)
     DEBUG("cmd: %s", cmd);
     exec_cmd(cmd, result);  
     DEBUG("result: %s", result);
-    if(strstr(result, "Error"))
+    if(STRPREFIX(result, "Error"))
     {   
         DEBUG("%s", result);
         return ERROR;
     }   
+
+    sleep(1);
+    exec_cmd("mdev -s", result); 
 
     sprintf(cmd, "parted -s %s mkpart YZYVOI fat32 0%c 1.075G", path, '%');
     DEBUG("cmd: %s", cmd);
     exec_cmd(cmd, result);  
 	DEBUG("result %s", result);
-    if(strstr(result, "Error"))
+    if(STRPREFIX(result, "Error"))
     {   
         DEBUG("%s", result);
         return ERROR;
     }   
 
-    sprintf(cmd, "parted %s set 1 boot on", path);
+    sprintf(cmd, "parted -s %s set 1 boot on", path);
     exec_cmd(cmd, result);  
     DEBUG("cmd: %s", cmd);
 	DEBUG("result %s", result);
-    if(strstr(result, "Error"))
+    if(STRPREFIX(result, "Error"))
     {   
         DEBUG("%s", result);
         return ERROR;
@@ -407,6 +413,13 @@ int format_disk(const char *path)
     DEBUG("cmd: %s", cmd);
     exec_cmd(cmd, result); 
 	DEBUG("result %s", result);
+
+	DEBUG("mount boot ");
+	if(mount_boot() == SUCCESS)
+	{
+		exec_cmd("mkdir -p /boot/conf", result);
+        strcpy(config_file, "/boot/conf/config.ini");
+	}
 
     if(!strlen(result))
     {   
@@ -493,12 +506,6 @@ int install_programe()
 	DEBUG("file_name %s", info->file_name);
 	send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_UI);
 
-	if(_mount_table_search("/boot", dev_info.mini_disk->dev))
-	{
-		umount_boot();
-	}
-
-
 #ifdef USB
 	if(!dev_info.usb_disk)
 	{
@@ -509,7 +516,7 @@ int install_programe()
 
     sprintf(cmd, install_sh, dev_info.mini_disk->name, dev_info.usb_disk->name);
     exec_cmd(cmd, result);
-	if(strstr(result, "successd"))
+	if(STRPREFIX(result, "successd"))
 	{
 		DEBUG("install programe ok");
 		conf.install_flag = 1;

@@ -479,6 +479,14 @@ int convert_32(int iValue)
     return iData;
 }
 
+char *str_tolower(char *str)
+{
+    char *c; 
+    for (c = str; *c; ++c)
+        *c = tolower(*c);
+    return str;
+}
+
 
 
 /* Convert a string representing an amount of memory into the number of

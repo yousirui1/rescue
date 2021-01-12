@@ -73,6 +73,7 @@
 
 #define SUCCESS 0
 #define ERROR 	1
+#define TIMEOUT 3
 
 #define SERVER_PORT 50007
 
@@ -82,7 +83,7 @@
 #define SCHED_PRIORITY_UI       3
 #define SCHED_PRIORITY_TORRENT  4
 
-#define MAX_BUFLEN      1024 * 10
+#define MAX_BUFLEN      1024 * 10   
 #define MAX_FILENAMELEN 256
 #define MAX_CONFIGLEN   1024
 
@@ -90,5 +91,10 @@
 
 #define COVERAGE_MODE 1
 #define INCRMENT_MODE 2
+
+#ifndef __cplusplus
+#define max(a,b)    (((a) > (b)) ? (a) : (b))
+#define min(a,b)    (((a) < (b)) ? (a) : (b))
+#endif
 
 #endif

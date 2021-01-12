@@ -77,7 +77,7 @@ static void process_ui_msg(char *buf, int length)
 		{
 			init_qcow2(dev_info.mini_disk->dev, 0);
 			client_reconnect();
-			remove("/boot/conf/config.ini");
+			remove("/boot/*");
 			sync();
 			reboot(RB_AUTOBOOT);				
 		}

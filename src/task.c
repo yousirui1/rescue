@@ -18,6 +18,9 @@ static int task_bt(char *data, int length)
     progress_info *info = (progress_info *)&buf[HEAD_LEN];
 	
 	strcpy(info->file_name, task->file_name);
+
+
+
 	
 	if(task->diff == 1 && task->diff_mode == INCRMENT_MODE)
 	{
@@ -33,10 +36,116 @@ static int task_bt(char *data, int length)
 
 	if(offset != 0)
 	{
+try:
 		if(add_torrent(task->torrent_file, dev_info.mini_disk->dev->path, (uint64_t)(offset * 512)) == SUCCESS)
 		{
 			ret = start_torrent(task->torrent_file, buf, task->diff_mode);
 
+			if(ret == TIMEOUT)
+			{
+				DEBUG("bt download TIMEOUT try agent");
+				goto try;
+			}
+
+			if(SUCCESS == ret)
+			{
+				save_qcow2(dev_info.mini_disk->dev);
+				if(task->diff != 0)
+				{
+					if(change_back_file_qcow2(dev_info.mini_disk->dev, task->uuid ,task->diff) == SUCCESS)
+					{
+						set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
+						DEBUG("uuid: %s change_back_file_qcow2  %d -> %d ok !!!", task->uuid, task->diff, task->diff - 1);
+						info->progress = 100;
+						ret = SUCCESS;
+					}
+					else
+					{
+						info->progress = 0;
+						del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
+						save_qcow2(dev_info.mini_disk->dev);
+						DEBUG("change back file error uuid %s diff %d", task->uuid, task->diff);
+					}
+				}	
+				else
+				{
+					info->progress = 100;
+					ret = SUCCESS;
+					set_boot_qcow2(dev_info.mini_disk->dev, task->diff, task->disk_type, task->uuid);
+					DEBUG("set boot uuid: %s diff %d", task->uuid, task->diff);
+				}
+			}
+			else
+			{
+				info->progress = 0;
+				del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
+				save_qcow2(dev_info.mini_disk->dev);
+			}
+	
+		}
+		else
+		{
+			info->progress = 0;
+			del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
+			save_qcow2(dev_info.mini_disk->dev);
+		}
+	}
+	else
+	{
+		DEBUG("alloc qcow2 space error %d ", offset);
+		info->progress = 0;
+		send_error_msg(BT_DISK_FULL_ERR);
+	}
+
+    strcpy(info->state, "finished");
+    send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
+
+	return ret;
+}
+
+static void task_http(char *data, int length)
+{
+	int i, ret = ERROR;
+	uint64_t offset = 0;
+    struct http_task *task = (struct http_task *)data;
+
+	char buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};
+    progress_info *info = (progress_info *)&buf[HEAD_LEN];
+
+	DEBUG("task->uuid %s task->diff %d task->real_size %llu task->file_size %llu task->disk_type %d task->operate_id %d ",
+	task->uuid, task->diff, task->real_size, task->file_size, task->disk_type, task->operate_id);
+	DEBUG("task->file_name %s", task->file_name);
+	DEBUG("task->download_url %s", task->download_url);
+	
+	info->file_size = (uint64_t)task->file_size * 512;
+	strcpy(info->file_name, task->file_name);
+
+	*(int *)&(info->storage[0]) = task->diff_mode;
+	info->type = 0x00;
+
+#if 1
+	if(task->disk_type != 0)
+	{
+		return SUCCESS;
+	}
+#endif
+	
+	if(task->diff == 1 && task->diff_mode == INCRMENT_MODE)
+	{
+		offset  = add_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff, (uint64_t)(task->real_size),
+					 task->real_size, 1, task->disk_type, task->operate_id, INCRMENT_MODE);
+	}
+	else	
+	{
+		offset  = add_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff,
+							(uint64_t)(task->file_size) + 1024 * 2, task->real_size, 1, 
+							task->disk_type, task->operate_id, COVERAGE_MODE);
+	}
+
+
+	if(offset != 0)
+	{
+		ret = http_get(task->download_url, buf, offset, dev_info.mini_disk->dev, (uint64_t)task->file_size);
 		if(SUCCESS == ret)
 		{
 			save_qcow2(dev_info.mini_disk->dev);
@@ -71,14 +180,6 @@ static int task_bt(char *data, int length)
 			del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
 			save_qcow2(dev_info.mini_disk->dev);
 		}
-
-		}
-		else
-		{
-			info->progress = 0;
-			del_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff);
-			save_qcow2(dev_info.mini_disk->dev);
-		}
 	}
 	else
 	{
@@ -86,12 +187,12 @@ static int task_bt(char *data, int length)
 		info->progress = 0;
 		send_error_msg(BT_DISK_FULL_ERR);
 	}
-
     strcpy(info->state, "finished");
     send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
-
+	DEBUG("http finish");
 	return ret;
 }
+
 	
 static void task_tftp(char *data, int length)
 {
@@ -149,6 +250,8 @@ static void task_tftp(char *data, int length)
 	}
     DEBUG("tftp_get end ");
 }
+
+
 
 static void task_p2v(char *data, int length)
 {
@@ -222,6 +325,9 @@ void task_loop()
 				case TASK_TFTP:
 					task_tftp(index->pBuf, index->uiSize);
 					break;	
+				case TASK_HTTP:
+					task_http(index->pBuf, index->uiSize);
+					break;
 				default:
 					break;
 			}

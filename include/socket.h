@@ -98,6 +98,8 @@ typedef enum YZY_CMD
     UPDATA_DESKTOP_GROUP_INFO = 1024,
     CANCEL_SEND_DESKTOP,
     CANCEL_P2V,
+	CLEAR_TARGET_DESKTOP = 1031,
+	SEND_DESKTOP_TCP,
 
     UPGRAD = 1030,
     //SHUT  
@@ -192,6 +194,19 @@ struct template_info{
     //unsigned int template_size;
 };
 
+
+
+typedef struct len_and_sockaddr 
+{
+	socklen_t len;
+	union{
+		struct sockaddr sa;
+		struct sockaddr_in sin;
+#if ENABLE_FEATURE_IPV6
+		struct sockaddr_in6 sin6;
+#endif
+	} u;
+}len_and_sockaddr;
 
 
 

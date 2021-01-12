@@ -379,7 +379,7 @@ add_desktop:
 	cJSON *disks = cJSON_GetObjectItem(desktop, "disks");
 	if(!disks)
 	{
-		DEBUG("");
+		DEBUG("not find disks");
 		return ERROR;
 	}
 
@@ -393,11 +393,10 @@ add_desktop:
         dif_level = cJSON_GetObjectItem(item, "dif_level");
         real_size = cJSON_GetObjectItem(item, "real_size");
         reserve_size = cJSON_GetObjectItem(item, "reserve_size");
-        torrent_file = cJSON_GetObjectItem(item, "torrent_file");
-        restore_flag = cJSON_GetObjectItem(item, "restore_flag");
-		if(!uuid || !type || !prefix || !dif_level || !real_size ||!reserve_size || !torrent_file|| !restore_flag)
+        //torrent_file = cJSON_GetObjectItem(item, "torrent_file");
+		if(!uuid || !type || !prefix || !dif_level || !real_size ||!reserve_size )
 		{
-			DEBUG("");
+			DEBUG("param json error");
 			return ERROR;
 		}
 
@@ -430,14 +429,19 @@ add_desktop:
             }
             case 2:             //共享盘
             {
+		
 				write_profile_string(section, SHARE_UUID_KEY, uuid->valuestring, DESKTOP_FILE);
                 sprintf(buf, "%d", dif_level->valueint);
                 write_profile_string(section, SHARE_DIF_KEY, buf, DESKTOP_FILE);
                 write_profile_string(section, SHARE_PREFIX_KEY, prefix->valuestring, DESKTOP_FILE);
                 write_profile_string(section, SHARE_REAL_SIZE_KEY, real_size->valuestring, DESKTOP_FILE);
                 write_profile_string(section, SHARE_RESERVE_SIZE_KEY, reserve_size->valuestring, DESKTOP_FILE);
-                //sprintf(buf, "%d", disk->restore_flag);
-                //write_profile_string(section, SHARE_FLAG_KEY, buf, DESKTOP_FILE);
+        		restore_flag = cJSON_GetObjectItem(item, "restore_flag");
+				if(restore_flag)
+				{
+                	sprintf(buf, "%d", restore_flag->valueint);
+                	write_profile_string(section, SHARE_RESTORE_FLAG, buf, DESKTOP_FILE);
+				}
 
                 break;
             }

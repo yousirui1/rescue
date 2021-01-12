@@ -8,6 +8,7 @@ typedef enum TASK_TYPE
 	TASK_BT = 1,
 	TASK_P2V,
 	TASK_TFTP,
+	TASK_HTTP,
 }TASK_TYPE;
 
 struct p2v_task{
@@ -42,6 +43,25 @@ struct torrent_task {
 
 	int disk_type;
 };
+
+struct http_task 
+{
+	char download_url[128];
+	char file_name[128];
+	char uuid[36];
+	int diff;
+	int diff_mode;	
+
+	unsigned long long real_size;
+	unsigned long long space_size;
+	unsigned long long file_size;	
+	
+	int operate_id;
+
+	int disk_type;
+};
+
+
 
 struct desktop_task {
 	char group_name[128];

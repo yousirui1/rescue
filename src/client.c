@@ -530,6 +530,136 @@ int send_p2v_transform(struct client *cli, char *data)
 }
 
 
+static int send_desktop_tcp(struct client *cli, int batch_no, int code)
+{
+	int ret;
+	if(cli->recv_buf)
+		free(cli->recv_buf);
+
+	cJSON *root = cJSON_CreateObject();
+	cJSON *data = cJSON_CreateObject();
+
+	if(root && data)
+	{
+		if(code)
+		{
+            cJSON_AddNumberToObject(root, "code", 10001);
+            cJSON_AddStringToObject(root, "msg", "voi os is already exist ");
+		}
+		else
+		{
+            cJSON_AddNumberToObject(root, "code", 0);
+            cJSON_AddStringToObject(root, "msg", "Success");
+		}
+		
+        cJSON_AddItemToObject(root, "data", data);
+
+        cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
+        cJSON_AddNumberToObject(data, "batch_no", batch_no);
+
+        cli->recv_buf = cJSON_Print(root);
+        cli->recv_size = strlen(cli->recv_buf);
+        set_packet_head(cli->recv_head, SEND_DESKTOP_TCP, cli->recv_size, JSON_TYPE, 1);
+        ret = send_packet(cli);
+		cJSON_Delete(root);
+	}
+	else
+	{
+		if(root)
+			cJSON_Delete(root);
+		if(data)
+			cJSON_Delete(data);
+	}
+	return ret;	
+
+}
+
+static int recv_desktop_tcp(struct client *cli)
+{
+	int ret = ERROR, i;
+	char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
+	cJSON *root = cJSON_Parse((char *)(buf));
+	struct http_task task;
+	update_desktop(buf);
+	DEBUG("%s", buf);
+	if(root)
+	{
+        cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
+		cJSON *desktop = cJSON_GetObjectItem(root, "desktop");
+		
+		if(desktop)
+		{
+			cJSON *desktop_group_name = cJSON_GetObjectItem(desktop, "desktop_group_name");
+			cJSON *disks = cJSON_GetObjectItem(desktop, "disks");
+			cJSON *desktop_group_uuid = cJSON_GetObjectItem(desktop, "desktop_group_uuid");
+			cJSON *diff_mode = cJSON_GetObjectItem(desktop, "diff_mode");	
+			cJSON *dif_level, *prefix, *real_size, *reserve_size, *file_size, *type, *uuid, *max_diff, *operate_id, *download_url;
+		
+			if(disks && desktop_group_name)
+			{
+				for (i = 0; i < cJSON_GetArraySize(disks); i++)
+				{
+                  	cJSON * item = cJSON_GetArrayItem(disks, i);
+                    if (!item)
+                        continue;
+                    max_diff = cJSON_GetObjectItem(item, "max_dif");
+                    uuid = cJSON_GetObjectItem(item, "uuid");
+                    dif_level = cJSON_GetObjectItem(item, "dif_level");
+                    prefix = cJSON_GetObjectItem(item, "prefix");
+                    real_size = cJSON_GetObjectItem(item, "real_size");
+					file_size = cJSON_GetObjectItem(item, "file_size");
+                    reserve_size = cJSON_GetObjectItem(item, "reserve_size");
+                    type = cJSON_GetObjectItem(item, "type");
+                    operate_id = cJSON_GetObjectItem(item, "operate_id");
+					download_url = cJSON_GetObjectItem(item, "download_url");
+
+                    if (!max_diff || !uuid || !dif_level || !prefix || !real_size || !reserve_size || !type || !operate_id ||
+							!download_url || !file_size)
+                        continue;
+
+		            if (type->valueint == 0)
+            		{
+                		sprintf(task.file_name, "%s_系统盘_%d", desktop_group_name->valuestring, dif_level->valueint);
+            		}
+            		else if (type->valueint == 1)
+            		{
+                		sprintf(task.file_name, "%s_数据盘_%d", desktop_group_name->valuestring, dif_level->valueint);
+            		}
+            		else if (type->valueint == 2)
+            		{
+                		if(operate_id->valueint == get_operate_qcow2(uuid->valuestring, 0)) //共享盘已存在不再下载
+                		{
+                    		DEBUG("share disk uuid: %s data found operated equal: %d ", uuid->valuestring, operate_id->valueint);
+							continue;
+                		}
+                		else
+                		{
+                    		strcpy(task.file_name, "共享盘");
+                		}
+            		}
+            		memcpy(task.uuid, uuid->valuestring, 36);
+            		memcpy(task.download_url, download_url->valuestring, strlen(download_url->valuestring));
+
+            		task.diff = dif_level->valueint;
+            		task.diff_mode = diff_mode->valueint + 1;
+            		task.disk_type = type->valueint;
+
+					sscanf(real_size->valuestring, "%llu", &task.real_size);
+					sscanf(file_size->valuestring, "%llu", &task.file_size);
+
+					task.operate_id = operate_id->valueint;
+            		en_queue(&task_queue, (char *)&task, sizeof(struct http_task), TASK_HTTP);
+				}
+			}
+		}
+        ret = send_desktop_tcp(cli, batch_no->valueint, SUCCESS);
+        cJSON_Delete(root);
+	}
+	return ret;
+}
+
+
+
 static int send_desktop(struct client *cli, int batch_no, int flag)
 {
 	int ret;
@@ -573,12 +703,13 @@ static int send_desktop(struct client *cli, int batch_no, int flag)
 	return ret;	
 }
 
-
 static int recv_desktop(struct client *cli)
 {
 	int ret = ERROR, i;
 	char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
 	cJSON *root = cJSON_Parse((char *)(buf));
+	update_desktop(buf);
+	DEBUG("%s", buf);
 	if(root)
 	{
         cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
@@ -607,7 +738,6 @@ run_out:
 	}
 	return ret;
 }
-
 
 static int send_down_torrent(struct client *cli, char *task_uuid)
 {
@@ -657,13 +787,14 @@ static int recv_down_torrent(struct client *cli)
 
     yzy_torrent *torrent = (yzy_torrent *)&cli->recv_buf[read_packet_supplementary(cli->recv_head) +
                                                          read_packet_token(cli->recv_head)];
-#if 0
+#if 1
     DEBUG("torrent->uuid %s", torrent->uuid);
     DEBUG("torrent->type %d", torrent->type);
     DEBUG("torrent->sys_type %d", torrent->sys_type);
     DEBUG("torrent->dif_level %d", (torrent->dif_level));
     DEBUG("torrent->real_size %lld", torrent->real_size);
     DEBUG("torrent->space_size %lld", torrent->space_size);
+    DEBUG("torrent->file_size %lld", torrent->file_size);
     DEBUG("torrent->data_len %lld", torrent->data_len);
     DEBUG("torrent->operate_id %d", torrent->operate_id);
     DEBUG("torrent->group_uuid %s", torrent->group_uuid);
@@ -743,6 +874,85 @@ static int recv_down_torrent(struct client *cli)
 }
 
 
+static int send_clear_target_desktop(struct client *cli, int batch_no, int code)
+{
+    int ret = ERROR;
+
+	if(cli->recv_buf)
+		free(cli->recv_buf);
+    
+    cJSON *root = cJSON_CreateObject();
+    cJSON *data = cJSON_CreateObject();
+    
+    if (root && data)
+    {   
+        cJSON_AddNumberToObject(root, "code", code);
+		if(code == SUCCESS)
+		{
+        	cJSON_AddStringToObject(root, "msg", "Success");
+		}
+		else
+		{
+        	cJSON_AddStringToObject(root, "msg", "error no find group info");
+		}
+        
+        cJSON_AddItemToObject(root, "data", data);
+        
+        cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
+        cJSON_AddNumberToObject(data, "batch_no", batch_no);
+        
+        cli->recv_buf = cJSON_Print(root);
+        cli->recv_size = strlen(cli->recv_buf);
+        set_packet_head(cli->recv_head, CLEAR_TARGET_DESKTOP, cli->recv_size, JSON_TYPE, 1);
+        ret = send_packet(cli, 1);
+        cJSON_Delete(root);
+    }
+    else
+    {   
+    	if (root)
+        	cJSON_Delete(root);
+        if (data)
+            cJSON_Delete(data);
+    }
+    return ret;
+}
+
+static int recv_clear_target_desktop(struct client *cli)
+{
+    int ret;
+    char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
+    cJSON *root = cJSON_Parse((char *)(buf));
+    if (root)
+    {   
+        cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
+		cJSON *desktop_group_uuid = cJSON_GetObjectItem(root, "desktop_uuid");
+		
+		ret = get_desktop(desktop_group_uuid->valuestring);
+    	if (ret == -1)
+		{
+			DEBUG("no find  target  qcow2");
+			ret = send_clear_target_desktop(cli, batch_no->valueint, ERROR);
+		}
+		else
+		{
+			DEBUG("del target os qcow2 %s", m_group[ret].os_uuid);
+            del_qcow2(dev_info.mini_disk->dev, m_group[ret].os_uuid, 0);
+            del_qcow2(dev_info.mini_disk->dev, m_group[ret].os_uuid, 1);
+            del_qcow2(dev_info.mini_disk->dev, m_group[ret].os_uuid, 2);
+
+			DEBUG("del target data qcow2 %s", m_group[ret].data_uuid);
+            del_qcow2(dev_info.mini_disk->dev, m_group[ret].data_uuid, 0);
+            del_qcow2(dev_info.mini_disk->dev, m_group[ret].data_uuid, 1);
+            del_qcow2(dev_info.mini_disk->dev, m_group[ret].data_uuid, 2);
+
+			ret = send_clear_target_desktop(cli, batch_no->valueint, SUCCESS);
+		}
+        cJSON_Delete(root);
+    }
+    return ret;
+
+}
+
 static int send_clear_all_desktop(struct client *cli, int batch_no)
 {   
     int ret = ERROR;
@@ -778,7 +988,6 @@ static int send_clear_all_desktop(struct client *cli, int batch_no)
     }
     return ret;
 }
-
 
 static int recv_clear_all_desktop(struct client *cli)
 {   
@@ -1631,8 +1840,9 @@ static int send_set_update_config(struct client *cli)
         cli->send_size = strlen(cli->send_buf);
 		//DEBUG("%s", cli->send_buf);
         
-        set_packet_head(cli->send_head, UPDATE_CONFIG_INTO, cli->send_size, JSON_TYPE, 0);
-        ret = send_packet(cli, 0);
+        //set_packet_head(cli->send_head, UPDATE_CONFIG_INTO, cli->send_size, JSON_TYPE, 0);
+        //ret = send_packet(cli, 0);
+		ret = SUCCESS;
 		if(first_time)
 		{
 			ret = send_get_desktop_group_list(cli);
@@ -1695,6 +1905,15 @@ static int send_config_version(struct client *cli)
     if (root)
     {    
         cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
+
+        cJSON_AddStringToObject(root, "platform", "x86");
+     
+        char tmp[12] = {0}; 
+        sprintf(tmp, "%d.%d", conf.major_ver, conf.minor_ver);
+        cJSON_AddStringToObject(root, "soft_version", tmp);
+        //cJSON_AddNumberToObject(root, "conf_version", conf.config_ver);
+        cJSON_AddNumberToObject(root, "disk_residue", conf.terminal.disk_size);
+
 		cli->send_buf = cJSON_Print(root);
         cli->send_size = strlen(cli->send_buf);
 
@@ -1842,6 +2061,13 @@ static int process_msg(struct client *cli)
 
 		case UPGRAD:
 			ret = recv_upgrad(cli);
+			break;
+
+		case CLEAR_TARGET_DESKTOP:
+			ret = recv_clear_target_desktop(cli);
+			break;
+		case SEND_DESKTOP_TCP:
+			ret = recv_desktop_tcp(cli);
 			break;
 
 		default:

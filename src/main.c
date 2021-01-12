@@ -99,6 +99,12 @@ int main(int argc, char *argv[])
 	init_configs();
 	bt_client();
 
+	//int http_get(const char *url, char *pipe_buf, uint64_t offset, PedDevice *dev, uint64_t file_section)
+	
+//http_get("http://192.169.27.181:50000/api/v1/voi/template/download_desktop?filename=voi_0_fbbd45e7-f573-4189-ad22-7f3ff284a1da",
+ //   NULL, 20000, dev_info.mini_disk->dev , 384);
+	
+
 	ret = pthread_create(&pthread_event, NULL, thread_event, NULL);
 	if(SUCCESS != ret)
 	{

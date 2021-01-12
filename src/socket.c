@@ -452,3 +452,128 @@ int send_packet(struct client *cli, int req_flag)
 	}
     return ret;
 }
+
+/* sockfd -> FILE  */
+FILE *open_socket(const char *host, int port)
+{
+	int fd, ret;
+	FILE *fp;
+
+	fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (fd == -1)
+    {   
+        DEBUG("unable to create socket");
+        return NULL;
+    }
+
+	DEBUG("host %s port %d", host, port);
+    ret = connect_server(fd, host, port, TIME_OUT);
+    if(ret != SUCCESS)
+    {    
+        DEBUG("connect http ip: %s port: %d timeout 10s", host, port);
+        close_fd(fd);
+        return NULL;
+    }    
+	
+	fp = fdopen(fd, "r+");
+	if(!fp)
+		return NULL;
+	else 
+		return fp;
+}
+
+
+#if 0
+void set_nport(struct sockaddr *sa, unsigned int port)
+{
+	if(sa->sa_famliy = AF_INET)
+	{
+		struct sockaddr_in *sin = (void *)sa;
+		sin->sin_port = port;
+		return ;
+	}
+}
+
+
+/* host "1.2.3.4[:port]", www.baidu.com[:port]" */
+static len_and_sockaddr* str2sockaddr(const char *host, int port, int ai_flags)
+{
+	int rc;
+	len_and_sockaddr *r;
+	struct addrinfo *result = NULL;
+	struct addrinfo *used_res;
+	const char *org_host = host;
+	const char *cp;
+	struct addrinfo hint;
+	
+	if(is_prefixed_with(host, "local:"))
+	{
+		struct sockaddr_un *sun;
+		r = malloc(LSA_LEN_SIZE + sizeof(struct sockaddr_un));
+		r->len = sizeof(struct sockaddr_un);
+		r->u.sa.sa_family = AF_UNIX;
+		sun = (struct sockaddr_un *)&r->u.sa;
+		strncpy(sun->sun_path, host + 6, sizeof(sun->sun_path));
+		return r;
+	}
+	
+	r = NULL;
+
+	cp = strrchr(host, ':');
+	if(cp && strchr(host, ':') != cp)
+	{
+		cp = NULL;
+	}
+	if(cp)	// point to ':' or "]:" 
+	{
+		int sz = cp - host + 1;
+		//host = strncpy(alloca(sz), host, sz);
+
+		cp++;
+		port = strtou(cp, NULL, 10);
+		if(errno || (unsigned int)port > 0xffff)
+		{
+			DEBUG("port error %s", org_host);
+			return NULL;
+		}	
+	}
+
+	{
+		struct in_addr in4;
+		if(inet_aton(host, &in4) != 0)
+		{
+			r = malloc(LSA_LEN_SIZE + sizeof(struct sockaddr_in));
+			r->len = sizeof(struct sockaddr_in);
+			r->u.sa.sa_family = AF_INET;
+			r->u.sin.sin_addr = in4;
+			goto set_port;
+		}
+
+	}
+
+	memset(&hint, 0, sizeof(hint));
+	hint.ai_famliy = af;
+	/* Need sock_stream, or else we get each address thrice 
+	 * for each possible socket type (tcp, udp, raw ...); */
+	hint.ai_socktype = SOCK_STREAM;
+	hint.ai_socktype = SOCK_STREAM;
+	rc = getaddrinfo(host, NULL, &hint, &result);
+	if(rc || !result)
+	{
+
+	}	
+	while(1)
+	{
+
+
+	}
+
+
+set_port:
+	set_nport(&r->u.sa, htons(port));
+ret:
+	if(result)
+		freeaddrinfo(result);
+	return r;
+}
+#endif

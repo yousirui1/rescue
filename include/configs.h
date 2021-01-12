@@ -74,6 +74,7 @@
 #define SHARE_PREFIX_KEY "share_prefix"
 #define SHARE_REAL_SIZE_KEY "share_real"
 #define SHARE_RESERVE_SIZE_KEY "share_resver"
+#define SHARE_RESTORE_FLAG "restore_flag"
 
 struct terminal_info{
     unsigned int id;

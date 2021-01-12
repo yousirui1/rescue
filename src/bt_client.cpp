@@ -18,6 +18,7 @@ static int run_flag = 0;
 uint32_t m_torrent_id = 0;
 std::shared_ptr<lt::session> m_ses;
 
+
 // return the name of a torrent status enum
 char const* state(lt::torrent_status::state_t s)
 {
@@ -72,109 +73,6 @@ int del_torrent(uint32_t torrent_id)
     }   
     return SUCCESS;
 }
-
-#if 0
-uint32_t add_torrent(const char *torrent, const char *save_path, char *file_name, uint64_t physical_offset) try
-{
-    lt::error_code ec;
-    lt::add_torrent_params params;
-    params.save_path = save_path;
-    params.ti = std::make_shared<lt::torrent_info>(torrent, ec);
-    params.download_limit = 0;
-    params.upload_limit = 0;
-	params.ti->set_physicaldrive_offset(physical_offset);
-
-	if(m_ses)
-	{
-    	lt::torrent_handle th = m_ses->add_torrent(std::move(params));
-		return th.id();
-	}
-	else
-	{
-		return ERROR;
-	}
-}
-catch(std::exception &e) 
-{
-    DEBUG("catch bt error: %s", e.what());
-    return -1; 
-}
-#endif
-
-#if 0
-int download_loop()
-{
-#if 0
-	for()
-	{
-        std::vector<lt::alert*> alerts;
-        m_ses->pop_alerts(&alerts);
-
-        for (lt::alert const* a : alerts) 
-		{
-            std::cout << a->message() << std::endl;
-            // if we receive the finished alert or an error, we're done
-            if (auto at = lt::alert_cast<lt::torrent_finished_alert>(a)) 
-			{
-				if(m_torrent_id == at->handle.id())
-					m_torrent_id = 0;	
-
-				pthread_cond_signal(&bt_cond);
-            }   
-            if (auto at = lt::alert_cast<lt::torrent_error_alert>(a)) 
-			{
-				if(m_torrent_id == at->handle.id())
-					m_torrent_id = 0;	
-				m_ses->remove_torrent(at->handle);
-				pthread_cond_signal(&bt_cond);
-            }   
-
-			if(auto st = lt::alert_cast<lt::state_update_alert>(a))
-			{
-                if(st->status.empty() || m_torrent_id == 0)
-                    continue;
-                /* we only have a single torrent. so we know which one 
-                 * the status is for */
-                (void *)time(&current_time);
-                if(current_time - last_time >= 1)
-                {   
-                    lt::torrent_status const & s = st->status[0];
-					last_time = current_time;
-                    if(m_torrent_id == s.handle.id())
-                    {   
-						DEBUG("%s download rate %lu KB/s, total_download %lu KB, uprate %lu KB/s, total_up %lu KB, progress %d",
-                        state(s.state), s.download_payload_rate / 1000, s.total_done / 1000, s.upload_rate/1000, 
-                        s.total_upload / 1000, s.progress_ppm / 10000);
-
-                       	if(STRPREFIX(state(s.state), "seeding"))			//seeding
-						{
-							pthread_cond_signal(&bt_cond);
-							//m_torrent = 0;
-						}
-						else			//download check
-						{
-							if(s.total_done == s.total_wanted)
-							{
-								pthread_cond_signal(&bt_cond);
-								//pthread_
-								//m_torrent = 0;
-							}
-						}
-                    }   
-				}
-			}
-        }   
-		m_ses->post_torrent_updates();
-        m_ses->post_dht_stats();
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
-	}
-#endif
-done:
-
-
-	return SUCCESS;
-}
-#endif
 
 
 int bt_client() try
@@ -277,6 +175,7 @@ int start_torrent(char *torrent, char *pipe_buf, int diff_mode) try
 	DEBUG("torrent %s", torrent);
 	
 	run_flag = 1;
+	int timeout = 60;
 	while(run_flag)
 	{
 		std::vector<lt::alert *>alerts;
@@ -303,7 +202,7 @@ int start_torrent(char *torrent, char *pipe_buf, int diff_mode) try
 					DEBUG("bt error: %s", a->message().c_str());
 					m_torrent_id = 0;	
 					info->progress = 0;
-					ret = ERROR;
+					ret = TIMEOUT;
 					goto done;
 				}
 			}
@@ -334,8 +233,27 @@ int start_torrent(char *torrent, char *pipe_buf, int diff_mode) try
                     	info->total_size = s.total_done;
                     	send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
                     	last_time = current_time;
+						DEBUG("info->download_rate %llu", info->download_rate);
 
-						if(s.total_done == s.total_wanted || STRPREFIX(state(s.state), "seeding"))
+						if(STRPREFIX(state(s.state), "downloading") &&  info->download_rate < 10)
+						{
+							timeout --;
+						}
+						else
+						{
+							timeout = 60;
+						}
+				
+						if(timeout <= 0)
+						{
+							DEBUG("bt error: %s", a->message().c_str());
+							m_torrent_id = 0;	
+							info->progress = 0;
+							ret = TIMEOUT;
+							goto done;
+						}
+
+						if(s.total_done == s.total_wanted &&  STRPREFIX(state(s.state), "seeding"))
 						{
 							DEBUG("download finish done");
 							info->progress = 99;

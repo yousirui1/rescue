@@ -19,9 +19,6 @@ static int task_bt(char *data, int length)
 	
 	strcpy(info->file_name, task->file_name);
 
-
-
-	
 	if(task->diff == 1 && task->diff_mode == INCRMENT_MODE)
 	{
 		offset  = add_qcow2(dev_info.mini_disk->dev, task->uuid, task->diff, (uint64_t)(task->real_size),
@@ -99,7 +96,6 @@ try:
 
     strcpy(info->state, "finished");
     send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
-
 	return ret;
 }
 
@@ -122,13 +118,6 @@ static void task_http(char *data, int length)
 
 	*(int *)&(info->storage[0]) = task->diff_mode;
 	info->type = 0x00;
-
-#if 1
-	if(task->disk_type != 0)
-	{
-		return SUCCESS;
-	}
-#endif
 	
 	if(task->diff == 1 && task->diff_mode == INCRMENT_MODE)
 	{

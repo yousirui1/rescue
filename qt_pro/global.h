@@ -168,6 +168,8 @@ public:
 	int install_flag;
     int download_flag;
     struct template_info template_i;
+
+    QStringList err_msg_list;
 };
 
 

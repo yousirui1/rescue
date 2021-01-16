@@ -17,7 +17,6 @@ int send_error_msg(int err_type)
 {
 	char head[HEAD_LEN + 4] = {0}; 
 	*(int *)(&head[HEAD_LEN]) = err_type;
-	DEBUG("%d", *(int *)(&head[HEAD_LEN]));
 	return send_pipe(head, ERROR_MSG_PIPE, 4, PIPE_UI);
 }
 

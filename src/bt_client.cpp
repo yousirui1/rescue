@@ -175,7 +175,7 @@ int start_torrent(char *torrent, char *pipe_buf, int diff_mode) try
 	DEBUG("torrent %s", torrent);
 	
 	run_flag = 1;
-	int timeout = 60;
+	int timeout = 120;
 	while(run_flag)
 	{
 		std::vector<lt::alert *>alerts;
@@ -241,7 +241,7 @@ int start_torrent(char *torrent, char *pipe_buf, int diff_mode) try
 						}
 						else
 						{
-							timeout = 60;
+							timeout = 120;
 						}
 				
 						if(timeout <= 0)
@@ -253,7 +253,7 @@ int start_torrent(char *torrent, char *pipe_buf, int diff_mode) try
 							goto done;
 						}
 
-						if(s.total_done == s.total_wanted &&  STRPREFIX(state(s.state), "seeding"))
+						if(STRPREFIX(state(s.state), "seeding"))
 						{
 							DEBUG("download finish done");
 							info->progress = 99;

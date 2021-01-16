@@ -67,7 +67,7 @@ void PipeThread::process_pipe(unsigned char *msg, int len)
 {
     int ret;
     unsigned char *tmp = &msg[HEAD_LEN];
-    DEBUG("process_pipe read_msg_order(msg) %d", read_msg_order(msg));
+    DEBUG("process_pipe read_msg_order(msg) %d len %d", read_msg_order(msg), len);
     switch(read_msg_order(msg))
     {
         case CLIENT_CONNECT_PIPE:           //连接中

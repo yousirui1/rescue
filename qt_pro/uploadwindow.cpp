@@ -236,6 +236,11 @@ void Uploadwindow::Reboot()
 
 void Uploadwindow::setProgressValue(struct progress_info *info)
 {
+    DEBUG("setProgressValue ");
+#if 0
+    if(!info)
+        return ;
+#endif
     DEBUG("info->progress %d", info->progress);
     if(info->type == 2) //安装或更新
     {

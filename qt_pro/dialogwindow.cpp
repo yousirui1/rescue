@@ -49,7 +49,6 @@ DialogWindow::DialogWindow(QWidget *parent) :
     connect(ui->static_radio,SIGNAL(clicked(bool)),
              this,SLOT(slots_dhcpable()));
 
-
     ui->ip_edit->setEnabled(false);
     ui->dns_edit->setEnabled(false);
     ui->dns2_edit->setEnabled(false);
@@ -166,15 +165,10 @@ void DialogWindow::setType(int type)
 
 void DialogWindow::setErrorText(QString msg)
 {
-    DEBUG("11111111111111");
-    //this->show();
-    DEBUG("22222222222222");
+    this->show();
     hideAll();
-    DEBUG("33333333333333");
     ui->error_dialog->show();
-    DEBUG("44444444444444");
     ui->error_msg_label->setText(msg);
-    DEBUG("55555555555555");
 }
 
 void DialogWindow::on_cacel_btn_clicked()

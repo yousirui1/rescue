@@ -68,27 +68,7 @@ void Global::setErrorMsg(int msg)
     if(msg > 8)         //QStringList err_msg_list size 8;
         return ;
 
-    DEBUG("err_msg_list");
-    qDebug()<<""<<err_msg_list[msg];
-    switch(current_index)
-    {
-        case MAINWINDOW_PAGE:         //MainWindow
-            main_ui->dialog_ui->show();
-            main_ui->dialog_ui->setErrorText(err_msg_list[msg]);
-            break;
-        case CONFIGWINDOW_PAGE:         //ConfigWindow
-            config_ui->dialog_ui->show();
-             config_ui->dialog_ui->setErrorText(err_msg_list[msg]);
-             break;
-        case UPLOADWINDOW_PAGE:         //UploadWindow
-             upload_ui->dialog_ui->show();
-             upload_ui->dialog_ui->setErrorText(err_msg_list[msg]);
-            break;
-        case OSWINDOW_PAGE:         //OSWindow
-            os_ui->dialog_ui->show();
-            os_ui->dialog_ui->setErrorText(err_msg_list[msg]);
-            break;
-    }
+    emit setError(err_msg_list[msg]);
 }
 
 void Global::setConfig(struct config *info)

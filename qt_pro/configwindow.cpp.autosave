@@ -103,20 +103,9 @@ ConfigWindow::ConfigWindow(QWidget *parent) :
     setTabOrder(ui->laststepButton,ui->formatButton);
 
 
-    if(!global->main_ui)
-    {
-        DEBUG("main_ui");
-    }
-
-    if(!dialog_ui)
-    {
-        DEBUG("1111111111111");
-    }
-
     connect(dialog_ui->install_cacel_btn, SIGNAL(clicked()), this, SLOT(install_cacenl_clicked()));
     connect(dialog_ui->install_confirm_btn, SIGNAL(clicked()), this, SLOT(install_confirm_btn()));
 
-    DEBUG("222222222222");
 
     ui->ip_edit->setText(global->conf.netcard.ip);
     ui->netmask_edit->setText(global->conf.netcard.netmask);

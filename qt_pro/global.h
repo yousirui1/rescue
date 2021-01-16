@@ -138,6 +138,7 @@ signals:
     void display(int number);
     void close_pipe();
     void setValue(struct progress_info *info);
+    void setError(QString msg);
 
 public slots:
      void setCurrentIndex(int);

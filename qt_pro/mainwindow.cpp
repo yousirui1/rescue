@@ -31,13 +31,15 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     global->setDesktopRect(QApplication::desktop()->availableGeometry());
+    global->setMainWindow(this);
+    dialog_ui = new DialogWindow();
 
     loadFont("/opt/freetype2/font/pin.ttf");
     stackLayout = new QStackedLayout();
     upload_ui = new Uploadwindow();
     config_ui = new ConfigWindow();
     os_ui = new OSWindow();
-    dialog_ui = new DialogWindow();
+
     stackLayout->addWidget(this);       //0
     stackLayout->addWidget(config_ui);  //1
     stackLayout->addWidget(upload_ui);  //2
@@ -48,9 +50,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(upload_ui, SIGNAL(display(int)), stackLayout, SLOT(setCurrentIndex(int)));
     connect(config_ui, SIGNAL(display(int)), stackLayout, SLOT(setCurrentIndex(int)));
     connect(os_ui, SIGNAL(display(int)), stackLayout, SLOT(setCurrentIndex(int)));
-    //connect(dialog_ui, SIGNAL(display(int)), stackLayout, SLOT(setCurrentIndex(int)));
+    connect(global, SIGNAL(setError(QString)), dialog_ui, SLOT(setErrorText(QString)));
 
-    global->setMainWindow(this);
     global->setUploadWindow(upload_ui);
     global->setConfigWindow(config_ui);
     global->setOSWindow(os_ui);
@@ -61,7 +62,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(upload_ui, SIGNAL(display(int)), global, SLOT(setCurrentIndex(int)));
     connect(config_ui, SIGNAL(display(int)), global, SLOT(setCurrentIndex(int)));
     connect(os_ui, SIGNAL(display(int)), global, SLOT(setCurrentIndex(int)));
-    connect(dialog_ui, SIGNAL(display(int)), global, SLOT(setCurrentIndex(int)));
+    //connect(dialog_ui, SIGNAL(display(int)), global, SLOT(setCurrentIndex(int)));
+
+    //
 
     date_label = ui->dataLabel;
     ip_label = ui->ip_label;

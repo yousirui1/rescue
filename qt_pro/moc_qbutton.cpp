@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'qbutton.h'
 **
-** Created: Thu Jan 14 15:04:32 2021
+** Created: Sat Jan 16 15:54:31 2021
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.2)
 **
 ** WARNING! All changes made in this file will be lost!

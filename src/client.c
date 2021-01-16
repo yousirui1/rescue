@@ -787,7 +787,7 @@ static int recv_down_torrent(struct client *cli)
 
     yzy_torrent *torrent = (yzy_torrent *)&cli->recv_buf[read_packet_supplementary(cli->recv_head) +
                                                          read_packet_token(cli->recv_head)];
-#if 1
+#if 0
     DEBUG("torrent->uuid %s", torrent->uuid);
     DEBUG("torrent->type %d", torrent->type);
     DEBUG("torrent->sys_type %d", torrent->sys_type);
@@ -1389,7 +1389,7 @@ static int recv_get_desktop_group_list(struct client *cli)
     int ret, current = -1;
     char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
     cJSON *root = cJSON_Parse((char *)(buf));
-	DEBUG("%s", buf);
+	//DEBUG("%s", buf);
     if (root)
     {    
         cJSON *code = cJSON_GetObjectItem(root, "code");

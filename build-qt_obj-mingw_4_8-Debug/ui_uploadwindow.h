@@ -661,7 +661,7 @@ public:
         desLabel_65->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p><span style=\" color:#ffffff;\">\345\272\217\345\217\267</span></p></body></html>", 0, QApplication::UnicodeUTF8));
         desLabel_66->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p align=\"right\"><span style=\" color:#ffffff;\">\345\272\217\345\217\267</span></p></body></html>", 0, QApplication::UnicodeUTF8));
         desLabel_67->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p align=\"right\"><span style=\" color:#ffffff;\">\345\272\217\345\217\267</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-        f2Label->setText(QApplication::translate("Uploadwindow", "[F2]\347\273\210\347\253\257\351\205\215\347\275\256", 0, QApplication::UnicodeUTF8));
+        f2Label->setText(QString());
         netpoint_label->setText(QString());
         netstate_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p align=\"center\">\345\234\250\347\272\277</p></body></html>", 0, QApplication::UnicodeUTF8));
         neticon_label->setText(QString());

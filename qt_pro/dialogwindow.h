@@ -24,12 +24,15 @@ public:
     ~DialogWindow();
     void setType(int);
     void hideAll();
-    void setErrorText(QString msg);
+
     void showEvent(QShowEvent *e);
     void keyPressEvent(QKeyEvent *e);
 
 signals:
     void display(int number);
+
+public slots:
+    void setErrorText(QString msg);
 
 private slots:
     void on_cacel_btn_clicked();

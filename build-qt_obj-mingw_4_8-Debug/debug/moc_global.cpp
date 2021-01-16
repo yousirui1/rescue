@@ -22,29 +22,31 @@ static const uint qt_meta_data_Global[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   14, // methods
+       6,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       3,       // signalCount
+       4,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
       15,    8,    7,    7, 0x05,
       28,    7,    7,    7, 0x05,
       46,   41,    7,    7, 0x05,
+      75,   71,    7,    7, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      71,    7,    7,    7, 0x0a,
-      92,    7,    7,    7, 0x08,
+      93,    7,    7,    7, 0x0a,
+     114,    7,    7,    7, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_Global[] = {
     "Global\0\0number\0display(int)\0close_pipe()\0"
-    "info\0setValue(progress_info*)\0"
-    "setCurrentIndex(int)\0onUpdateTime()\0"
+    "info\0setValue(progress_info*)\0msg\0"
+    "setError(QString)\0setCurrentIndex(int)\0"
+    "onUpdateTime()\0"
 };
 
 void Global::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -56,8 +58,9 @@ void Global::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 0: _t->display((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 1: _t->close_pipe(); break;
         case 2: _t->setValue((*reinterpret_cast< progress_info*(*)>(_a[1]))); break;
-        case 3: _t->setCurrentIndex((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 4: _t->onUpdateTime(); break;
+        case 3: _t->setError((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 4: _t->setCurrentIndex((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 5: _t->onUpdateTime(); break;
         default: ;
         }
     }
@@ -95,9 +98,9 @@ int Global::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 5)
+        if (_id < 6)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 5;
+        _id -= 6;
     }
     return _id;
 }
@@ -120,5 +123,12 @@ void Global::setValue(progress_info * _t1)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 2, _a);
+}
+
+// SIGNAL 3
+void Global::setError(QString _t1)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 3, _a);
 }
 QT_END_MOC_NAMESPACE

@@ -40,8 +40,7 @@ Uploadwindow::Uploadwindow(QWidget *parent) :
     neticon_label = ui->neticon_label;
     netpoint_label = ui->netpoint_label;
 
-    dialog_ui = new DialogWindow();
-    dialog_ui->hide();
+    dialog_ui = global->main_ui->dialog_ui;
 
     this->ip_label->setText(ip);
     this->netstate_label->setText(tr("离线"));

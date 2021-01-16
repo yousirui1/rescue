@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'dialogwindow.h'
 **
-** Created: Thu Jan 14 15:04:32 2021
+** Created: Sat Jan 16 16:18:22 2021
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_DialogWindow[] = {
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-       7,   12, // methods
+       8,   12, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -32,20 +32,21 @@ static const uint qt_meta_data_DialogWindow[] = {
       21,   14,   13,   13, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      34,   13,   13,   13, 0x08,
-      57,   13,   13,   13, 0x08,
-      74,   13,   13,   13, 0x08,
-      99,   13,   13,   13, 0x08,
-     130,   13,   13,   13, 0x08,
-     163,   13,   13,   13, 0x08,
+      38,   34,   13,   13, 0x0a,
+      60,   13,   13,   13, 0x08,
+      83,   13,   13,   13, 0x08,
+     100,   13,   13,   13, 0x08,
+     125,   13,   13,   13, 0x08,
+     156,   13,   13,   13, 0x08,
+     189,   13,   13,   13, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_DialogWindow[] = {
-    "DialogWindow\0\0number\0display(int)\0"
-    "on_cacel_btn_clicked()\0slots_dhcpable()\0"
-    "on_confirm_btn_clicked()\0"
+    "DialogWindow\0\0number\0display(int)\0msg\0"
+    "setErrorText(QString)\0on_cacel_btn_clicked()\0"
+    "slots_dhcpable()\0on_confirm_btn_clicked()\0"
     "on_install_cacel_btn_clicked()\0"
     "on_install_confirm_btn_clicked()\0"
     "on_error_confirm_btn_clicked()\0"
@@ -77,15 +78,16 @@ int DialogWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: display((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 1: on_cacel_btn_clicked(); break;
-        case 2: slots_dhcpable(); break;
-        case 3: on_confirm_btn_clicked(); break;
-        case 4: on_install_cacel_btn_clicked(); break;
-        case 5: on_install_confirm_btn_clicked(); break;
-        case 6: on_error_confirm_btn_clicked(); break;
+        case 1: setErrorText((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 2: on_cacel_btn_clicked(); break;
+        case 3: slots_dhcpable(); break;
+        case 4: on_confirm_btn_clicked(); break;
+        case 5: on_install_cacel_btn_clicked(); break;
+        case 6: on_install_confirm_btn_clicked(); break;
+        case 7: on_error_confirm_btn_clicked(); break;
         default: ;
         }
-        _id -= 7;
+        _id -= 8;
     }
     return _id;
 }

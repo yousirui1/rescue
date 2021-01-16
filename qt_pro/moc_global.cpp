@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'global.h'
 **
-** Created: Thu Jan 14 15:16:10 2021
+** Created: Sat Jan 16 16:18:22 2021
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_Global[] = {
        2,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   12, // methods
+       6,   12, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -32,18 +32,20 @@ static const uint qt_meta_data_Global[] = {
       15,    8,    7,    7, 0x05,
       28,    7,    7,    7, 0x05,
       46,   41,    7,    7, 0x05,
+      75,   71,    7,    7, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      71,    7,    7,    7, 0x0a,
-      92,    7,    7,    7, 0x08,
+      93,    7,    7,    7, 0x0a,
+     114,    7,    7,    7, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_Global[] = {
     "Global\0\0number\0display(int)\0close_pipe()\0"
-    "info\0setValue(progress_info*)\0"
-    "setCurrentIndex(int)\0onUpdateTime()\0"
+    "info\0setValue(progress_info*)\0msg\0"
+    "setError(QString)\0setCurrentIndex(int)\0"
+    "onUpdateTime()\0"
 };
 
 const QMetaObject Global::staticMetaObject = {
@@ -74,11 +76,12 @@ int Global::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 0: display((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 1: close_pipe(); break;
         case 2: setValue((*reinterpret_cast< progress_info*(*)>(_a[1]))); break;
-        case 3: setCurrentIndex((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 4: onUpdateTime(); break;
+        case 3: setError((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 4: setCurrentIndex((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 5: onUpdateTime(); break;
         default: ;
         }
-        _id -= 5;
+        _id -= 6;
     }
     return _id;
 }
@@ -101,5 +104,12 @@ void Global::setValue(progress_info * _t1)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 2, _a);
+}
+
+// SIGNAL 3
+void Global::setError(QString _t1)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 3, _a);
 }
 QT_END_MOC_NAMESPACE

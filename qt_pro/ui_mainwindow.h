@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'mainwindow.ui'
 **
-** Created: Sat Jan 16 15:54:30 2021
+** Created: Fri Jan 29 12:00:10 2021
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -100,14 +100,11 @@ public:
         modeWidget->setGeometry(QRect(0, 140, 576, 211));
         modeWidget->setMinimumSize(QSize(576, 0));
         modeWidget->setMaximumSize(QSize(576, 16777215));
-        modeWidget->setStyleSheet(QString::fromUtf8("QWidget#modeWidget\n"
-"{\n"
+        modeWidget->setStyleSheet(QString::fromUtf8("\n"
 "border-image:url(:/images/nice_light.png) 10 10 10 10;\n"
 "border-top: 10px transparent;\n"
 "\n"
 "border-bottom: 10px transparent;\n"
-"\n"
-"}\n"
 ""));
         verticalLayout_2 = new QVBoxLayout(modeWidget);
         verticalLayout_2->setSpacing(0);

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'configwindow.ui'
 **
-** Created: Sat Jan 16 15:54:30 2021
+** Created: Fri Jan 29 12:00:10 2021
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!

@@ -777,6 +777,7 @@ static int send_down_torrent(struct client *cli, char *task_uuid)
 	return ret;
 }
 
+
 static int recv_down_torrent(struct client *cli)
 {
     int ret;
@@ -1333,7 +1334,6 @@ static int send_reboot(struct client *cli, int batch_no, int flag)
     return ret;
 }
 
-
 static int recv_reboot(struct client *cli, int flag)
 {
     int ret = ERROR;
@@ -1353,7 +1353,28 @@ static int recv_reboot(struct client *cli, int flag)
 static int recv_get_diff_torrent(struct client *cli)
 {
 	char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
+	DEBUG("%s", buf);
+	cJSON *root = cJSON_Parse((char *)(buf));
+    if (root)
+    {    
+        cJSON *code = cJSON_GetObjectItem(root, "code");
+        cJSON *data = cJSON_GetObjectItem(root, "data");
 
+        if (code && code->valueint == SUCCESS && data)
+        {    
+			cJSON *desktop_group_uuid = cJSON_GetObjectItem(data, "desktop_group_uuid");	
+			cJSON *diff_disk_uuid = cJSON_GetObjectItem(data, "diff_disk_uuid");	
+            cJSON* dif_level = cJSON_GetObjectItem(data, "dif_level");
+            cJSON* diff_disk_type = cJSON_GetObjectItem(data, "diff_disk_type");
+			if(desktop_group_uuid && diff_disk_uuid && dif_level && diff_disk_type)
+			{
+				DEBUG("update_desktop_disk_level uuid:%s level%d", diff_disk_uuid->valuestring, dif_level->valueint);
+				update_desktop_disk_level(desktop_group_uuid->valuestring, diff_disk_uuid->valuestring, dif_level->valueint, 
+											diff_disk_type->valueint);
+			}
+        }
+        cJSON_Delete(root);
+	}
 	return SUCCESS;	
 }
 
@@ -1389,7 +1410,7 @@ static int recv_get_desktop_group_list(struct client *cli)
     int ret, current = -1;
     char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
     cJSON *root = cJSON_Parse((char *)(buf));
-	//DEBUG("%s", buf);
+	DEBUG("%s", buf);
     if (root)
     {    
         cJSON *code = cJSON_GetObjectItem(root, "code");
@@ -1446,7 +1467,7 @@ static int recv_get_desktop_group_list(struct client *cli)
 
                         if (!max_diff || !uuid || !dif_level || !prefix || !real_size || !reserve_size || !type || !operate_id)
                             continue;
-
+				
                         if (type->valueint == 0)
                         {
                             memcpy(m_group[i].os_uuid, uuid->valuestring, 36);
@@ -1731,7 +1752,7 @@ static int recv_get_config(struct client *cli)
 
 			save_config();
 			send_config_pipe();
-			if(first_time && conf.install_flag)
+			if(first_time)
 			{
 				ret = send_get_desktop_group_list(cli);
 				first_time = 0;

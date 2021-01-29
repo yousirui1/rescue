@@ -70,14 +70,20 @@ static void process_ui_msg(char *buf, int length)
 	{
 		case INSTALL_PIPE:
 		{
+			if(STRPREFIX(conf.netcard.ip, "169.254.1.1"))
+			{
+				dhcp_request();
+			}
 			install_programe();
 			break;
 		}
 		case INIT_PIPE:
 		{
+			char result[MAX_BUFLEN] = {0};
 			init_qcow2(dev_info.mini_disk->dev, 0);
 			client_reconnect();
-			remove("/boot/*");
+			exec_cmd("rm -rf /boot/*", result);
+			umount_boot();
 			sync();
 			reboot(RB_AUTOBOOT);				
 		}

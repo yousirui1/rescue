@@ -7,6 +7,7 @@
 struct device_info dev_info;
 #define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
 
+//#define USB
 
 extern QUEUE task_queue;
 
@@ -77,6 +78,18 @@ device_contains (const char *dev, dev_t root_device)
 
   return 0;
 }
+
+void dhcp_request()
+{
+    char result[MAX_BUFLEN] = {0};
+    char cmd[MAX_BUFLEN] = {0};
+
+    strcpy(cmd, "udhcpc -n -i eth0 ");
+    exec_cmd(cmd, result);
+    find_all_netcards();
+    send_config_pipe();
+}
+
 
 
 static void find_all_disks()
@@ -184,7 +197,6 @@ void find_all_netcards()
     netcard_param *net = &(conf.netcard);
 
     ret = get_netcard_info(&dev_info.net);
-
     if(ret == 1) 		//未获取ip 只扫描到loop网卡 
     {   
 		DEBUG("only find loop network");
@@ -506,41 +518,78 @@ int install_programe()
 	DEBUG("file_name %s", info->file_name);
 	send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_UI);
 
-#ifdef USB
-	if(!dev_info.usb_disk)
+	//http
+	if(conf.http_ip && strlen(conf.http_ip) != 0)
 	{
-		DEBUG("no found usb flash disk");	
-		send_error_msg(U_DISK_NO_FOUD_ERR);
-		return ERROR;
-	}
-
-    sprintf(cmd, install_sh, dev_info.mini_disk->name, dev_info.usb_disk->name);
-    exec_cmd(cmd, result);
-	if(STRPREFIX(result, "successd"))
-	{
-		DEBUG("install programe ok");
-		conf.install_flag = 1;
 		mount_boot();
+    	sprintf(cmd, http_install_sh, conf.http_ip, conf.http_ip);
+		DEBUG("cmd %s", cmd);
+		exec_cmd(cmd, result);
+		if(STRPREFIX(result, "successd"))
+		{
+			DEBUG("install programe ok");
+			conf.install_flag = 1;
+			exec_cmd("mkdir -p /boot/conf", result);
+        	strcpy(config_file, "/boot/conf/config.ini");
+			DEBUG("install_flag %d", conf.install_flag);
 
-		exec_cmd("mkdir -p /boot/conf", result);
-        strcpy(config_file, "/boot/conf/config.ini");
-		DEBUG("install_flag %d", conf.install_flag);
-
-		info->progress = 100;
-		send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_QT);
-		save_config();
-		return SUCCESS;
+			info->progress = 100;
+			send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_UI);
+			send_pipe(buf, INSTALL_DONE ,sizeof(progress_info), PIPE_EVENT);
+			save_config();
+			return SUCCESS;
+		}
+		else
+		{
+			DEBUG("install programe error %s", result);
+			conf.install_flag = 0;
+			umount_boot();
+			DEBUG("install_flag %d", conf.install_flag);
+			send_error_msg(INSTALL_ERR);
+			return ERROR;
+		}	
 	}
-	else
+	else //usb
 	{
-		DEBUG("install programe error %s", result);
-		conf.install_flag = 0;
-		umount_boot();
-		DEBUG("install_flag %d", conf.install_flag);
-		send_error_msg(INSTALL_ERR);
-		return ERROR;
-	}	
-#else	//tftp
+		if(!dev_info.usb_disk)
+		{
+			DEBUG("no found usb flash disk");	
+			send_error_msg(U_DISK_NO_FOUD_ERR);
+			return ERROR;
+		}
+	    sprintf(cmd, install_sh, dev_info.mini_disk->name, dev_info.usb_disk->name);
+		DEBUG("%s", cmd);
+	    exec_cmd(cmd, result);
+		if(STRPREFIX(result, "successd"))
+		{
+			DEBUG("install programe ok");
+			conf.install_flag = 1;
+			mount_boot();
+	
+			exec_cmd("mkdir -p /boot/conf", result);
+	        strcpy(config_file, "/boot/conf/config.ini");
+			DEBUG("install_flag %d", conf.install_flag);
+	
+			info->progress = 100;
+			send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_UI);
+			save_config();
+			return SUCCESS;
+		}
+		else
+		{
+			DEBUG("install programe error %s", result);
+			conf.install_flag = 0;
+			umount_boot();
+			DEBUG("install_flag %d", conf.install_flag);
+			send_error_msg(INSTALL_ERR);
+			return ERROR;
+		}	
+	}
+}
+
+
+
+#if 0
 	struct tftp_task task = {0};
     exec_cmd("mkdir -p /boot/linux", result);
 
@@ -564,5 +613,3 @@ int install_programe()
 	task.type = 2;	
 	en_queue(&task_queue, (char *)&task, sizeof(struct tftp_task) , 0x3);
 #endif
-}
-

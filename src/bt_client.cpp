@@ -175,7 +175,7 @@ int start_torrent(char *torrent, char *pipe_buf, int diff_mode) try
 	DEBUG("torrent %s", torrent);
 	
 	run_flag = 1;
-	int timeout = 120;
+	int timeout = 20;
 	while(run_flag)
 	{
 		std::vector<lt::alert *>alerts;
@@ -233,7 +233,7 @@ int start_torrent(char *torrent, char *pipe_buf, int diff_mode) try
                     	info->total_size = s.total_done;
                     	send_pipe(pipe_buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_EVENT);
                     	last_time = current_time;
-						DEBUG("info->download_rate %llu", info->download_rate);
+						DEBUG("info->download_rate %llu timeout %d", info->download_rate, timeout);
 
 						if(STRPREFIX(state(s.state), "downloading") &&  info->download_rate < 10)
 						{
@@ -241,7 +241,7 @@ int start_torrent(char *torrent, char *pipe_buf, int diff_mode) try
 						}
 						else
 						{
-							timeout = 120;
+							timeout = 20;
 						}
 				
 						if(timeout <= 0)

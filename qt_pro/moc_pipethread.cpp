@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'pipethread.h'
 **
-** Created: Sat Jan 16 15:54:31 2021
+** Created: Fri Jan 29 12:00:11 2021
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.2)
 **
 ** WARNING! All changes made in this file will be lost!

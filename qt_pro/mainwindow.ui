@@ -133,14 +133,11 @@ color: #FFFFFF;</string>
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QWidget#modeWidget
-{
+          <string notr="true">
 border-image:url(:/images/nice_light.png) 10 10 10 10;
 border-top: 10px transparent;
 
 border-bottom: 10px transparent;
-
-}
 </string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">

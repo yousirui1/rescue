@@ -193,6 +193,9 @@ int update_config(char *buf, int len)
 }
 
 
+
+
+
 int save_config()
 {
     char buf[128] = {0};
@@ -451,6 +454,48 @@ add_desktop:
 	}
 }
 
+
+void update_desktop_disk_level(char *group_uuid, char *disk_uuid, int diff_level, int type)
+{
+	int i;	
+	char section[12] = {0};
+	char buf[12] = {0};
+
+
+	if(diff_level < 0 && diff_level > 3)
+		return ;
+
+	if(diff_level == 3)
+		diff_level = 2;
+
+	for(i = 0; i < MAX_DESKTOP; i++)		//是否存在
+	{
+        sprintf(section, DESKTOP_SECTION"%02d", i);
+		if(read_profile_string(section, DESKTOP_GROUP_UUID_KEY, buf, sizeof(buf), NULL, DESKTOP_FILE)) 
+        {
+            if(STRPREFIX(group_uuid, buf))            //相等
+			{
+				switch(type)
+				{
+					case 0:		
+                		sprintf(buf, "%d", diff_level);
+                		write_profile_string(section, BASE_DIF_KEY, buf, DESKTOP_FILE);
+						break;
+					case 1:
+                		sprintf(buf, "%d", diff_level);
+                		write_profile_string(section, DATA_DIF_KEY, buf, DESKTOP_FILE);
+						break;
+					case 2:
+                		sprintf(buf, "%d", diff_level);
+                		write_profile_string(section, SHARE_DIF_KEY, buf, DESKTOP_FILE);
+						break;
+					default:
+						break;
+				}
+	        }
+        }
+	}
+}
 
 #if 0
 void init_test()

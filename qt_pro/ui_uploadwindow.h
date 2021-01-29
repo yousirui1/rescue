@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'uploadwindow.ui'
 **
-** Created: Sat Jan 16 15:54:30 2021
+** Created: Fri Jan 29 12:00:10 2021
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -607,20 +607,20 @@ public:
         i_remain_time_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p>-\347\247\222</p></body></html>", 0, QApplication::UnicodeUTF8));
         i_status_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p align=\"center\">\346\255\243\345\234\250\345\256\211\350\243\205:\345\256\242\346\210\267\347\253\257</p></body></html>", 0, QApplication::UnicodeUTF8));
         i_remain_time_t_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p align=\"right\">\345\211\251\344\275\231\346\227\266\351\227\264:</p></body></html>", 0, QApplication::UnicodeUTF8));
-        i_progress_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p>10%</p></body></html>", 0, QApplication::UnicodeUTF8));
+        i_progress_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p>0%</p></body></html>", 0, QApplication::UnicodeUTF8));
         i_termal_info_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p align=\"center\"><span style=\" color:#ffffff;\">\347\273\210\347\253\257\344\277\241\346\201\257</span></p></body></html>", 0, QApplication::UnicodeUTF8));
         i_num_t_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p align=\"right\"><span style=\" color:#ffffff;\">\345\272\217\345\217\267\357\274\232</span></p></body></html>", 0, QApplication::UnicodeUTF8));
         i_disk_info_t_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p align=\"right\">\347\241\254\347\233\230\345\211\251\344\275\231:</p></body></html>", 0, QApplication::UnicodeUTF8));
-        i_num_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p>Desktop-MC08</p></body></html>", 0, QApplication::UnicodeUTF8));
+        i_num_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p>0</p></body></html>", 0, QApplication::UnicodeUTF8));
         i_memory_t_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p align=\"right\">\345\206\205\345\255\230:</p></body></html>", 0, QApplication::UnicodeUTF8));
         i_cpu_t_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p align=\"right\">CPU:</p></body></html>", 0, QApplication::UnicodeUTF8));
-        i_disk_info_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p>380GB\357\274\210400GB)</p></body></html>", 0, QApplication::UnicodeUTF8));
-        i_memory_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p>1928MB</p></body></html>", 0, QApplication::UnicodeUTF8));
-        i_cpu_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p>Intel(R)1111111111111111111111111111111111111111111111111111111111</p></body></html>", 0, QApplication::UnicodeUTF8));
+        i_disk_info_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p>0GB\357\274\2100GB)</p></body></html>", 0, QApplication::UnicodeUTF8));
+        i_memory_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p>0MB</p></body></html>", 0, QApplication::UnicodeUTF8));
+        i_cpu_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p>Intel(R)</p></body></html>", 0, QApplication::UnicodeUTF8));
         i_ip_t_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p align=\"right\">IP\345\234\260\345\235\200:</p></body></html>", 0, QApplication::UnicodeUTF8));
-        i_mac_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p>00-0C-29-29-D6-68</p></body></html>", 0, QApplication::UnicodeUTF8));
+        i_mac_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p>00-00-00-00-00-00</p></body></html>", 0, QApplication::UnicodeUTF8));
         i_mac_t_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p align=\"right\">MAC\345\234\260\345\235\200:</p></body></html>", 0, QApplication::UnicodeUTF8));
-        i_ip_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p>192.168.125.125\357\274\210255.255.255.0\357\274\211</p></body></html>", 0, QApplication::UnicodeUTF8));
+        i_ip_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p>192.168.1.1\357\274\210255.255.255.0\357\274\211</p></body></html>", 0, QApplication::UnicodeUTF8));
         i_netcard_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p>Intel</p></body></html>", 0, QApplication::UnicodeUTF8));
         i_netcard_t_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p align=\"right\">\347\275\221\345\215\241:</p></body></html>", 0, QApplication::UnicodeUTF8));
         i_download_rate_t_label->setText(QApplication::translate("Uploadwindow", "<html><head/><body><p align=\"right\">\344\270\213\350\241\214:</p></body></html>", 0, QApplication::UnicodeUTF8));

@@ -122,6 +122,7 @@ struct configs{
 
     unsigned char tftp_ip[32];
     unsigned char nfs_ip[32];
+    unsigned char http_ip[32];
 
 
     int major_ver;

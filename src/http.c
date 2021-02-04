@@ -430,13 +430,13 @@ read_response:
 		}
 		if(key == KEY_transfer_encoding)
 		{
-			DEBUG("KEY_transfer_encoding %s", str);
+			//DEBUG("KEY_transfer_encoding %s", str);
 			
 			//if (strcmp(str, "chunked") != 0)
 //				DEBUG("transfer encoding '%s' is not supported", str);
 		
 			if(!STRPREFIX(str, "chunked"))
-				DEBUG("transfer encoding '%s' is not supported", str);
+				;//DEBUG("transfer encoding '%s' is not supported", str);
 
 			chunked = 1;
 		}

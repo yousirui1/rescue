@@ -9,6 +9,7 @@ typedef enum TASK_TYPE
 	TASK_P2V,
 	TASK_TFTP,
 	TASK_HTTP,
+	TASK_EVENT,
 }TASK_TYPE;
 
 struct p2v_task{
@@ -44,6 +45,7 @@ struct torrent_task {
 	int disk_type;
 };
 
+
 struct http_task 
 {
 	char download_url[128];
@@ -61,8 +63,6 @@ struct http_task
 	int disk_type;
 };
 
-
-
 struct desktop_task {
 	char group_name[128];
 	char group_uuid[36];			
@@ -73,6 +73,21 @@ struct desktop_task {
 	int offset;
 	struct torrent_task bt[8];
 };
+
+
+typedef enum TASK_EVENT_TYPE
+{
+	TASK_EVENT_DEL_QCOW = 1,
+}TASK_EVENT_TYPE;
+
+struct event_task 
+{
+	int type;
+	char data[128];
+	int length;
+};
+
+
 
 
 #endif

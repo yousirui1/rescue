@@ -12,6 +12,41 @@ struct device_info dev_info;
 extern QUEUE task_queue;
 
 /**
+ * Get  device of a partition. /dev/sda4
+ * major minor  #blocks  name
+ * Returns C<0> if no parent device could be found.
+ */
+int device_partition (const char *dev)
+{
+  	FILE *fp = NULL;
+  	//char partition[16] = {0};
+	unsigned partition = 1;
+	char *content = NULL;
+  	size_t len = 0;
+  	unsigned parent_major, parent_minor;
+	unsigned long long blocks;
+	char *path = "/proc/partitions";
+	char format[32] = "%u %u %llu ";
+	
+  	fp = fopen (path, "r");
+  	if (fp == NULL)
+    	return 1;
+	strcat(format, dev);
+	strcat(format, "%d");
+
+	while(getline (&content, &len, fp) != -1)
+	{
+		if (sscanf (content, format, &parent_major, &parent_minor, &blocks, &partition) == 4)
+		{
+			DEBUG("/dev/%s partition %d", dev, partition);
+			return partition;
+		}
+	}
+	return 1;	
+}
+
+
+/**
  * Get parent device of a partition.
  *
  * Returns C<0> if no parent device could be found.
@@ -19,28 +54,29 @@ extern QUEUE task_queue;
 static dev_t
 partition_parent (dev_t part_dev)
 {
-  FILE *fp = NULL;
-  char *path = NULL, *content = NULL;
-  size_t len = 0;
-  unsigned parent_major, parent_minor;
+  	FILE *fp = NULL;
+  	char *path = NULL, *content = NULL;
+  	size_t len = 0;
+  	unsigned parent_major, parent_minor;
 
-  if (asprintf (&path, "/sys/dev/block/%ju:%ju/../dev",
+  	if (asprintf (&path, "/sys/dev/block/%ju:%ju/../dev",
                 (uintmax_t) major (part_dev),
                 (uintmax_t) minor (part_dev)) == -1)
     error (EXIT_FAILURE, errno, "asprintf");
 
-  fp = fopen (path, "r");
-  if (fp == NULL)
-    return 0;
+  	fp = fopen (path, "r");
+  	if (fp == NULL)
+    	return 0;
 
-  if (getline (&content, &len, fp) == -1) 
-    error (EXIT_FAILURE, errno, "getline");
+  	if (getline (&content, &len, fp) == -1) 
+    	error (EXIT_FAILURE, errno, "getline");
 
     
 	if (sscanf (content, "%u:%u", &parent_major, &parent_minor) != 2)
     	return 0;
 
-  return makedev (parent_major, parent_minor);
+	
+  	return makedev (parent_major, parent_minor);
 }
 
 /**
@@ -302,7 +338,6 @@ void init_device()
         {
 			//if(_mount_table_search("/boot", dev_info.mini_disk->dev))
 			{
-				DEBUG("");
 				umount_boot();
 			}
 
@@ -334,9 +369,7 @@ int mount_boot()
 	{
     	sprintf(cmd, mount_sh, dev_info.mini_disk->name);
 	}
-	DEBUG("cmd: %s", cmd);
     exec_cmd(cmd, result);
-	DEBUG("result %s", result);
     if(STRPREFIX(result, "successd"))
     {   
 		return SUCCESS;
@@ -557,7 +590,8 @@ int install_programe()
 			send_error_msg(U_DISK_NO_FOUD_ERR);
 			return ERROR;
 		}
-	    sprintf(cmd, install_sh, dev_info.mini_disk->name, dev_info.usb_disk->name);
+
+	    sprintf(cmd, install_sh, dev_info.mini_disk->name, dev_info.usb_disk->name, device_partition(dev_info.usb_disk->name));
 		DEBUG("%s", cmd);
 	    exec_cmd(cmd, result);
 		if(STRPREFIX(result, "successd"))

@@ -163,7 +163,6 @@ void del_diff_qcow2(PedDevice *dev, char *name)
 
     uint32_t i;
 
-
     if (!storeDrv.pStoreCfg) 
         return ;
 
@@ -190,6 +189,7 @@ void del_diff_qcow2(PedDevice *dev, char *name)
 
 void save_qcow2(PedDevice *dev)
 {
+	int ret;
 	storeDrv.save(dev);
 }
 

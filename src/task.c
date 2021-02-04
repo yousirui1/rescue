@@ -110,7 +110,6 @@ static void task_http(char *data, int length)
 
 	DEBUG("task->uuid %s task->diff %d task->real_size %llu task->file_size %llu task->disk_type %d task->operate_id %d ",
 	task->uuid, task->diff, task->real_size, task->file_size, task->disk_type, task->operate_id);
-	DEBUG("task->file_name %s", task->file_name);
 	DEBUG("task->download_url %s", task->download_url);
 	
 	info->file_size = (uint64_t)task->file_size * 512;
@@ -130,8 +129,6 @@ static void task_http(char *data, int length)
 							(uint64_t)(task->file_size) + 1024 * 2, task->real_size, 1, 
 							task->disk_type, task->operate_id, COVERAGE_MODE);
 	}
-
-
 	if(offset != 0)
 	{
 		ret = http_get(task->download_url, buf, offset, dev_info.mini_disk->dev, (uint64_t)task->file_size);
@@ -240,8 +237,6 @@ static void task_tftp(char *data, int length)
     DEBUG("tftp_get end ");
 }
 
-
-
 static void task_p2v(char *data, int length)
 {
 	struct p2v_task * task = (struct p2v_task *)data;
@@ -249,6 +244,19 @@ static void task_p2v(char *data, int length)
                     task->storage, task->image_name,
                     dev_info.mini_disk->dev->path);
 }
+
+static void task_event(char *data, int length)
+{
+	char uuid[37];
+	struct event_task *task = (struct event_task*)data;
+	memcpy(uuid, task->data, 36);
+	DEBUG("del uuid %s qcow diff 3", uuid);
+	del_qcow2(dev_info.mini_disk->dev, uuid, 3);
+}
+
+
+
+
 
 void task_loop()
 {
@@ -316,6 +324,9 @@ void task_loop()
 					break;	
 				case TASK_HTTP:
 					task_http(index->pBuf, index->uiSize);
+					break;
+				case TASK_EVENT:
+					task_event(index->pBuf, index->uiSize);
 					break;
 				default:
 					break;

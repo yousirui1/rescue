@@ -11,13 +11,9 @@
 #include <libtorrent/torrent_info.hpp>
 #include "bt_client.h"
 
-pthread_mutex_t bt_mtx = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t bt_cond = PTHREAD_COND_INITIALIZER;
-
 static int run_flag = 0;
 uint32_t m_torrent_id = 0;
 std::shared_ptr<lt::session> m_ses;
-
 
 // return the name of a torrent status enum
 char const* state(lt::torrent_status::state_t s)
@@ -282,7 +278,6 @@ catch(std::exception &e)
 }
 
 #if 0
-
 DEBUG("%s download rate %lu KB/s, total_download %lu KB, uprate %lu KB/s, total_up %lu KB, progress %d",
                     	state(s.state), s.download_payload_rate / 1000, s.total_done / 1000, s.upload_rate/1000, 
 						s.total_upload / 1000, s.progress_ppm / 10000);

@@ -46,8 +46,6 @@ static int get_desktop(char *group_uuid)
     return -1;
 }
 
-
-
 struct desktop_group *get_desktop_group(char *group_uuid)
 {
 	int i = 0, index = -1;
@@ -580,6 +578,7 @@ static int recv_desktop_tcp(struct client *cli)
 	char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
 	cJSON *root = cJSON_Parse((char *)(buf));
 	struct http_task task;
+	struct event_task ev_task;
 	update_desktop(buf);
 	DEBUG("%s", buf);
 	if(root)
@@ -648,6 +647,18 @@ static int recv_desktop_tcp(struct client *cli)
 					sscanf(file_size->valuestring, "%llu", &task.file_size);
 
 					task.operate_id = operate_id->valueint;
+
+					DEBUG("initiative download del diff 3 temp");
+					//del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 3);		//
+					//en_queue(&);
+
+					memset(ev_task.data, 0, sizeof(ev_task.data));
+					memcpy(ev_task.data, uuid->valuestring, 36);
+					ev_task.type = TASK_EVENT_DEL_QCOW;
+					ev_task.length = 36;
+					
+					en_queue(&task_queue, (char *)&ev_task, sizeof(struct event_task), TASK_EVENT);
+
             		en_queue(&task_queue, (char *)&task, sizeof(struct http_task), TASK_HTTP);
 				}
 			}
@@ -708,6 +719,7 @@ static int recv_desktop(struct client *cli)
 	int ret = ERROR, i;
 	char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
 	cJSON *root = cJSON_Parse((char *)(buf));
+	struct event_task ev_task;
 	update_desktop(buf);
 	DEBUG("%s", buf);
 	if(root)
@@ -724,13 +736,27 @@ static int recv_desktop(struct client *cli)
 			if(!disks || cJSON_GetArraySize(disks) <= 0 || !desktop_group_uuid)
 				goto run_out;
 		
-			//struct desktop_group *group = get_desktop_group(desktop_group_uuid->valuestring);
-#if 0	
-			memset(&group->task, 0, sizeof(struct desktop_task));
-			group->task.diff_mode = group->diff_mode;
-			group->task.size = cJSON_GetArraySize(disks);
-			strcpy(group->task.group_name, desktop_group_name->valuestring);
-#endif
+			if(disks && desktop_group_name)
+			{
+				for (i = 0; i < cJSON_GetArraySize(disks); i++)
+				{
+                  	cJSON * item = cJSON_GetArrayItem(disks, i);
+                    if (!item)
+                        continue;
+                    cJSON *uuid = cJSON_GetObjectItem(item, "uuid");
+
+					if(uuid)
+					{
+						DEBUG("initiative download del diff 3 temp %s", uuid->valuestring);
+				//		del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 3);		//
+						memset(ev_task.data, 0, sizeof(ev_task.data));
+						memcpy(ev_task.data, uuid->valuestring, 36);
+						ev_task.type = TASK_EVENT_DEL_QCOW;
+						ev_task.length = 36;
+						en_queue(&task_queue, (char *)&ev_task, sizeof(struct event_task), TASK_EVENT);
+					}
+				}
+			}
 		}
         ret = send_desktop(cli, batch_no->valueint, SUCCESS);
 run_out:
@@ -776,7 +802,6 @@ static int send_down_torrent(struct client *cli, char *task_uuid)
 	}
 	return ret;
 }
-
 
 static int recv_down_torrent(struct client *cli)
 {
@@ -873,7 +898,6 @@ static int recv_down_torrent(struct client *cli)
     }
     return ERROR;
 }
-
 
 static int send_clear_target_desktop(struct client *cli, int batch_no, int code)
 {
@@ -1073,7 +1097,6 @@ run_out:
     }
     return ret;
 }
-
 
 static int send_update_config(struct client *cli, int batch_no)
 {   
@@ -1365,7 +1388,7 @@ static int recv_get_diff_torrent(struct client *cli)
 			cJSON *desktop_group_uuid = cJSON_GetObjectItem(data, "desktop_group_uuid");	
 			cJSON *diff_disk_uuid = cJSON_GetObjectItem(data, "diff_disk_uuid");	
             cJSON* dif_level = cJSON_GetObjectItem(data, "dif_level");
-            cJSON* diff_disk_type = cJSON_GetObjectItem(data, "diff_disk_type");
+            cJSON* diff_disk_type = cJSON_GetObjectItem(data, "diff_type");
 			if(desktop_group_uuid && diff_disk_uuid && dif_level && diff_disk_type)
 			{
 				DEBUG("update_desktop_disk_level uuid:%s level%d", diff_disk_uuid->valuestring, dif_level->valueint);
@@ -1410,7 +1433,7 @@ static int recv_get_desktop_group_list(struct client *cli)
     int ret, current = -1;
     char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
     cJSON *root = cJSON_Parse((char *)(buf));
-	DEBUG("%s", buf);
+	DEBUG("%s", cJSON_Print(root));
     if (root)
     {    
         cJSON *code = cJSON_GetObjectItem(root, "code");

@@ -571,6 +571,7 @@ int SaveStoreConfig(yzy_file_t hd)
     if (!storeDrv.pStoreCfg) return -2;
     if (storeDrv.storeLba == 0)
 	{
+		DEBUG("storeDrv.storeLba == 0");
         return -1;
 	}
     RebuildStoreConfig();
@@ -579,9 +580,13 @@ int SaveStoreConfig(yzy_file_t hd)
     int ret = yzy_file_write(hd, storeDrv.storeLba * FILESECBYTES, gStoreBuf, YZY_MAX_STORE_BUFF_LEN);
 
     ret = yzy_file_write(hd, GetBackLba() * FILESECBYTES, gStoreBuf, YZY_MAX_STORE_BUFF_LEN); //write backup
+#if 0
     if (ret == (int)YZY_MAX_STORE_BUFF_LEN)
+	{
         return 0;
-    return -1;
+	}
+#endif
+	return ret;
 }
 
 void SetStoreLba(uint64_t lba)

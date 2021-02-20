@@ -197,7 +197,10 @@ static void find_all_disks()
 				dev_info.disks[dev_info.disk_count].total_space = dev->length ; // KB
 
 				if(check_qcow2(dev) == SUCCESS)
+				{
 					dev_info.disks[dev_info.disk_count].disk_ready = 1;
+					//conf.install_flag = 1;		
+				}
 				else
 					dev_info.disks[dev_info.disk_count].disk_ready = 0;
 
@@ -606,6 +609,7 @@ int install_programe()
 	
 			info->progress = 100;
 			send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_UI);
+			send_pipe(buf, INSTALL_DONE ,sizeof(progress_info), PIPE_EVENT);
 			save_config();
 			return SUCCESS;
 		}

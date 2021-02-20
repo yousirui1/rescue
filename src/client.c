@@ -899,7 +899,7 @@ static int recv_down_torrent(struct client *cli)
     return ERROR;
 }
 
-static int send_clear_target_desktop(struct client *cli, int batch_no, int code)
+static int send_clear_target_desktop(struct client *cli, int batch_no, char *desktop_group_uuid, int code)
 {
     int ret = ERROR;
 
@@ -925,6 +925,7 @@ static int send_clear_target_desktop(struct client *cli, int batch_no, int code)
         
         cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
         cJSON_AddNumberToObject(data, "batch_no", batch_no);
+        cJSON_AddStringToObject(data, "desktop_uuid", desktop_group_uuid);
         
         cli->recv_buf = cJSON_Print(root);
         cli->recv_size = strlen(cli->recv_buf);
@@ -956,7 +957,7 @@ static int recv_clear_target_desktop(struct client *cli)
     	if (ret == -1)
 		{
 			DEBUG("no find  target  qcow2");
-			ret = send_clear_target_desktop(cli, batch_no->valueint, ERROR);
+			ret = send_clear_target_desktop(cli, batch_no->valueint, desktop_group_uuid->valuestring,ERROR);
 		}
 		else
 		{
@@ -970,7 +971,7 @@ static int recv_clear_target_desktop(struct client *cli)
             del_qcow2(dev_info.mini_disk->dev, m_group[ret].data_uuid, 1);
             del_qcow2(dev_info.mini_disk->dev, m_group[ret].data_uuid, 2);
 
-			ret = send_clear_target_desktop(cli, batch_no->valueint, SUCCESS);
+			ret = send_clear_target_desktop(cli, batch_no->valueint, desktop_group_uuid->valuestring, SUCCESS);
 		}
         cJSON_Delete(root);
     }
@@ -1433,7 +1434,7 @@ static int recv_get_desktop_group_list(struct client *cli)
     int ret, current = -1;
     char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
     cJSON *root = cJSON_Parse((char *)(buf));
-	DEBUG("%s", cJSON_Print(root));
+	//DEBUG("%s", cJSON_Print(root));
     if (root)
     {    
         cJSON *code = cJSON_GetObjectItem(root, "code");

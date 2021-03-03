@@ -102,6 +102,8 @@ int main(int argc, char *argv[])
 	init_logs();
 
 	parse_options(argc, argv);
+
+	//strcpy(conf.server.ip, "10.96.1.241");
 	
 	init_pipe();
 	init_device();

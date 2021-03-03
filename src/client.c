@@ -580,7 +580,7 @@ static int recv_desktop_tcp(struct client *cli)
 	struct http_task task;
 	struct event_task ev_task;
 	update_desktop(buf);
-	DEBUG("%s", buf);
+	DEBUG("%s", cJSON_Parse((char *)buf));
 	if(root)
 	{
         cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
@@ -721,7 +721,7 @@ static int recv_desktop(struct client *cli)
 	cJSON *root = cJSON_Parse((char *)(buf));
 	struct event_task ev_task;
 	update_desktop(buf);
-	DEBUG("%s", buf);
+	DEBUG("%s", cJSON_Parse((char *)buf));
 	if(root)
 	{
         cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
@@ -813,7 +813,6 @@ static int recv_down_torrent(struct client *cli)
 
     yzy_torrent *torrent = (yzy_torrent *)&cli->recv_buf[read_packet_supplementary(cli->recv_head) +
                                                          read_packet_token(cli->recv_head)];
-#if 0
     DEBUG("torrent->uuid %s", torrent->uuid);
     DEBUG("torrent->type %d", torrent->type);
     DEBUG("torrent->sys_type %d", torrent->sys_type);
@@ -824,7 +823,6 @@ static int recv_down_torrent(struct client *cli)
     DEBUG("torrent->data_len %lld", torrent->data_len);
     DEBUG("torrent->operate_id %d", torrent->operate_id);
     DEBUG("torrent->group_uuid %s", torrent->group_uuid);
-#endif
 
     memcpy(task_uuid, torrent->task_uuid, 36);
     memcpy(uuid, torrent->uuid, 36);
@@ -963,13 +961,11 @@ static int recv_clear_target_desktop(struct client *cli)
 		{
 			DEBUG("del target os qcow2 %s", m_group[ret].os_uuid);
             del_qcow2(dev_info.mini_disk->dev, m_group[ret].os_uuid, 0);
-            del_qcow2(dev_info.mini_disk->dev, m_group[ret].os_uuid, 1);
-            del_qcow2(dev_info.mini_disk->dev, m_group[ret].os_uuid, 2);
+			del_diff_qcow2(dev_info.mini_disk->dev, m_group[ret].os_uuid);
 
 			DEBUG("del target data qcow2 %s", m_group[ret].data_uuid);
             del_qcow2(dev_info.mini_disk->dev, m_group[ret].data_uuid, 0);
-            del_qcow2(dev_info.mini_disk->dev, m_group[ret].data_uuid, 1);
-            del_qcow2(dev_info.mini_disk->dev, m_group[ret].data_uuid, 2);
+			del_diff_qcow2(dev_info.mini_disk->dev, m_group[ret].data_uuid);
 
 			ret = send_clear_target_desktop(cli, batch_no->valueint, desktop_group_uuid->valuestring, SUCCESS);
 		}
@@ -1377,7 +1373,7 @@ static int recv_reboot(struct client *cli, int flag)
 static int recv_get_diff_torrent(struct client *cli)
 {
 	char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
-	DEBUG("%s", buf);
+	DEBUG("%s", cJSON_Parse((char *)(buf)));
 	cJSON *root = cJSON_Parse((char *)(buf));
     if (root)
     {    
@@ -1388,7 +1384,7 @@ static int recv_get_diff_torrent(struct client *cli)
         {    
 			cJSON *desktop_group_uuid = cJSON_GetObjectItem(data, "desktop_group_uuid");	
 			cJSON *diff_disk_uuid = cJSON_GetObjectItem(data, "diff_disk_uuid");	
-            cJSON* dif_level = cJSON_GetObjectItem(data, "dif_level");
+            cJSON* dif_level = cJSON_GetObjectItem(data, "diff_level");
             cJSON* diff_disk_type = cJSON_GetObjectItem(data, "diff_type");
 			if(desktop_group_uuid && diff_disk_uuid && dif_level && diff_disk_type)
 			{
@@ -1479,7 +1475,10 @@ static int recv_get_desktop_group_list(struct client *cli)
                     {    
                         item = cJSON_GetArrayItem(disks, j);
                         if (!item)
+						{
+							DEBUG("item is NULL j %d", j);
                             continue;
+						}
                         max_diff = cJSON_GetObjectItem(item, "max_dif");
                         uuid = cJSON_GetObjectItem(item, "uuid");
                         dif_level = cJSON_GetObjectItem(item, "dif_level");
@@ -1490,7 +1489,10 @@ static int recv_get_desktop_group_list(struct client *cli)
                         operate_id = cJSON_GetObjectItem(item, "operate_id");
 
                         if (!max_diff || !uuid || !dif_level || !prefix || !real_size || !reserve_size || !type || !operate_id)
+						{
+							DEBUG("parse json error param loss !");
                             continue;
+						}
 				
                         if (type->valueint == 0)
                         {
@@ -1561,8 +1563,8 @@ static int recv_get_desktop_group_list(struct client *cli)
                                         continue;
                                     }
 
-                                    //item = cJSON_GetArrayItem(disks, j + 1);
-                                    item = cJSON_GetArrayItem(disks, ++j);
+                                    item = cJSON_GetArrayItem(disks, j + 1);
+                                    //item = cJSON_GetArrayItem(disks, ++j);
 									operate_id_next = NULL;
 									dif_level_next = NULL;
                                     if (item) //diff level 2
@@ -1584,9 +1586,6 @@ static int recv_get_desktop_group_list(struct client *cli)
                                     }
                                     else //存在 1 2
                                     {
-                                        DEBUG("dif_level->valueint %d", dif_level->valueint);
-                                        DEBUG("operate_id->valueint %d", operate_id->valueint);
-                                        DEBUG("uuid->valuestring %s", uuid->valuestring);
                                         if (operate_id->valueint != get_operate_qcow2(uuid->valuestring, 1)) //1 操作号不同
                                         {
                                             if (diff_mode->valueint && operate_id->valueint == get_operate_qcow2(uuid->valuestring, 1) + 1 &&
@@ -1868,7 +1867,7 @@ static int send_set_update_config(struct client *cli)
         sprintf(tmp, "%d.%d", conf.major_ver, conf.minor_ver);
         cJSON_AddStringToObject(root, "soft_version", tmp);
         cJSON_AddNumberToObject(root, "conf_version", conf.config_ver);
-        cJSON_AddNumberToObject(root, "disk_residue", conf.terminal.disk_size);
+        cJSON_AddNumberToObject(root, "disk_residue", available_space(dev_info.mini_disk->dev->disk_name));
         
         cJSON_AddItemToObject(root, "setup_info", setup_info);
         
@@ -1957,7 +1956,7 @@ static int send_config_version(struct client *cli)
         sprintf(tmp, "%d.%d", conf.major_ver, conf.minor_ver);
         cJSON_AddStringToObject(root, "soft_version", tmp);
         //cJSON_AddNumberToObject(root, "conf_version", conf.config_ver);
-        cJSON_AddNumberToObject(root, "disk_residue", conf.terminal.disk_size);
+        cJSON_AddNumberToObject(root, "disk_residue", available_space(dev_info.mini_disk->dev->disk_name));
 
 		cli->send_buf = cJSON_Print(root);
         cli->send_size = strlen(cli->send_buf);

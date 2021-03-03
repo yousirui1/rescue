@@ -13,20 +13,30 @@ char http_install_sh[] = {"#!/bin/sh \n"
 					};
 
 char install_sh[] = {"#!/bin/sh \n"
-					 "mkdir -p src dst \n"
-					 "mount /dev/%s1 dst \n"
+					 "mkdir -p src /boot/linux \n"
 					 "mount /dev/%s%d src \n"
-					 "mkdir -p dst/linux \n"
-					 "cp -f src/EFI/linux/vmlinuz-5.2.8-lfs-9.0 dst/linux/ \n"				
-					 "outpu=`unzip -o src/voi.zip -d dst/ `\n"
+					 "cp -f src/EFI/linux/vmlinuz-5.2.8-lfs-9.0 /boot/linux/ \n"				
+					 "outpu=`unzip -o src/voi.zip -d /boot/ `\n"
 					 "if [ $? -ne 0 ]; then \n"
     					"echo \"failed\" \n"
 					"else \n"
     					"echo \"successd\" \n"
 					"fi \n"
-					"umount src dst \n"
-					"rm -rf src dst \n"
+					"umount src \n"
+					"rm -rf src \n"
 					};
+
+
+char install_root_sh[] = {"#!/bin/sh \n"
+					 "mkdir -p  /boot/linux \n"
+					 "outpu=`unzip -o /root/voi.zip -d /boot/ `\n"
+					 "if [ $? -ne 0 ]; then \n"
+    					"echo \"failed\" \n"
+					"else \n"
+    					"echo \"successd\" \n"
+					"fi \n"
+					};
+
 
 #if 1
 					 //"tftp -g -r %s %s	\n"

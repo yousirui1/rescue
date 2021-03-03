@@ -409,6 +409,7 @@ add_desktop:
 			{
                 write_profile_string(section, BASE_UUID_KEY, uuid->valuestring, DESKTOP_FILE);
                 sprintf(buf, "%d", dif_level->valueint);
+				DEBUG("dif_level->valueint %d", dif_level->valueint);
                 write_profile_string(section, BASE_DIF_KEY, buf, DESKTOP_FILE);
                 write_profile_string(section, BASE_PREFIX_KEY, prefix->valuestring, DESKTOP_FILE);
                 write_profile_string(section, BASE_REAL_SIZE_KEY, real_size->valuestring, DESKTOP_FILE);
@@ -445,7 +446,6 @@ add_desktop:
                 	sprintf(buf, "%d", restore_flag->valueint);
                 	write_profile_string(section, SHARE_RESTORE_FLAG, buf, DESKTOP_FILE);
 				}
-
                 break;
             }
             default:

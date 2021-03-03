@@ -171,7 +171,7 @@ int start_torrent(char *torrent, char *pipe_buf, int diff_mode) try
 	DEBUG("torrent %s", torrent);
 	
 	run_flag = 1;
-	int timeout = 20;
+	int timeout = 100;
 	while(run_flag)
 	{
 		std::vector<lt::alert *>alerts;
@@ -237,7 +237,7 @@ int start_torrent(char *torrent, char *pipe_buf, int diff_mode) try
 						}
 						else
 						{
-							timeout = 20;
+							timeout = 100;
 						}
 				
 						if(timeout <= 0)

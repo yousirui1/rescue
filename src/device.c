@@ -334,8 +334,8 @@ void init_device()
 	if(dev_info.mini_disk)
 	{
 		init_qcow2(dev_info.mini_disk->dev, dev_info.mini_disk->disk_ready);	
-		//terminal->disk_size = dev_info.mini_disk->total_space;
-		terminal->disk_size = available_space(dev_info.mini_disk->dev->disk_name);
+		terminal->disk_size = dev_info.mini_disk->total_space;
+		//terminal->disk_size = available_space(dev_info.mini_disk->dev->disk_name);
 		DEBUG("terminal->disk_size %llu", terminal->disk_size);
         if(dev_info.mini_disk->disk_ready) // 安装ok
         {
@@ -568,6 +568,8 @@ int install_programe()
 			exec_cmd("mkdir -p /boot/conf", result);
         	strcpy(config_file, "/boot/conf/config.ini");
 			DEBUG("install_flag %d", conf.install_flag);
+		
+			exec_cmd("mv /boot/linux/vmlinuz-5.2.8-lfs-9.0_new /boot/linux/vmlinuz-5.2.8-lfs-9.0",result);
 
 			info->progress = 100;
 			send_pipe(buf, PROGRESS_PIPE ,sizeof(progress_info), PIPE_UI);
@@ -587,21 +589,22 @@ int install_programe()
 	}
 	else //usb
 	{
-		if(!dev_info.usb_disk)
+		mount_boot();
+		if(!dev_info.usb_disk)		
 		{
 			DEBUG("no found usb flash disk");	
-			send_error_msg(U_DISK_NO_FOUD_ERR);
-			return ERROR;
+			strcpy(cmd, install_root_sh);
 		}
-
-	    sprintf(cmd, install_sh, dev_info.mini_disk->name, dev_info.usb_disk->name, device_partition(dev_info.usb_disk->name));
+		else
+		{
+	    	sprintf(cmd, install_sh, dev_info.usb_disk->name, device_partition(dev_info.usb_disk->name));
+		}
 		DEBUG("%s", cmd);
 	    exec_cmd(cmd, result);
 		if(STRPREFIX(result, "successd"))
 		{
 			DEBUG("install programe ok");
 			conf.install_flag = 1;
-			mount_boot();
 	
 			exec_cmd("mkdir -p /boot/conf", result);
 	        strcpy(config_file, "/boot/conf/config.ini");

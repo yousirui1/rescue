@@ -45,7 +45,7 @@ static void process_event_msg(char *buf, int length)
 		{
 			DEBUG("server send msg reboot");
 			stop_torrent();
-			send_upload_log(&m_client);
+			//send_upload_log(&m_client);
 			sync();
 			reboot(RB_AUTOBOOT);				
 			break;
@@ -54,7 +54,7 @@ static void process_event_msg(char *buf, int length)
 		{
 			DEBUG("server send msg shutdown");
 			stop_torrent();
-			send_upload_log(&m_client);
+			//send_upload_log(&m_client);
 			sync();
 			reboot(RB_POWER_OFF);				
 			break;
@@ -108,7 +108,7 @@ static void process_ui_msg(char *buf, int length)
 		{
 			DEBUG("qt send pipe reboot msg");
 			stop_torrent();
-			send_upload_log(&m_client);
+			//send_upload_log(&m_client);
 			client_reconnect();
 			sync();
 			reboot(RB_AUTOBOOT);				

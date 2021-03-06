@@ -839,6 +839,7 @@ static int recv_down_torrent(struct client *cli)
     else
     {
         DEBUG("no found group info error %s", torrent->group_uuid);
+		first_time = 1;			// 重新 获取桌面组信息
         return ERROR;
     }
     if (fp)
@@ -1430,7 +1431,7 @@ static int recv_get_desktop_group_list(struct client *cli)
     int ret, current = -1;
     char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
     cJSON *root = cJSON_Parse((char *)(buf));
-	//DEBUG("%s", cJSON_Print(root));
+	DEBUG("%s", cJSON_Print(root));
     if (root)
     {    
         cJSON *code = cJSON_GetObjectItem(root, "code");

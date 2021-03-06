@@ -58,7 +58,7 @@ void init_configs()
     /* network */
     net->is_dhcp = read_profile_int(NET_SECTION, NET_DHCP_KEY, 1, config_file);
 
-	if(!net->is_dhcp)
+	if(!net->is_dhcp ||	STRPREFIX(net->ip, "169.254.1.1"))
 	{
 	    if(read_profile_string(NET_SECTION, NET_IP_KEY, buf, sizeof(buf), net->ip, config_file))
     	{

@@ -9,6 +9,8 @@ struct desktop_group m_group[MAX_GROUP] = {0};
 
 int first_time = 1; 	//第一次登陆
 
+int qcow2_count = 0;
+
 static int send_get_desktop_group_list(struct client *cli);
 static int send_get_diff_torrent(struct client *cli, char *group_uuid, char *diff_uuid, int diff, int type);
 
@@ -19,6 +21,14 @@ void client_reconnect()
     write(pipe_event[1], head, HEAD_LEN);
     write(pipe_ui[1], head, HEAD_LEN);
     DEBUG("client_reconnect");
+
+	if(qcow2_count != 0)
+	{
+		DEBUG("recv qcow2 disk info loss %d", qcow2_count);
+		first_time = 1;		
+		stop_torrent();
+		qcow2_count = 0;
+	}	
 }
 
 void client_online()
@@ -314,6 +324,7 @@ static int recv_progress(struct client *cli)
     
     return SUCCESS;
 }
+int bt_count = 0;
 
 int send_progress(struct client *cli, char *buf)
 {
@@ -349,8 +360,14 @@ int send_progress(struct client *cli, char *buf)
             
             cli->send_buf = cJSON_Print(root);
             cli->send_size = strlen(cli->send_buf);
-            set_packet_head(cli->send_head, BT_TASK_STATE, cli->send_size, JSON_TYPE, 0);
-            ret = send_packet(cli, 0);
+
+			if(STRPREFIX(info->state, "finished") || bt_count >= 10)
+			{
+            	set_packet_head(cli->send_head, BT_TASK_STATE, cli->send_size, JSON_TYPE, 0);
+            	ret = send_packet(cli, 0);
+				bt_count = 0;
+			}
+			bt_count ++ ;
         }
         else if (info->type == 1) //p2v 上传
         {   
@@ -569,7 +586,6 @@ static int send_desktop_tcp(struct client *cli, int batch_no, int code)
 			cJSON_Delete(data);
 	}
 	return ret;	
-
 }
 
 static int recv_desktop_tcp(struct client *cli)
@@ -669,8 +685,6 @@ static int recv_desktop_tcp(struct client *cli)
 	return ret;
 }
 
-
-
 static int send_desktop(struct client *cli, int batch_no, int flag)
 {
 	int ret;
@@ -721,7 +735,8 @@ static int recv_desktop(struct client *cli)
 	cJSON *root = cJSON_Parse((char *)(buf));
 	struct event_task ev_task;
 	update_desktop(buf);
-	DEBUG("%s", cJSON_Parse((char *)buf));
+	DEBUG("%s", cJSON_Print(root));
+	struct torrent_task task = {0};
 	if(root)
 	{
         cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
@@ -732,8 +747,9 @@ static int recv_desktop(struct client *cli)
 			cJSON *desktop_group_name = cJSON_GetObjectItem(desktop, "desktop_group_name");
 			cJSON *disks = cJSON_GetObjectItem(desktop, "disks");
 			cJSON *desktop_group_uuid = cJSON_GetObjectItem(desktop, "desktop_group_uuid");
+			cJSON *diff_mode = cJSON_GetObjectItem(desktop, "diff_mode");
 					
-			if(!disks || cJSON_GetArraySize(disks) <= 0 || !desktop_group_uuid)
+			if(!disks || cJSON_GetArraySize(disks) <= 0 || !desktop_group_uuid || !diff_mode)
 				goto run_out;
 		
 			if(disks && desktop_group_name)
@@ -744,6 +760,58 @@ static int recv_desktop(struct client *cli)
                     if (!item)
                         continue;
                     cJSON *uuid = cJSON_GetObjectItem(item, "uuid");
+					cJSON *type = cJSON_GetObjectItem(item, "type");
+					cJSON *dif_level = cJSON_GetObjectItem(item, "dif_level");
+					cJSON *real_size = cJSON_GetObjectItem(item, "real_size");
+					cJSON *reserve_size = cJSON_GetObjectItem(item, "reserve_size");
+					cJSON *file_size = cJSON_GetObjectItem(item, "file_size");
+					cJSON *operate_id = cJSON_GetObjectItem(item, "operate_id");
+					cJSON *download_url = cJSON_GetObjectItem(item, "download_url");
+
+					if(!uuid || !type || !dif_level || !real_size ||!reserve_size ||!file_size ||!operate_id)
+						continue;	
+			
+					memset(&task, 0, sizeof(struct torrent_task));			
+					if(download_url && strlen(download_url->valuestring))
+					{
+	            		if (type->valueint == 0)
+	            		{    
+	                		sprintf(task.file_name, "%s_系统盘_%d", desktop_group_name->valuestring, dif_level->valueint);
+	            		}    
+	            		else if (type->valueint == 1)
+	            		{    
+	                		sprintf(task.file_name, "%s_数据盘_%d", desktop_group_name->valuestring, dif_level->valueint);
+	            		}    
+	            		else if (type->valueint == 2)
+	            		{    
+	                		if(operate_id->valueint == get_operate_qcow2(uuid->valuestring, 0)) //共享盘已存在不再下载
+	                		{    
+	                    		DEBUG("share disk data found operated equal: %d", operate_id->valueint);
+	                    		return SUCCESS;
+	                		}    
+	                		else 
+	                		{    
+	                    		strcpy(task.file_name, "共享盘");
+	                    		del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 0);
+	                    		del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
+	                		}    
+	            		}  
+	
+						sprintf(task.torrent_file, "/root/voi_%d_%s.torrent", dif_level->valueint, uuid->valuestring);
+						strcpy(task.uuid, uuid->valuestring);
+	
+	    				task.diff = dif_level->valueint;
+	            		task.diff_mode = diff_mode->valueint + 1; 
+	            		task.disk_type = type->valueint;
+	
+						sscanf(real_size->valuestring, "%llu", &task.real_size);
+						sscanf(reserve_size->valuestring, "%llu", &task.space_size);
+						sscanf(file_size->valuestring, "%llu", &task.file_size);
+				
+	            		task.operate_id = operate_id->valueint;
+						strcpy(task.download_url, download_url->valuestring);
+						en_queue(&task_queue, (char *)&task, sizeof(struct torrent_task), TASK_BT);
+					}
 
 					if(uuid)
 					{
@@ -813,6 +881,8 @@ static int recv_down_torrent(struct client *cli)
 
     yzy_torrent *torrent = (yzy_torrent *)&cli->recv_buf[read_packet_supplementary(cli->recv_head) +
                                                          read_packet_token(cli->recv_head)];
+
+#if 0
     DEBUG("torrent->uuid %s", torrent->uuid);
     DEBUG("torrent->type %d", torrent->type);
     DEBUG("torrent->sys_type %d", torrent->sys_type);
@@ -823,9 +893,12 @@ static int recv_down_torrent(struct client *cli)
     DEBUG("torrent->data_len %lld", torrent->data_len);
     DEBUG("torrent->operate_id %d", torrent->operate_id);
     DEBUG("torrent->group_uuid %s", torrent->group_uuid);
-
+#endif
     memcpy(task_uuid, torrent->task_uuid, 36);
-    memcpy(uuid, torrent->uuid, 36);
+    //memcpy(uuid, torrent->uuid, 36);
+
+    return send_down_torrent(cli, task_uuid);
+
 
     char *data = &cli->recv_buf[read_packet_supplementary(cli->recv_head) +
                                 read_packet_token(cli->recv_head) + sizeof(yzy_torrent)];
@@ -1373,9 +1446,12 @@ static int recv_reboot(struct client *cli, int flag)
 
 static int recv_get_diff_torrent(struct client *cli)
 {
+	int ret;
 	char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
-	DEBUG("%s", cJSON_Parse((char *)(buf)));
 	cJSON *root = cJSON_Parse((char *)(buf));
+	DEBUG("%s", cJSON_Print(root));
+	qcow2_count --;
+
     if (root)
     {    
         cJSON *code = cJSON_GetObjectItem(root, "code");
@@ -1386,10 +1462,72 @@ static int recv_get_diff_torrent(struct client *cli)
 			cJSON *desktop_group_uuid = cJSON_GetObjectItem(data, "desktop_group_uuid");	
 			cJSON *diff_disk_uuid = cJSON_GetObjectItem(data, "diff_disk_uuid");	
             cJSON* dif_level = cJSON_GetObjectItem(data, "diff_level");
-            cJSON* diff_disk_type = cJSON_GetObjectItem(data, "diff_type");
+            cJSON* diff_disk_type = cJSON_GetObjectItem(data, "diff_disk_type");
+			cJSON* download_url = cJSON_GetObjectItem(data, "download_url");
+            cJSON *real_size = cJSON_GetObjectItem(data, "real_size");
+            cJSON *reserve_size = cJSON_GetObjectItem(data, "reserve_size");
+            cJSON *file_size = cJSON_GetObjectItem(data, "file_size");
+			cJSON* operate_id = cJSON_GetObjectItem(data, "operate_id");
+
 			if(desktop_group_uuid && diff_disk_uuid && dif_level && diff_disk_type)
 			{
 				DEBUG("update_desktop_disk_level uuid:%s level%d", diff_disk_uuid->valuestring, dif_level->valueint);
+				if(download_url && strlen(download_url->valuestring) && real_size && reserve_size && file_size && operate_id)
+				{
+    				struct desktop_group *current_group = NULL;
+    				ret = get_desktop(desktop_group_uuid->valuestring);
+					if(ret != -1)
+					{
+						current_group = &m_group[ret];
+					}
+					else
+					{
+        				DEBUG("no found group info error %s", desktop_group_uuid->valuestring);
+						first_time = 1;			// 重新 获取桌面组信息
+        				return ERROR;
+					}
+            		struct torrent_task task = {0};
+
+		            if (diff_disk_type->valueint == 0)
+		            {
+		                sprintf(task.file_name, "%s_系统盘_%d", current_group->group_name, dif_level->valueint);
+		            }
+		            else if (diff_disk_type->valueint == 1)
+		            {
+		                sprintf(task.file_name, "%s_数据盘_%d", current_group->group_name, dif_level->valueint);
+		            }
+		            else if (diff_disk_type->valueint == 2)
+		            {
+		                if(operate_id->valueint == get_operate_qcow2(diff_disk_uuid->valuestring, 0)) //共享盘已存在不再下载
+		                {
+		                    DEBUG("share disk data found operated equal: %d", operate_id->valueint);
+		                    return SUCCESS;
+		                }
+		                else
+		                {
+		                    strcpy(task.file_name, "共享盘");
+		                    del_qcow2(dev_info.mini_disk->dev, diff_disk_uuid->valuestring, 0);
+		                    del_diff_qcow2(dev_info.mini_disk->dev, diff_disk_uuid->valuestring);
+		                }
+		            }
+
+            		memcpy(task.download_url, download_url->valuestring, strlen(download_url->valuestring));
+		
+					strcpy(task.uuid, diff_disk_uuid->valuestring);
+					sprintf(task.torrent_file, "/root/voi_%d_%s.torrent", dif_level->valueint, diff_disk_uuid->valuestring);
+		
+		            task.diff = dif_level->valueint;
+		            task.diff_mode = current_group->diff_mode + 1;
+		            task.disk_type = diff_disk_type->valueint;
+
+                    sscanf(real_size->valuestring, "%llu", &task.real_size);
+                    sscanf(reserve_size->valuestring, "%llu", &task.space_size);
+                    sscanf(file_size->valuestring, "%llu", &task.file_size);
+                    
+                    task.operate_id = operate_id->valueint;
+
+            		en_queue(&task_queue, (char *)&task, sizeof(struct torrent_task), TASK_BT);
+				}
 				update_desktop_disk_level(desktop_group_uuid->valuestring, diff_disk_uuid->valuestring, dif_level->valueint, 
 											diff_disk_type->valueint);
 			}
@@ -1420,6 +1558,7 @@ static int send_get_diff_torrent(struct client *cli, char *group_uuid, char *dif
 
         set_packet_head(cli->send_head, DIFF_DOWN_TORRENT, cli->send_size, JSON_TYPE, 0);
         ret = send_packet(cli, 0);
+		qcow2_count ++;
 		
 		cJSON_Delete(root);
 	}
@@ -1431,7 +1570,7 @@ static int recv_get_desktop_group_list(struct client *cli)
     int ret, current = -1;
     char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
     cJSON *root = cJSON_Parse((char *)(buf));
-	DEBUG("%s", cJSON_Print(root));
+	//DEBUG("%s", cJSON_Print(root));
     if (root)
     {    
         cJSON *code = cJSON_GetObjectItem(root, "code");
@@ -1637,6 +1776,14 @@ static int recv_get_desktop_group_list(struct client *cli)
     }
     if (root)
         cJSON_Delete(root);
+
+	if(check_os_qcow2() != SUCCESS)
+	{
+		char head[HEAD_LEN] = {0};
+		DEBUG("no find default desktop download it");
+    	send_pipe(head, RESET_PIPE, 0, PIPE_EVENT);
+	}
+	first_time = 0;
     return SUCCESS;
 }
 
@@ -1779,7 +1926,6 @@ static int recv_get_config(struct client *cli)
 			if(first_time)
 			{
 				ret = send_get_desktop_group_list(cli);
-				first_time = 0;
 				//ret = SUCCESS;
 			}
 			else	
@@ -1891,8 +2037,6 @@ static int send_set_update_config(struct client *cli)
 		if(first_time)
 		{
 			ret = send_get_desktop_group_list(cli);
-			first_time = 0;
-			//ret = SUCCESS;
 		}
         cJSON_Delete(root);
 	}

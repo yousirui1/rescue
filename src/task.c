@@ -11,12 +11,28 @@ unsigned char *task_queue_buf = NULL;
 static int task_bt(char *data, int length)
 {
 	int i, ret = ERROR;
+	char result[MAX_BUFLEN] = {0};
+    char cmd[MAX_BUFLEN] = {0};
+
 	uint64_t offset = 0;
 	struct torrent_task *task = (struct torrent_task *)data;
 
 	char buf[HEAD_LEN + sizeof(progress_info) + 1] = {0};
     progress_info *info = (progress_info *)&buf[HEAD_LEN];
-	
+
+	if(strlen(task->download_url) != 0)
+	{
+		sprintf(cmd, "wget %s -O %s", task->download_url, task->torrent_file);
+		DEBUG("cmd: %s", cmd);
+		exec_cmd(cmd, result);				
+	}	
+
+	if(access(task->torrent_file, F_OK) != SUCCESS)
+	{
+		DEBUG("torrent file no find %s", task->torrent_file);
+		return ERROR;
+	}
+
 	strcpy(info->file_name, task->file_name);
 
 	if(task->diff == 1 && task->diff_mode == INCRMENT_MODE)
@@ -247,11 +263,20 @@ static void task_p2v(char *data, int length)
 
 static void task_event(char *data, int length)
 {
-	char uuid[37];
 	struct event_task *task = (struct event_task*)data;
-	memcpy(uuid, task->data, 36);
-	DEBUG("del uuid %s qcow diff 3", uuid);
-	del_qcow2(dev_info.mini_disk->dev, uuid, 3);
+	switch(task->type)
+	{
+		case TASK_EVENT_DEL_QCOW:
+		{
+			char uuid[37];
+			memcpy(uuid, task->data, 36);
+			DEBUG("del uuid %s qcow diff 3", uuid);
+			del_qcow2(dev_info.mini_disk->dev, uuid, 3);
+			break;
+		}
+		default:
+			break;
+	}
 }
 
 

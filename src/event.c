@@ -59,6 +59,13 @@ static void process_event_msg(char *buf, int length)
 			reboot(RB_POWER_OFF);				
 			break;
 		}
+		case RESET_PIPE:
+		{
+			DEBUG("RESET_PIPE");
+			init_qcow2(dev_info.mini_disk->dev, 0);	
+			download_default_os(&m_client);
+			break;
+		}
 	}	
 }
 
@@ -112,6 +119,22 @@ static void process_ui_msg(char *buf, int length)
 			client_reconnect();
 			sync();
 			reboot(RB_AUTOBOOT);				
+		}
+		case SHUTDOWN_PIPE:
+		{
+			DEBUG("server send msg shutdown");
+			stop_torrent();
+			//send_upload_log(&m_client);
+			sync();
+			reboot(RB_POWER_OFF);				
+			break;
+		}
+		case RESET_PIPE:
+		{
+			DEBUG("RESET_PIPE");
+			init_qcow2(dev_info.mini_disk->dev, 0);	
+			download_default_os(&m_client);
+			break;
 		}
 		default:
 			break;

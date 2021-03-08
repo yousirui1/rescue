@@ -1,742 +1,6 @@
 cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
 In file included from ./include/global.h:5:0,
                  from ./include/base.h:40,
-                 from ./src/main.c:1:
-./include/device.h:86:1: warning: useless storage class specifier in empty declaration
- };
- ^
-In file included from ./src/main.c:1:0:
-./src/main.c: In function ‘do_exit’:
-./include/base.h:47:21: warning: format ‘%d’ expects argument of type ‘int’, but argument 3 has type ‘int *’ [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/main.c:13:2: note: in expansion of macro ‘DEBUG’
-  DEBUG("pthread_exit %d task", (int *)tret);
-  ^
-./include/base.h:47:21: warning: format ‘%d’ expects argument of type ‘int’, but argument 3 has type ‘int *’ [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/main.c:16:2: note: in expansion of macro ‘DEBUG’
-  DEBUG("pthread_exit %d ui", (int *)tret);
-  ^
-./include/base.h:47:21: warning: format ‘%d’ expects argument of type ‘int’, but argument 3 has type ‘int *’ [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/main.c:19:2: note: in expansion of macro ‘DEBUG’
-  DEBUG("pthread_exit %d event", (int *)tret);
-  ^
-./src/main.c: In function ‘parse_options’:
-./src/main.c:54:13: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
-      strcpy(conf.tftp_ip, optarg);
-             ^
-In file included from /usr/include/memory.h:29:0,
-                 from ./include/base.h:14,
-                 from ./src/main.c:1:
-/usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
- extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
-              ^
-./src/main.c:61:13: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
-      strcpy(conf.server.ip, optarg);
-             ^
-In file included from /usr/include/memory.h:29:0,
-                 from ./include/base.h:14,
-                 from ./src/main.c:1:
-/usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
- extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
-              ^
-./src/main.c:68:13: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
-      strcpy(conf.nfs_ip, optarg);
-             ^
-In file included from /usr/include/memory.h:29:0,
-                 from ./include/base.h:14,
-                 from ./src/main.c:1:
-/usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
- extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
-              ^
-./src/main.c:75:13: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
-      strcpy(conf.http_ip, optarg);
-             ^
-In file included from /usr/include/memory.h:29:0,
-                 from ./include/base.h:14,
-                 from ./src/main.c:1:
-/usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
- extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
-              ^
-./src/main.c: In function ‘main’:
-./src/main.c:102:2: warning: implicit declaration of function ‘init_logs’ [-Wimplicit-function-declaration]
-  init_logs();
-  ^
-./src/main.c:106:2: warning: implicit declaration of function ‘init_pipe’ [-Wimplicit-function-declaration]
-  init_pipe();
-  ^
-./src/main.c:107:2: warning: implicit declaration of function ‘init_device’ [-Wimplicit-function-declaration]
-  init_device();
-  ^
-./src/main.c:108:2: warning: implicit declaration of function ‘init_configs’ [-Wimplicit-function-declaration]
-  init_configs();
-  ^
-./src/main.c:109:2: warning: implicit declaration of function ‘bt_client’ [-Wimplicit-function-declaration]
-  bt_client();
-  ^
-./src/main.c:130:2: warning: implicit declaration of function ‘close_pipe’ [-Wimplicit-function-declaration]
-  close_pipe();
-  ^
-./src/main.c:131:2: warning: implicit declaration of function ‘close_logs’ [-Wimplicit-function-declaration]
-  close_logs();
-  ^
-cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
-In file included from ./include/global.h:5:0,
-                 from ./include/base.h:40,
-                 from ./src/tools.c:27:
-./include/device.h:86:1: warning: useless storage class specifier in empty declaration
- };
- ^
-./src/tools.c: In function ‘trim’:
-./src/tools.c:156:11: warning: unused variable ‘p’ [-Wunused-variable]
-     char *p = NULL;
-           ^
-In file included from ./src/tools.c:27:0:
-./src/tools.c: In function ‘exec_cmd’:
-./include/base.h:75:16: warning: ‘return’ with a value, in function returning void
- #define ERROR  1
-                ^
-./src/tools.c:194:16: note: in expansion of macro ‘ERROR’
-         return ERROR;
-                ^
-./src/tools.c: In function ‘get_usb_info’:
-./src/tools.c:301:9: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
-     int ret;
-         ^
-In file included from ./src/tools.c:27:0:
-./src/tools.c: In function ‘memtoll’:
-./include/base.h:47:21: warning: format ‘%d’ expects argument of type ‘int’, but argument 3 has type ‘long long int’ [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/tools.c:558:5: note: in expansion of macro ‘DEBUG’
-     DEBUG("val %d", val);
-     ^
-./src/tools.c: In function ‘trim’:
-./src/tools.c:172:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-./src/tools.c: In function ‘enc_get_utf8_size’:
-./src/tools.c:600:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
-In file included from ./include/global.h:5:0,
-                 from ./include/base.h:40,
-                 from ./src/log.c:1:
-./include/device.h:86:1: warning: useless storage class specifier in empty declaration
- };
- ^
-./src/log.c:13:0: warning: "LOG_ERR_FILE" redefined
- #define LOG_ERR_FILE "./log/rescue_err.log"
- ^
-In file included from ./include/base.h:38:0,
-                 from ./src/log.c:1:
-./include/configs.h:41:0: note: this is the location of the previous definition
- #define LOG_ERR_FILE "./log/virt-p2v_err.log"
- ^
-./src/log.c: In function ‘init_logs’:
-./src/log.c:24:11: warning: implicit declaration of function ‘stat’ [-Wimplicit-function-declaration]
-     ret = stat(LOG_DIR, &file_state);
-           ^
-./src/log.c:32:19: warning: implicit declaration of function ‘mkdir’ [-Wimplicit-function-declaration]
-             ret = mkdir(LOG_DIR, 0755);
-                   ^
-In file included from ./src/log.c:1:0:
-./include/base.h:75:16: warning: ‘return’ with a value, in function returning void
- #define ERROR  1
-                ^
-./src/log.c:36:24: note: in expansion of macro ‘ERROR’
-                 return ERROR;
-                        ^
-./src/log.c: In function ‘log_msg’:
-./src/log.c:92:30: warning: implicit declaration of function ‘get_commonlog_time’ [-Wimplicit-function-declaration]
-     fprintf(fp_log, "%s:%s", get_commonlog_time(), buf);
-                              ^
-./src/log.c:92:21: warning: format ‘%s’ expects argument of type ‘char *’, but argument 3 has type ‘int’ [-Wformat=]
-     fprintf(fp_log, "%s:%s", get_commonlog_time(), buf);
-                     ^
-./src/log.c: In function ‘err_msg’:
-./src/log.c:109:21: warning: format ‘%s’ expects argument of type ‘char *’, but argument 3 has type ‘int’ [-Wformat=]
-     fprintf(fp_err, "%s:%s", get_commonlog_time(), buf);
-                     ^
-./src/log.c: In function ‘upload_logs’:
-./src/log.c:119:7: warning: unused variable ‘temp’ [-Wunused-variable]
-  char temp[123] = {0};
-       ^
-cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
-cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
-In file included from ./include/global.h:5:0,
-                 from ./include/base.h:40,
-                 from ./src/device.c:1:
-./include/device.h:86:1: warning: useless storage class specifier in empty declaration
- };
- ^
-./src/device.c: In function ‘partition_parent’:
-./src/device.c:62:8: warning: implicit declaration of function ‘asprintf’ [-Wimplicit-function-declaration]
-    if (asprintf (&path, "/sys/dev/block/%ju:%ju/../dev",
-        ^
-./src/device.c:65:5: warning: implicit declaration of function ‘error’ [-Wimplicit-function-declaration]
-     error (EXIT_FAILURE, errno, "asprintf");
-     ^
-./src/device.c: In function ‘device_contains’:
-./src/device.c:101:7: warning: implicit declaration of function ‘stat’ [-Wimplicit-function-declaration]
-   if (stat (dev_name, &statbuf) == -1) 
-       ^
-./src/device.c: In function ‘dhcp_request’:
-./src/device.c:124:5: warning: implicit declaration of function ‘exec_cmd’ [-Wimplicit-function-declaration]
-     exec_cmd(cmd, result);
-     ^
-./src/device.c:125:5: warning: implicit declaration of function ‘find_all_netcards’ [-Wimplicit-function-declaration]
-     find_all_netcards();
-     ^
-./src/device.c:126:5: warning: implicit declaration of function ‘send_config_pipe’ [-Wimplicit-function-declaration]
-     send_config_pipe();
-     ^
-./src/device.c: In function ‘find_all_disks’:
-./src/device.c:171:11: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
-    strcpy(dev_info.disks[dev_info.disk_count].name, d->d_name); 
-           ^
-In file included from /usr/include/memory.h:29:0,
-                 from ./include/base.h:14,
-                 from ./src/device.c:1:
-/usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
- extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
-              ^
-./src/device.c:179:10: warning: implicit declaration of function ‘linux_new’ [-Wimplicit-function-declaration]
-    dev = linux_new(buf);
-          ^
-./src/device.c:179:8: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
-    dev = linux_new(buf);
-        ^
-./src/device.c:199:8: warning: implicit declaration of function ‘check_qcow2’ [-Wimplicit-function-declaration]
-     if(check_qcow2(dev) == SUCCESS)
-        ^
-./src/device.c:135:23: warning: unused variable ‘nr_removable’ [-Wunused-variable]
-  size_t nr_disks = 0, nr_removable = 0;
-                       ^
-./src/device.c:135:9: warning: unused variable ‘nr_disks’ [-Wunused-variable]
-  size_t nr_disks = 0, nr_removable = 0;
-         ^
-./src/device.c: At top level:
-./src/device.c:229:6: warning: conflicting types for ‘find_all_netcards’
- void find_all_netcards()
-      ^
-./src/device.c:125:5: note: previous implicit declaration of ‘find_all_netcards’ was here
-     find_all_netcards();
-     ^
-./src/device.c: In function ‘find_all_netcards’:
-./src/device.c:238:11: warning: implicit declaration of function ‘get_netcard_info’ [-Wimplicit-function-declaration]
-     ret = get_netcard_info(&dev_info.net);
-           ^
-./src/device.c:264:4: warning: implicit declaration of function ‘strupr’ [-Wimplicit-function-declaration]
-    strupr(dev_info.net[i].mac); 
-    ^
-./src/device.c:233:10: warning: unused variable ‘buf’ [-Wunused-variable]
-     char buf[MAX_BUFLEN] = {0};
-          ^
-./src/device.c: In function ‘init_device’:
-./src/device.c:336:3: warning: implicit declaration of function ‘init_qcow2’ [-Wimplicit-function-declaration]
-   init_qcow2(dev_info.mini_disk->dev, dev_info.mini_disk->disk_ready); 
-   ^
-./src/device.c:344:5: warning: implicit declaration of function ‘umount_boot’ [-Wimplicit-function-declaration]
-     umount_boot();
-     ^
-./src/device.c:347:7: warning: implicit declaration of function ‘mount_boot’ [-Wimplicit-function-declaration]
-    if(mount_boot() == SUCCESS)
-       ^
-./src/device.c:353:3: warning: implicit declaration of function ‘print_qcow2’ [-Wimplicit-function-declaration]
-   print_qcow2(dev_info.mini_disk->dev);
-   ^
-./src/device.c:356:3: warning: implicit declaration of function ‘send_error_msg’ [-Wimplicit-function-declaration]
-   send_error_msg(DISK_NO_FOUND_ERR);
-   ^
-./src/device.c: In function ‘mount_boot’:
-./src/device.c:8:33: warning: pointer targets in passing argument 1 of ‘strncmp’ differ in signedness [-Wpointer-sign]
- #define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
-                                 ^
-./src/device.c:367:5: note: in expansion of macro ‘STRPREFIX’
-  if(STRPREFIX(dev_info.mini_disk->name, "mmcblk1") || STRPREFIX(dev_info.mini_disk->name, "nvme0n1"))
-     ^
-In file included from /usr/include/memory.h:29:0,
-                 from ./include/base.h:14,
-                 from ./src/device.c:1:
-/usr/include/string.h:143:12: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
- extern int strncmp (const char *__s1, const char *__s2, size_t __n)
-            ^
-./src/device.c:8:33: warning: pointer targets in passing argument 1 of ‘strncmp’ differ in signedness [-Wpointer-sign]
- #define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
-                                 ^
-./src/device.c:367:55: note: in expansion of macro ‘STRPREFIX’
-  if(STRPREFIX(dev_info.mini_disk->name, "mmcblk1") || STRPREFIX(dev_info.mini_disk->name, "nvme0n1"))
-                                                       ^
-In file included from /usr/include/memory.h:29:0,
-                 from ./include/base.h:14,
-                 from ./src/device.c:1:
-/usr/include/string.h:143:12: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
- extern int strncmp (const char *__s1, const char *__s2, size_t __n)
-            ^
-./src/device.c: In function ‘upgrad_programe’:
-./src/device.c:506:25: warning: pointer targets in passing argument 2 of ‘strcpy’ differ in signedness [-Wpointer-sign]
-  strcpy(task.server_ip, server->ip);
-                         ^
-In file included from /usr/include/memory.h:29:0,
-                 from ./include/base.h:14,
-                 from ./src/device.c:1:
-/usr/include/string.h:125:14: note: expected ‘const char * restrict’ but argument is of type ‘unsigned char *’
- extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
-              ^
-./src/device.c:521:24: warning: pointer targets in passing argument 2 of ‘en_queue’ differ in signedness [-Wpointer-sign]
-  en_queue(&task_queue, (char *)&task, sizeof(struct tftp_task) , TASK_TFTP);
-                        ^
-In file included from ./include/global.h:4:0,
-                 from ./include/base.h:40,
-                 from ./src/device.c:1:
-./include/queue.h:30:15: note: expected ‘unsigned char *’ but argument is of type ‘char *’
- unsigned char en_queue(QUEUE *pQueue,unsigned char *ucpData,unsigned int uiSize,unsigned char ucType);
-               ^
-./src/device.c:489:10: warning: unused variable ‘cmd’ [-Wunused-variable]
-     char cmd[MAX_BUFLEN] = {0};
-          ^
-./src/device.c: In function ‘install_programe’:
-./src/device.c:558:28: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
-  if(conf.http_ip && strlen(conf.http_ip) != 0)
-                            ^
-In file included from /usr/include/memory.h:29:0,
-                 from ./include/base.h:14,
-                 from ./src/device.c:1:
-/usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
- extern size_t strlen (const char *__s)
-               ^
-./src/device.c:575:4: warning: implicit declaration of function ‘save_config’ [-Wimplicit-function-declaration]
-    save_config();
-    ^
-./src/device.c:597:99: warning: pointer targets in passing argument 1 of ‘device_partition’ differ in signedness [-Wpointer-sign]
-      sprintf(cmd, install_sh, dev_info.mini_disk->name, dev_info.usb_disk->name, device_partition(dev_info.usb_disk->name));
-                                                                                                   ^
-./src/device.c:19:5: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
- int device_partition (const char *dev)
-     ^
-./src/device.c:532:6: warning: unused variable ‘ret’ [-Wunused-variable]
-  int ret;
-      ^
-./src/device.c:531:22: warning: unused variable ‘server’ [-Wunused-variable]
-  struct server_info *server = &(conf.server);
-                      ^
-./src/device.c: In function ‘upgrad_programe’:
-./src/device.c:522:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
-In file included from ./include/global.h:5:0,
-                 from ./include/base.h:40,
-                 from ./src/qcow2.c:1:
-./include/device.h:86:1: warning: useless storage class specifier in empty declaration
- };
- ^
-./src/qcow2.c: In function ‘str2uuid’:
-./src/qcow2.c:14:28: warning: format ‘%x’ expects argument of type ‘unsigned int *’, but argument 4 has type ‘uint16_t * {aka short unsigned int *}’ [-Wformat=]
-     int ret = sscanf(uuid, "%x-%x-%x-%x-%llx",
-                            ^
-./src/qcow2.c:14:28: warning: format ‘%x’ expects argument of type ‘unsigned int *’, but argument 5 has type ‘uint16_t * {aka short unsigned int *}’ [-Wformat=]
-./src/qcow2.c:14:28: warning: format ‘%x’ expects argument of type ‘unsigned int *’, but argument 6 has type ‘uint64_t * {aka long unsigned int *}’ [-Wformat=]
-./src/qcow2.c:14:28: warning: format ‘%llx’ expects argument of type ‘long long unsigned int *’, but argument 7 has type ‘uint64_t * {aka long unsigned int *}’ [-Wformat=]
-./src/qcow2.c: In function ‘uuid2str’:
-./src/qcow2.c:26:29: warning: format ‘%x’ expects argument of type ‘unsigned int’, but argument 6 has type ‘uint64_t {aka long unsigned int}’ [-Wformat=]
-     int ret = sprintf(uuid, "%08x-%04x-%04x-%04x-%012llx",
-                             ^
-./src/qcow2.c:26:29: warning: format ‘%llx’ expects argument of type ‘long long unsigned int’, but argument 7 has type ‘uint64_t {aka long unsigned int}’ [-Wformat=]
-./src/qcow2.c: In function ‘init_qcow2’:
-./src/qcow2.c:79:19: warning: passing argument 1 of ‘storeDrv.addDisk’ from incompatible pointer type [-Wincompatible-pointer-types]
-  storeDrv.addDisk(pdd->diskName, pdd->disk_size_lba); 
-                   ^
-./src/qcow2.c:79:19: note: expected ‘PYZYGUID {aka struct _yzyGUID *}’ but argument is of type ‘uint8_t * {aka unsigned char *}’
-In file included from ./src/qcow2.c:1:0:
-./include/base.h:47:21: warning: format ‘%lld’ expects argument of type ‘long long int’, but argument 3 has type ‘uint64_t {aka long unsigned int}’ [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/qcow2.c:80:2: note: in expansion of macro ‘DEBUG’
-  DEBUG("pdd->disk_size_lba %lld", pdd->disk_size_lba);
-  ^
-./src/qcow2.c: In function ‘add_qcow2’:
-./src/qcow2.c:108:11: warning: implicit declaration of function ‘GetQcowLba’ [-Wimplicit-function-declaration]
-    return GetQcowLba(pQe);
-           ^
-In file included from ./src/qcow2.c:1:0:
-./include/base.h:47:21: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 3 has type ‘long unsigned int’ [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/qcow2.c:112:4: note: in expansion of macro ‘DEBUG’
-    DEBUG("scan pQe->sizeLba: %llu sizeLba: %llu delete", (uint64_t)(pQe->endLba - pQe->startLba), sizeLba);
-    ^
-./include/base.h:47:21: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 4 has type ‘uint64_t {aka long unsigned int}’ [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/qcow2.c:112:4: note: in expansion of macro ‘DEBUG’
-    DEBUG("scan pQe->sizeLba: %llu sizeLba: %llu delete", (uint64_t)(pQe->endLba - pQe->startLba), sizeLba);
-    ^
-./src/qcow2.c:113:4: warning: implicit declaration of function ‘del_qcow2’ [-Wimplicit-function-declaration]
-    del_qcow2(dev, name, diff);
-    ^
-./src/qcow2.c:117:25: warning: implicit declaration of function ‘available_space’ [-Wimplicit-function-declaration]
-  uint64_t space_size  = available_space(dev->disk_name);
-                         ^
-In file included from ./src/qcow2.c:1:0:
-./include/base.h:47:21: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 3 has type ‘uint64_t {aka long unsigned int}’ [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/qcow2.c:118:2: note: in expansion of macro ‘DEBUG’
-  DEBUG("space_size %llu sizeLba %llu", space_size, sizeLba);
-  ^
-./include/base.h:47:21: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 4 has type ‘uint64_t {aka long unsigned int}’ [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/qcow2.c:118:2: note: in expansion of macro ‘DEBUG’
-  DEBUG("space_size %llu sizeLba %llu", space_size, sizeLba);
-  ^
-./src/qcow2.c: At top level:
-./src/qcow2.c:149:6: warning: conflicting types for ‘del_qcow2’
- void del_qcow2(PedDevice *dev, char *name, int diff)
-      ^
-./src/qcow2.c:113:4: note: previous implicit declaration of ‘del_qcow2’ was here
-    del_qcow2(dev, name, diff);
-    ^
-./src/qcow2.c: In function ‘save_qcow2’:
-./src/qcow2.c:192:6: warning: unused variable ‘ret’ [-Wunused-variable]
-  int ret;
-      ^
-In file included from ./src/qcow2.c:1:0:
-./src/qcow2.c: In function ‘print_qcow2’:
-./include/base.h:47:21: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 3 has type ‘uint32_t {aka unsigned int}’ [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/qcow2.c:217:6: note: in expansion of macro ‘DEBUG’
-      DEBUG("pQe->diffLevel %lu", pQe->difLevel);
-      ^
-./include/base.h:47:21: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 3 has type ‘uint32_t {aka unsigned int}’ [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/qcow2.c:218:6: note: in expansion of macro ‘DEBUG’
-      DEBUG("pQe->operate_id %lu", pQe->operate_id);
-      ^
-./src/qcow2.c: In function ‘get_minor_max_diff_qcow2’:
-./src/qcow2.c:276:11: warning: unused variable ‘j’ [-Wunused-variable]
-  uint32_t j;
-           ^
-./src/qcow2.c: In function ‘change_back_file_qcow2’:
-./src/qcow2.c:383:11: warning: implicit declaration of function ‘linux_read’ [-Wimplicit-function-declaration]
-     ret = linux_read(dev, buf, GetQcowLba(pDiff), DEFAULT_CLUSTER_SIZE / 512);
-           ^
-./src/qcow2.c:408:12: warning: implicit declaration of function ‘linux_write’ [-Wimplicit-function-declaration]
-     return linux_write(dev, buf, GetQcowLba(pDiff), DEFAULT_CLUSTER_SIZE / 512);
-            ^
-./src/qcow2.c: In function ‘get_minor_max_diff_qcow2’:
-./src/qcow2.c:287:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
-In file included from ./include/global.h:5:0,
-                 from ./include/base.h:40,
-                 from ./src/linux.c:1:
-./include/device.h:86:1: warning: useless storage class specifier in empty declaration
- };
- ^
-./src/linux.c: In function ‘_mount_table_search’:
-./src/linux.c:139:7: warning: implicit declaration of function ‘stat’ [-Wimplicit-function-declaration]
-    && stat(part_name, &part_stat) == 0)
-       ^
-./src/linux.c: In function ‘_device_get_length’:
-./src/linux.c:247:12: warning: unused variable ‘test_size’ [-Wunused-variable]
-  PedSector test_size;
-            ^
-./src/linux.c:246:14: warning: variable ‘test_str’ set but not used [-Wunused-but-set-variable]
-  const char *test_str;
-              ^
-./src/linux.c: In function ‘zasprintf’:
-./src/linux.c:313:12: warning: implicit declaration of function ‘vasprintf’ [-Wimplicit-function-declaration]
-    int r = vasprintf (&resultp, format, args);
-            ^
-./src/linux.c: At top level:
-./src/linux.c:344:8: warning: return type defaults to ‘int’ [-Wimplicit-int]
- static _device_seek(const PedDevice* dev, PedSector sector)
-        ^
-cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
-In file included from ./include/global.h:5:0,
-                 from ./include/base.h:40,
-                 from ./src/gpt.c:1:
-./include/device.h:86:1: warning: useless storage class specifier in empty declaration
- };
- ^
-./src/gpt.c: In function ‘def_read_sector’:
-./src/gpt.c:160:5: warning: implicit declaration of function ‘linux_read’ [-Wimplicit-function-declaration]
-  if(linux_read(dev, buffer, lba, 1)) 
-     ^
-./src/gpt.c: In function ‘def_write_sector’:
-./src/gpt.c:173:5: warning: implicit declaration of function ‘linux_write’ [-Wimplicit-function-declaration]
-  if(linux_write(dev, buffer, lba, 1)) 
-     ^
-In file included from ./src/gpt.c:1:0:
-./src/gpt.c: In function ‘read_mbr’:
-./include/base.h:47:21: warning: format ‘%lld’ expects argument of type ‘long long int’, but argument 5 has type ‘uint64_t {aka long unsigned int}’ [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/gpt.c:293:9: note: in expansion of macro ‘DEBUG’
-         DEBUG(" %d %s %lld %lld  %02x  %s\n",
-         ^
-./include/base.h:47:21: warning: format ‘%lld’ expects argument of type ‘long long int’, but argument 6 has type ‘uint64_t {aka long unsigned int}’ [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/gpt.c:293:9: note: in expansion of macro ‘DEBUG’
-         DEBUG(" %d %s %lld %lld  %02x  %s\n",
-         ^
-./src/gpt.c: In function ‘read_gpt’:
-./include/base.h:47:21: warning: format ‘%lld’ expects argument of type ‘long long int’, but argument 4 has type ‘uint64_t {aka long unsigned int}’ [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/gpt.c:391:9: note: in expansion of macro ‘DEBUG’
-         DEBUG(" %d   %12lld %12lld  %s   %ws\n",
-         ^
-./include/base.h:47:21: warning: format ‘%lld’ expects argument of type ‘long long int’, but argument 5 has type ‘uint64_t {aka long unsigned int}’ [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/gpt.c:391:9: note: in expansion of macro ‘DEBUG’
-         DEBUG(" %d   %12lld %12lld  %s   %ws\n",
-         ^
-./include/base.h:47:21: warning: unknown conversion type character ‘w’ in format [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/gpt.c:391:9: note: in expansion of macro ‘DEBUG’
-         DEBUG(" %d   %12lld %12lld  %s   %ws\n",
-         ^
-./include/base.h:47:21: warning: too many arguments for format [-Wformat-extra-args]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/gpt.c:391:9: note: in expansion of macro ‘DEBUG’
-         DEBUG(" %d   %12lld %12lld  %s   %ws\n",
-         ^
-./src/gpt.c:335:13: warning: unused variable ‘dev’ [-Wunused-variable]
-  PedDevice *dev = (PedDevice *)pdd->hd;
-             ^
-./src/gpt.c: In function ‘gpt_alloc’:
-./src/gpt.c:456:1: warning: no return statement in function returning non-void [-Wreturn-type]
- }
- ^
-./src/gpt.c: At top level:
-./src/gpt.c:419:17: warning: ‘gpt_alloc’ defined but not used [-Wunused-function]
- static PedDisk *gpt_alloc(const PedDevice *dev)
-                 ^
-cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
-In file included from ./include/global.h:5:0,
-                 from ./include/base.h:40,
-                 from ./src/disk.c:1:
-./include/device.h:86:1: warning: useless storage class specifier in empty declaration
- };
- ^
-cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
-In file included from ./include/global.h:5:0,
-                 from ./include/base.h:40,
-                 from ./src/StoreConfig.c:1:
-./include/device.h:86:1: warning: useless storage class specifier in empty declaration
- };
- ^
-./src/StoreConfig.c: In function ‘yzy_file_read’:
-./src/StoreConfig.c:48:8: warning: implicit declaration of function ‘linux_read’ [-Wimplicit-function-declaration]
-     if(linux_read(dev, buf, offset_lba, sector))
-        ^
-./src/StoreConfig.c: In function ‘yzy_file_write’:
-./src/StoreConfig.c:69:8: warning: implicit declaration of function ‘linux_write’ [-Wimplicit-function-declaration]
-     if(linux_write(dev, buf, offset_lba, sector))
-        ^
-./src/StoreConfig.c: In function ‘VerifyCrc’:
-./src/StoreConfig.c:103:31: warning: pointer targets in passing argument 2 of ‘crc32’ differ in signedness [-Wpointer-sign]
-     uint32_t crc = crc32(186, &gStoreBuf[yzy_offsetof(YZY_STORE_CONFIG, entry)], len);
-                               ^
-./src/StoreConfig.c:87:10: note: expected ‘char *’ but argument is of type ‘uint8_t * {aka unsigned char *}’
- uint32_t crc32(uint32_t crc, char* buff, int len)
-          ^
-./src/StoreConfig.c: In function ‘SetCrc’:
-./src/StoreConfig.c:112:31: warning: pointer targets in passing argument 2 of ‘crc32’ differ in signedness [-Wpointer-sign]
-     uint32_t crc = crc32(186, &gStoreBuf[yzy_offsetof(YZY_STORE_CONFIG, entry)], len);
-                               ^
-./src/StoreConfig.c:87:10: note: expected ‘char *’ but argument is of type ‘uint8_t * {aka unsigned char *}’
- uint32_t crc32(uint32_t crc, char* buff, int len)
-          ^
-./src/StoreConfig.c: In function ‘AllocStore’:
-./src/StoreConfig.c:469:46: warning: pointer targets in passing argument 3 of ‘ScanSpaceFormInterval’ differ in signedness [-Wpointer-sign]
-     ScanSpaceFormInterval(sizeLba, diskName, &iStart, &iEnd, diskList, j);
-                                              ^
-./src/StoreConfig.c:381:13: note: expected ‘int64_t * {aka long int *}’ but argument is of type ‘uint64_t * {aka long unsigned int *}’
- static void ScanSpaceFormInterval(uint64_t sizeLba, PYZYGUID diskName, int64_t *startLba, int64_t *endLba, PYZY_QCOW_ENTRY *diskList, uint32_t count)
-             ^
-./src/StoreConfig.c:469:55: warning: pointer targets in passing argument 4 of ‘ScanSpaceFormInterval’ differ in signedness [-Wpointer-sign]
-     ScanSpaceFormInterval(sizeLba, diskName, &iStart, &iEnd, diskList, j);
-                                                       ^
-./src/StoreConfig.c:381:13: note: expected ‘int64_t * {aka long int *}’ but argument is of type ‘uint64_t * {aka long unsigned int *}’
- static void ScanSpaceFormInterval(uint64_t sizeLba, PYZYGUID diskName, int64_t *startLba, int64_t *endLba, PYZY_QCOW_ENTRY *diskList, uint32_t count)
-             ^
-./src/StoreConfig.c: At top level:
-./src/StoreConfig.c:644:5: warning: initialization from incompatible pointer type [-Wincompatible-pointer-types]
-     AllocStoreSpace,
-     ^
-./src/StoreConfig.c:644:5: note: (near initialization for ‘storeDrv.alloc’)
-./src/StoreConfig.c:116:13: warning: ‘ZeroGuid’ defined but not used [-Wunused-function]
- static void ZeroGuid(PYZYGUID guid)
-             ^
-cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
-In file included from ./include/global.h:5:0,
-                 from ./include/base.h:40,
-                 from ./src/event.c:6:
-./include/device.h:86:1: warning: useless storage class specifier in empty declaration
- };
- ^
-./src/event.c: In function ‘process_event_msg’:
-./src/event.c:20:9: warning: implicit declaration of function ‘read_msg_order’ [-Wimplicit-function-declaration]
-  switch(read_msg_order(buf))
-         ^
-In file included from ./src/event.c:6:0:
-./include/base.h:47:21: warning: format ‘%d’ expects argument of type ‘int’, but argument 3 has type ‘int *’ [-Wformat=]
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                     ^
-./src/event.c:27:4: note: in expansion of macro ‘DEBUG’
-    DEBUG("pthread_exit client ret:%d", (int *)tret);
-    ^
-./src/event.c:33:4: warning: implicit declaration of function ‘send_progress’ [-Wimplicit-function-declaration]
-    send_progress(&m_client, &buf[HEAD_LEN]);
-    ^
-./src/event.c:41:4: warning: implicit declaration of function ‘download_default_os’ [-Wimplicit-function-declaration]
-    download_default_os(&m_client);
-    ^
-./src/event.c:47:4: warning: implicit declaration of function ‘stop_torrent’ [-Wimplicit-function-declaration]
-    stop_torrent();
-    ^
-./src/event.c:48:4: warning: implicit declaration of function ‘send_upload_log’ [-Wimplicit-function-declaration]
-    send_upload_log(&m_client);
-    ^
-In file included from ./src/event.c:6:0:
-./src/event.c: In function ‘process_ui_msg’:
-./include/base.h:67:33: warning: pointer targets in passing argument 1 of ‘strncmp’ differ in signedness [-Wpointer-sign]
- #define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
-                                 ^
-./src/event.c:73:7: note: in expansion of macro ‘STRPREFIX’
-    if(STRPREFIX(conf.netcard.ip, "169.254.1.1"))
-       ^
-In file included from /usr/include/memory.h:29:0,
-                 from ./include/base.h:14,
-                 from ./src/event.c:6:
-/usr/include/string.h:143:12: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
- extern int strncmp (const char *__s1, const char *__s2, size_t __n)
-            ^
-./src/event.c:75:5: warning: implicit declaration of function ‘dhcp_request’ [-Wimplicit-function-declaration]
-     dhcp_request();
-     ^
-./src/event.c:77:4: warning: implicit declaration of function ‘install_programe’ [-Wimplicit-function-declaration]
-    install_programe();
-    ^
-./src/event.c:83:4: warning: implicit declaration of function ‘init_qcow2’ [-Wimplicit-function-declaration]
-    init_qcow2(dev_info.mini_disk->dev, 0);
-    ^
-./src/event.c:84:4: warning: implicit declaration of function ‘client_reconnect’ [-Wimplicit-function-declaration]
-    client_reconnect();
-    ^
-./src/event.c:85:4: warning: implicit declaration of function ‘exec_cmd’ [-Wimplicit-function-declaration]
-    exec_cmd("rm -rf /boot/*", result);
-    ^
-./src/event.c:86:4: warning: implicit declaration of function ‘umount_boot’ [-Wimplicit-function-declaration]
-    umount_boot();
-    ^
-./src/event.c:92:4: warning: implicit declaration of function ‘update_config’ [-Wimplicit-function-declaration]
-    update_config(buf, length);  
-    ^
-./src/event.c:98:4: warning: implicit declaration of function ‘send_p2v_transform’ [-Wimplicit-function-declaration]
-    send_p2v_transform(&m_client, &buf[HEAD_LEN]);
-    ^
-./src/event.c:67:6: warning: unused variable ‘ret’ [-Wunused-variable]
-  int ret;
-      ^
-./src/event.c: In function ‘event_loop’:
-./src/event.c:134:10: warning: implicit declaration of function ‘get_netcard_state’ [-Wimplicit-function-declaration]
-  netfd = get_netcard_state();
-          ^
-./src/event.c:175:11: warning: implicit declaration of function ‘send_heartbeat’ [-Wimplicit-function-declaration]
-     ret = send_heartbeat(&m_client);
-           ^
-./src/event.c:263:2: warning: implicit declaration of function ‘close_fd’ [-Wimplicit-function-declaration]
-  close_fd(netfd);
-  ^
-./src/event.c:124:6: warning: unused variable ‘i’ [-Wunused-variable]
-  int i, nready, ret;
-      ^
-./src/event.c: In function ‘thread_event’:
-./src/event.c:286:12: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-     return (void *)ret;
-            ^
-cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
-In file included from ./include/global.h:5:0,
-                 from ./include/base.h:40,
-                 from ./src/socket.c:1:
-./include/device.h:86:1: warning: useless storage class specifier in empty declaration
- };
- ^
-./src/socket.c: In function ‘set_request_head’:
-./src/socket.c:50:9: warning: unused variable ‘ret’ [-Wunused-variable]
-     int ret = -1; 
-         ^
-./src/socket.c: In function ‘set_network’:
-./src/socket.c:162:2: warning: implicit declaration of function ‘exec_cmd’ [-Wimplicit-function-declaration]
-  exec_cmd(cmd, result);
-  ^
-./src/socket.c: In function ‘create_tcp’:
-./src/socket.c:318:9: warning: unused variable ‘keepCount’ [-Wunused-variable]
-     int keepCount = 5;    //retry count
-         ^
-./src/socket.c: In function ‘send_packet’:
-./src/socket.c:435:30: warning: pointer targets in passing argument 2 of ‘send_msg’ differ in signedness [-Wpointer-sign]
-      ret = send_msg(cli->fd, cli->recv_head, PACKET_LEN);
-                              ^
-./src/socket.c:74:5: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
- int send_msg(const int fd, const char *buf, const int len)
-     ^
-./src/socket.c:438:34: warning: pointer targets in passing argument 2 of ‘send_msg’ differ in signedness [-Wpointer-sign]
-          ret = send_msg(cli->fd, cli->token, cli->token_size);
-                                  ^
-./src/socket.c:74:5: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
- int send_msg(const int fd, const char *buf, const int len)
-     ^
-./src/socket.c:441:34: warning: pointer targets in passing argument 2 of ‘send_msg’ differ in signedness [-Wpointer-sign]
-          ret = send_msg(cli->fd, cli->recv_buf, cli->recv_size);
-                                  ^
-./src/socket.c:74:5: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
- int send_msg(const int fd, const char *buf, const int len)
-     ^
-./src/socket.c:445:30: warning: pointer targets in passing argument 2 of ‘send_msg’ differ in signedness [-Wpointer-sign]
-      ret = send_msg(cli->fd, cli->send_head, PACKET_LEN);
-                              ^
-./src/socket.c:74:5: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
- int send_msg(const int fd, const char *buf, const int len)
-     ^
-./src/socket.c:448:34: warning: pointer targets in passing argument 2 of ‘send_msg’ differ in signedness [-Wpointer-sign]
-          ret = send_msg(cli->fd, cli->token, cli->token_size);
-                                  ^
-./src/socket.c:74:5: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
- int send_msg(const int fd, const char *buf, const int len)
-     ^
-./src/socket.c:451:34: warning: pointer targets in passing argument 2 of ‘send_msg’ differ in signedness [-Wpointer-sign]
-          ret = send_msg(cli->fd, cli->send_buf, cli->send_size);
-                                  ^
-./src/socket.c:74:5: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
- int send_msg(const int fd, const char *buf, const int len)
-     ^
-./src/socket.c: In function ‘set_network’:
-./src/socket.c:163:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
-cc1: warning: command line option ‘-std=c++11’ is valid for C++/ObjC++ but not for C
-In file included from ./include/global.h:5:0,
-                 from ./include/base.h:40,
                  from ./src/client.c:1:
 ./include/device.h:86:1: warning: useless storage class specifier in empty declaration
  };
@@ -881,7 +145,7 @@ In file included from /usr/include/memory.h:29:0,
            ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_progress’:
-./src/client.c:337:50: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:338:50: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
              cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
                                                   ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -890,10 +154,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:350:27: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:351:27: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
              cli->send_buf = cJSON_Print(root);
                            ^
-./src/client.c:351:37: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:352:37: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
              cli->send_size = strlen(cli->send_buf);
                                      ^
 In file included from /usr/include/memory.h:29:0,
@@ -902,8 +166,27 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:394:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern size_t strlen (const char *__s)
                ^
+In file included from ./src/client.c:1:0:
+./src/client.c:354:17: warning: implicit declaration of function ‘state’ [-Wimplicit-function-declaration]
+    if(STRPREFIX(state(s.state), "finished"))
+                 ^
+./include/base.h:67:34: note: in definition of macro ‘STRPREFIX’
+ #define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
+                                  ^
+./src/client.c:354:23: error: ‘s’ undeclared (first use in this function)
+    if(STRPREFIX(state(s.state), "finished"))
+                       ^
+./include/base.h:67:34: note: in definition of macro ‘STRPREFIX’
+ #define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
+                                  ^
+./src/client.c:354:23: note: each undeclared identifier is reported only once for each function it appears in
+    if(STRPREFIX(state(s.state), "finished"))
+                       ^
+./include/base.h:67:34: note: in definition of macro ‘STRPREFIX’
+ #define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
+                                  ^
 In file included from ./src/client.c:3:0:
-./src/client.c:361:50: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:376:50: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
              cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
                                                   ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -912,10 +195,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:363:27: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:378:27: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
              cli->send_buf = cJSON_Print(root);
                            ^
-./src/client.c:364:37: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:379:37: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
              cli->send_size = strlen(cli->send_buf);
                                      ^
 In file included from /usr/include/memory.h:29:0,
@@ -926,7 +209,7 @@ In file included from /usr/include/memory.h:29:0,
                ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_cancel_p2v’:
-./src/client.c:391:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:406:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -935,10 +218,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:394:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:409:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
          cli->recv_buf = cJSON_Print(root);
                        ^
-./src/client.c:395:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:410:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->recv_size = strlen(cli->recv_buf);
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -948,17 +231,17 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 ./src/client.c: In function ‘recv_cancel_p2v’:
-./src/client.c:415:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:430:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
      char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
                  ^
-./src/client.c:421:9: warning: implicit declaration of function ‘cancel_conversion’ [-Wimplicit-function-declaration]
+./src/client.c:436:9: warning: implicit declaration of function ‘cancel_conversion’ [-Wimplicit-function-declaration]
          cancel_conversion();
          ^
 ./src/client.c: In function ‘recv_p2v_transform’:
-./src/client.c:432:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:447:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
      char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
                  ^
-./src/client.c:456:20: warning: passing argument 1 of ‘strcpy’ from incompatible pointer type [-Wincompatible-pointer-types]
+./src/client.c:471:20: warning: passing argument 1 of ‘strcpy’ from incompatible pointer type [-Wincompatible-pointer-types]
              strcpy(&task.server_ip, server->ip);
                     ^
 In file included from /usr/include/memory.h:29:0,
@@ -967,7 +250,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘char (*)[32]’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:456:37: warning: pointer targets in passing argument 2 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+./src/client.c:471:37: warning: pointer targets in passing argument 2 of ‘strcpy’ differ in signedness [-Wpointer-sign]
              strcpy(&task.server_ip, server->ip);
                                      ^
 In file included from /usr/include/memory.h:29:0,
@@ -976,7 +259,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘const char * restrict’ but argument is of type ‘unsigned char *’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:458:24: warning: passing argument 1 of ‘strcpy’ from incompatible pointer type [-Wincompatible-pointer-types]
+./src/client.c:473:24: warning: passing argument 1 of ‘strcpy’ from incompatible pointer type [-Wincompatible-pointer-types]
                  strcpy(&task.user, user->valuestring);
                         ^
 In file included from /usr/include/memory.h:29:0,
@@ -985,7 +268,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘char (*)[32]’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:460:24: warning: passing argument 1 of ‘strcpy’ from incompatible pointer type [-Wincompatible-pointer-types]
+./src/client.c:475:24: warning: passing argument 1 of ‘strcpy’ from incompatible pointer type [-Wincompatible-pointer-types]
                  strcpy(&task.passwd, password->valuestring);
                         ^
 In file included from /usr/include/memory.h:29:0,
@@ -994,7 +277,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘char (*)[32]’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:462:24: warning: passing argument 1 of ‘strcpy’ from incompatible pointer type [-Wincompatible-pointer-types]
+./src/client.c:477:24: warning: passing argument 1 of ‘strcpy’ from incompatible pointer type [-Wincompatible-pointer-types]
                  strcpy(&task.storage, storage->valuestring);
                         ^
 In file included from /usr/include/memory.h:29:0,
@@ -1003,7 +286,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘char (*)[32]’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:464:24: warning: passing argument 1 of ‘strcpy’ from incompatible pointer type [-Wincompatible-pointer-types]
+./src/client.c:479:24: warning: passing argument 1 of ‘strcpy’ from incompatible pointer type [-Wincompatible-pointer-types]
                  strcpy(&task.image_name, item->valuestring);
                         ^
 In file included from /usr/include/memory.h:29:0,
@@ -1012,7 +295,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘char (*)[128]’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:471:35: warning: pointer targets in passing argument 2 of ‘en_queue’ differ in signedness [-Wpointer-sign]
+./src/client.c:486:35: warning: pointer targets in passing argument 2 of ‘en_queue’ differ in signedness [-Wpointer-sign]
              en_queue(&task_queue, (char *)&task, sizeof(struct p2v_task), TASK_P2V);
                                    ^
 In file included from ./include/global.h:4:0,
@@ -1021,12 +304,12 @@ In file included from ./include/global.h:4:0,
 ./include/queue.h:30:15: note: expected ‘unsigned char *’ but argument is of type ‘char *’
  unsigned char en_queue(QUEUE *pQueue,unsigned char *ucpData,unsigned int uiSize,unsigned char ucType);
                ^
-./src/client.c:476:13: warning: implicit declaration of function ‘send_error_msg’ [-Wimplicit-function-declaration]
+./src/client.c:491:13: warning: implicit declaration of function ‘send_error_msg’ [-Wimplicit-function-declaration]
              send_error_msg(P2V_NAME_ERR);
              ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_p2v_transform’:
-./src/client.c:500:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:515:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1035,7 +318,7 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:501:47: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:516:47: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(root, "name", info->template_name);
                                                ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1044,7 +327,7 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:502:47: warning: passing argument 1 of ‘cJSON_CreateString’ from incompatible pointer type [-Wincompatible-pointer-types]
+./src/client.c:517:47: warning: passing argument 1 of ‘cJSON_CreateString’ from incompatible pointer type [-Wincompatible-pointer-types]
          cJSON_AddStringToObject(root, "desc", info->template_desc);
                                                ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1053,10 +336,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned int *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:510:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:525:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
          cli->send_buf = cJSON_Print(root);
                        ^
-./src/client.c:511:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:526:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->send_size = strlen(cli->send_buf);
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -1067,7 +350,7 @@ In file included from /usr/include/memory.h:29:0,
                ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_desktop_tcp’:
-./src/client.c:555:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:570:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1076,10 +359,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:558:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:573:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
          cli->recv_buf = cJSON_Print(root);
                        ^
-./src/client.c:559:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:574:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->recv_size = strlen(cli->recv_buf);
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -1089,41 +372,23 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 ./src/client.c: In function ‘recv_desktop_tcp’:
-./src/client.c:578:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:592:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
   char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
               ^
-./src/client.c:582:2: warning: implicit declaration of function ‘update_desktop’ [-Wimplicit-function-declaration]
+./src/client.c:596:2: warning: implicit declaration of function ‘update_desktop’ [-Wimplicit-function-declaration]
   update_desktop(buf);
   ^
 In file included from ./src/client.c:1:0:
-./src/client.c:583:26: error: expected expression before ‘char’
-  DEBUG("%s", cJSON_Parse(char *)buf);
-                          ^
-./include/base.h:47:80: note: in definition of macro ‘DEBUG’
+./include/base.h:47:21: warning: format ‘%s’ expects argument of type ‘char *’, but argument 3 has type ‘cJSON * {aka struct cJSON *}’ [-Wformat=]
          do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                                                                                ^
-./src/client.c:583:33: error: expected ‘)’ before ‘buf’
-  DEBUG("%s", cJSON_Parse(char *)buf);
-                                 ^
-./include/base.h:47:80: note: in definition of macro ‘DEBUG’
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                                                                                ^
-./src/client.c:583:26: error: expected expression before ‘char’
-  DEBUG("%s", cJSON_Parse(char *)buf);
-                          ^
-./include/base.h:48:72: note: in definition of macro ‘DEBUG’
-    log_msg("File: "__FILE__", Line: %05d:  " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                                                                        ^
-./src/client.c:583:33: error: expected ‘)’ before ‘buf’
-  DEBUG("%s", cJSON_Parse(char *)buf);
-                                 ^
-./include/base.h:48:72: note: in definition of macro ‘DEBUG’
-    log_msg("File: "__FILE__", Line: %05d:  " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                                                                        ^
-./src/client.c:629:46: warning: implicit declaration of function ‘get_operate_qcow2’ [-Wimplicit-function-declaration]
+                     ^
+./src/client.c:597:2: note: in expansion of macro ‘DEBUG’
+  DEBUG("%s", cJSON_Parse((char *)buf));
+  ^
+./src/client.c:643:46: warning: implicit declaration of function ‘get_operate_qcow2’ [-Wimplicit-function-declaration]
                    if(operate_id->valueint == get_operate_qcow2(uuid->valuestring, 0)) //共享盘已存在不再下载
                                               ^
-./src/client.c:660:28: warning: pointer targets in passing argument 2 of ‘en_queue’ differ in signedness [-Wpointer-sign]
+./src/client.c:674:28: warning: pointer targets in passing argument 2 of ‘en_queue’ differ in signedness [-Wpointer-sign]
       en_queue(&task_queue, (char *)&ev_task, sizeof(struct event_task), TASK_EVENT);
                             ^
 In file included from ./include/global.h:4:0,
@@ -1132,7 +397,7 @@ In file included from ./include/global.h:4:0,
 ./include/queue.h:30:15: note: expected ‘unsigned char *’ but argument is of type ‘char *’
  unsigned char en_queue(QUEUE *pQueue,unsigned char *ucpData,unsigned int uiSize,unsigned char ucType);
                ^
-./src/client.c:662:37: warning: pointer targets in passing argument 2 of ‘en_queue’ differ in signedness [-Wpointer-sign]
+./src/client.c:676:37: warning: pointer targets in passing argument 2 of ‘en_queue’ differ in signedness [-Wpointer-sign]
                en_queue(&task_queue, (char *)&task, sizeof(struct http_task), TASK_HTTP);
                                      ^
 In file included from ./include/global.h:4:0,
@@ -1141,12 +406,12 @@ In file included from ./include/global.h:4:0,
 ./include/queue.h:30:15: note: expected ‘unsigned char *’ but argument is of type ‘char *’
  unsigned char en_queue(QUEUE *pQueue,unsigned char *ucpData,unsigned int uiSize,unsigned char ucType);
                ^
-./src/client.c:593:11: warning: unused variable ‘desktop_group_uuid’ [-Wunused-variable]
+./src/client.c:607:11: warning: unused variable ‘desktop_group_uuid’ [-Wunused-variable]
     cJSON *desktop_group_uuid = cJSON_GetObjectItem(desktop, "desktop_group_uuid");
            ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_desktop’:
-./src/client.c:698:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:710:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1155,10 +420,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:701:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:713:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
          cli->recv_buf = cJSON_Print(root);
                        ^
-./src/client.c:702:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:714:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->recv_size = strlen(cli->recv_buf);
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -1168,35 +433,25 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 ./src/client.c: In function ‘recv_desktop’:
-./src/client.c:720:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:732:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
   char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
               ^
-In file included from ./src/client.c:1:0:
-./src/client.c:724:26: error: expected expression before ‘char’
-  DEBUG("%s", cJSON_Parse(char *)buf);
-                          ^
-./include/base.h:47:80: note: in definition of macro ‘DEBUG’
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                                                                                ^
-./src/client.c:724:33: error: expected ‘)’ before ‘buf’
-  DEBUG("%s", cJSON_Parse(char *)buf);
-                                 ^
-./include/base.h:47:80: note: in definition of macro ‘DEBUG’
-         do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                                                                                ^
-./src/client.c:724:26: error: expected expression before ‘char’
-  DEBUG("%s", cJSON_Parse(char *)buf);
-                          ^
-./include/base.h:48:72: note: in definition of macro ‘DEBUG’
-    log_msg("File: "__FILE__", Line: %05d:  " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                                                                        ^
-./src/client.c:724:33: error: expected ‘)’ before ‘buf’
-  DEBUG("%s", cJSON_Parse(char *)buf);
-                                 ^
-./include/base.h:48:72: note: in definition of macro ‘DEBUG’
-    log_msg("File: "__FILE__", Line: %05d:  " format"\r\n", __LINE__, ##__VA_ARGS__); \
-                                                                        ^
-./src/client.c:756:29: warning: pointer targets in passing argument 2 of ‘en_queue’ differ in signedness [-Wpointer-sign]
+./src/client.c:793:24: warning: implicit declaration of function ‘del_qcow2’ [-Wimplicit-function-declaration]
+                        del_qcow2(dev_info.mini_disk->dev, uuid->valuestring, 0);
+                        ^
+./src/client.c:794:24: warning: implicit declaration of function ‘del_diff_qcow2’ [-Wimplicit-function-declaration]
+                        del_diff_qcow2(dev_info.mini_disk->dev, uuid->valuestring);
+                        ^
+./src/client.c:811:29: warning: pointer targets in passing argument 2 of ‘en_queue’ differ in signedness [-Wpointer-sign]
+       en_queue(&task_queue, (char *)&task, sizeof(struct torrent_task), TASK_BT);
+                             ^
+In file included from ./include/global.h:4:0,
+                 from ./include/base.h:40,
+                 from ./src/client.c:1:
+./include/queue.h:30:15: note: expected ‘unsigned char *’ but argument is of type ‘char *’
+ unsigned char en_queue(QUEUE *pQueue,unsigned char *ucpData,unsigned int uiSize,unsigned char ucType);
+               ^
+./src/client.c:822:29: warning: pointer targets in passing argument 2 of ‘en_queue’ differ in signedness [-Wpointer-sign]
        en_queue(&task_queue, (char *)&ev_task, sizeof(struct event_task), TASK_EVENT);
                              ^
 In file included from ./include/global.h:4:0,
@@ -1207,7 +462,7 @@ In file included from ./include/global.h:4:0,
                ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_down_torrent’:
-./src/client.c:785:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:851:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1216,10 +471,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:788:17: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:854:17: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
    cli->recv_buf = cJSON_Print(root);
                  ^
-./src/client.c:789:27: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:855:27: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
    cli->recv_size = strlen(cli->recv_buf);
                            ^
 In file included from /usr/include/memory.h:29:0,
@@ -1229,19 +484,13 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 ./src/client.c: In function ‘recv_down_torrent’:
-./src/client.c:814:58: warning: implicit declaration of function ‘read_packet_supplementary’ [-Wimplicit-function-declaration]
+./src/client.c:880:58: warning: implicit declaration of function ‘read_packet_supplementary’ [-Wimplicit-function-declaration]
      yzy_torrent *torrent = (yzy_torrent *)&cli->recv_buf[read_packet_supplementary(cli->recv_head) +
                                                           ^
-./src/client.c:832:18: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:903:18: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
      char *data = &cli->recv_buf[read_packet_supplementary(cli->recv_head) +
                   ^
-./src/client.c:874:21: warning: implicit declaration of function ‘del_qcow2’ [-Wimplicit-function-declaration]
-                     del_qcow2(dev_info.mini_disk->dev, uuid, 0);
-                     ^
-./src/client.c:875:21: warning: implicit declaration of function ‘del_diff_qcow2’ [-Wimplicit-function-declaration]
-                     del_diff_qcow2(dev_info.mini_disk->dev, uuid);
-                     ^
-./src/client.c:895:35: warning: pointer targets in passing argument 2 of ‘en_queue’ differ in signedness [-Wpointer-sign]
+./src/client.c:967:35: warning: pointer targets in passing argument 2 of ‘en_queue’ differ in signedness [-Wpointer-sign]
              en_queue(&task_queue, (char *)&task, sizeof(struct torrent_task), TASK_BT);
                                    ^
 In file included from ./include/global.h:4:0,
@@ -1252,7 +501,7 @@ In file included from ./include/global.h:4:0,
                ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_clear_target_desktop’:
-./src/client.c:926:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:998:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1261,10 +510,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:930:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:1002:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
          cli->recv_buf = cJSON_Print(root);
                        ^
-./src/client.c:931:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:1003:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->recv_size = strlen(cli->recv_buf);
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -1274,12 +523,12 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 ./src/client.c: In function ‘recv_clear_target_desktop’:
-./src/client.c:949:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:1021:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
      char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
                  ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_clear_all_desktop’:
-./src/client.c:997:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1069:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1288,10 +537,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1000:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:1072:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
          cli->recv_buf = cJSON_Print(root);
                        ^
-./src/client.c:1001:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:1073:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->recv_size = strlen(cli->recv_buf);
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -1301,15 +550,15 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 ./src/client.c: In function ‘recv_clear_all_desktop’:
-./src/client.c:1019:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:1091:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
      char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
                  ^
-./src/client.c:1025:9: warning: implicit declaration of function ‘init_qcow2’ [-Wimplicit-function-declaration]
+./src/client.c:1097:9: warning: implicit declaration of function ‘init_qcow2’ [-Wimplicit-function-declaration]
          init_qcow2(dev_info.mini_disk->dev, 0);
          ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_update_diff_disk’:
-./src/client.c:1048:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1120:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1318,10 +567,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1051:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:1123:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
          cli->recv_buf = cJSON_Print(root);
                        ^
-./src/client.c:1052:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:1124:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->recv_size = strlen(cli->recv_buf);
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -1331,24 +580,24 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 ./src/client.c: In function ‘recv_update_diff_disk’:
-./src/client.c:1071:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:1143:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
      char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
                  ^
-./src/client.c:1083:40: warning: variable ‘download_url’ set but not used [-Wunused-but-set-variable]
+./src/client.c:1155:40: warning: variable ‘download_url’ set but not used [-Wunused-but-set-variable]
          cJSON *name, *uuid, *version, *download_url;
                                         ^
-./src/client.c:1083:30: warning: variable ‘version’ set but not used [-Wunused-but-set-variable]
+./src/client.c:1155:30: warning: variable ‘version’ set but not used [-Wunused-but-set-variable]
          cJSON *name, *uuid, *version, *download_url;
                               ^
-./src/client.c:1083:23: warning: variable ‘uuid’ set but not used [-Wunused-but-set-variable]
+./src/client.c:1155:23: warning: variable ‘uuid’ set but not used [-Wunused-but-set-variable]
          cJSON *name, *uuid, *version, *download_url;
                        ^
-./src/client.c:1083:16: warning: variable ‘name’ set but not used [-Wunused-but-set-variable]
+./src/client.c:1155:16: warning: variable ‘name’ set but not used [-Wunused-but-set-variable]
          cJSON *name, *uuid, *version, *download_url;
                 ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_update_config’:
-./src/client.c:1117:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1189:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1357,10 +606,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1120:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:1192:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
          cli->recv_buf = cJSON_Print(root);
                        ^
-./src/client.c:1121:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:1193:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->recv_size = strlen(cli->recv_buf);
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -1370,10 +619,10 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 ./src/client.c: In function ‘recv_update_config’:
-./src/client.c:1140:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:1212:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
      char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
                  ^
-./src/client.c:1165:20: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+./src/client.c:1237:20: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
              strcpy(conf.server.ip, server_ip->valuestring);
                     ^
 In file included from /usr/include/memory.h:29:0,
@@ -1382,15 +631,15 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:1167:9: warning: implicit declaration of function ‘save_config’ [-Wimplicit-function-declaration]
+./src/client.c:1239:9: warning: implicit declaration of function ‘save_config’ [-Wimplicit-function-declaration]
          save_config();
          ^
-./src/client.c:1168:9: warning: implicit declaration of function ‘send_config_pipe’ [-Wimplicit-function-declaration]
+./src/client.c:1240:9: warning: implicit declaration of function ‘send_config_pipe’ [-Wimplicit-function-declaration]
          send_config_pipe();
          ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_update_ip’:
-./src/client.c:1194:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1266:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1399,10 +648,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1197:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:1269:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
          cli->recv_buf = cJSON_Print(root);
                        ^
-./src/client.c:1198:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:1270:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->recv_size = strlen(cli->recv_buf); 
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -1412,10 +661,10 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 ./src/client.c: In function ‘recv_update_ip’:
-./src/client.c:1216:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:1288:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
      char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
                  ^
-./src/client.c:1230:20: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+./src/client.c:1302:20: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
              strcpy(conf.netcard.ip, ip->valuestring);
                     ^
 In file included from /usr/include/memory.h:29:0,
@@ -1424,7 +673,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:1232:20: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+./src/client.c:1304:20: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
              strcpy(conf.netcard.netmask, mask->valuestring);
                     ^
 In file included from /usr/include/memory.h:29:0,
@@ -1433,7 +682,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:1234:20: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+./src/client.c:1306:20: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
              strcpy(conf.netcard.gateway, gateway->valuestring);
                     ^
 In file included from /usr/include/memory.h:29:0,
@@ -1442,7 +691,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:1236:20: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+./src/client.c:1308:20: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
              strcpy(conf.netcard.dns1, dns1->valuestring);
                     ^
 In file included from /usr/include/memory.h:29:0,
@@ -1451,7 +700,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:1238:20: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+./src/client.c:1310:20: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
              strcpy(conf.netcard.dns2, dns2->valuestring);
                     ^
 In file included from /usr/include/memory.h:29:0,
@@ -1460,12 +709,12 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:1243:9: warning: implicit declaration of function ‘set_network’ [-Wimplicit-function-declaration]
+./src/client.c:1315:9: warning: implicit declaration of function ‘set_network’ [-Wimplicit-function-declaration]
          set_network(ip->valuestring, mask->valuestring);
          ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_update_name’:
-./src/client.c:1269:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1341:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1474,10 +723,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1272:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:1344:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
          cli->recv_buf = cJSON_Print(root);
                        ^
-./src/client.c:1273:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:1345:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->recv_size = strlen(cli->recv_buf);
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -1487,10 +736,10 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 ./src/client.c: In function ‘recv_update_name’:
-./src/client.c:1291:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:1363:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
      char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
                  ^
-./src/client.c:1300:20: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+./src/client.c:1372:20: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
              strcpy(conf.terminal.name, name->valuestring);
                     ^
 In file included from /usr/include/memory.h:29:0,
@@ -1501,7 +750,7 @@ In file included from /usr/include/memory.h:29:0,
               ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_reboot’:
-./src/client.c:1328:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1400:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(data, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1510,10 +759,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1331:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:1403:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
          cli->recv_buf = cJSON_Print(root);
                        ^
-./src/client.c:1332:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:1404:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->recv_size = strlen(cli->recv_buf);
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -1523,19 +772,28 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 ./src/client.c: In function ‘recv_reboot’:
-./src/client.c:1362:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:1434:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
      char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
                  ^
 ./src/client.c: In function ‘recv_get_diff_torrent’:
-./src/client.c:1377:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:1450:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
   char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
               ^
-./src/client.c:1394:5: warning: implicit declaration of function ‘update_desktop_disk_level’ [-Wimplicit-function-declaration]
+./src/client.c:1525:37: warning: pointer targets in passing argument 2 of ‘en_queue’ differ in signedness [-Wpointer-sign]
+               en_queue(&task_queue, (char *)&task, sizeof(struct torrent_task), TASK_BT);
+                                     ^
+In file included from ./include/global.h:4:0,
+                 from ./include/base.h:40,
+                 from ./src/client.c:1:
+./include/queue.h:30:15: note: expected ‘unsigned char *’ but argument is of type ‘char *’
+ unsigned char en_queue(QUEUE *pQueue,unsigned char *ucpData,unsigned int uiSize,unsigned char ucType);
+               ^
+./src/client.c:1527:5: warning: implicit declaration of function ‘update_desktop_disk_level’ [-Wimplicit-function-declaration]
      update_desktop_disk_level(desktop_group_uuid->valuestring, diff_disk_uuid->valuestring, dif_level->valueint, 
      ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_get_diff_torrent’:
-./src/client.c:1412:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1545:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1544,10 +802,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1418:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:1551:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
          cli->send_buf = cJSON_Print(root);
                        ^
-./src/client.c:1419:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:1552:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->send_size = strlen(cli->send_buf);
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -1557,64 +815,64 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 ./src/client.c: In function ‘recv_get_desktop_group_list’:
-./src/client.c:1433:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:1566:17: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
      char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
                  ^
-./src/client.c:1506:33: warning: implicit declaration of function ‘scan_qcow2’ [-Wimplicit-function-declaration]
+./src/client.c:1639:33: warning: implicit declaration of function ‘scan_qcow2’ [-Wimplicit-function-declaration]
                              if (scan_qcow2(uuid->valuestring, 0) == NULL) //之前没有数据盘base 0, 新增的数据盘
                                  ^
-./src/client.c:1506:66: warning: comparison between pointer and integer
+./src/client.c:1639:66: warning: comparison between pointer and integer
                              if (scan_qcow2(uuid->valuestring, 0) == NULL) //之前没有数据盘base 0, 新增的数据盘
                                                                   ^
 In file included from ./src/client.c:1:0:
-./src/client.c:1555:61: warning: implicit declaration of function ‘get_diff_mode_qcow2’ [-Wimplicit-function-declaration]
+./src/client.c:1688:61: warning: implicit declaration of function ‘get_diff_mode_qcow2’ [-Wimplicit-function-declaration]
           DEBUG("get_diff_mode_qcow2(uuid->valuestring) %d", get_diff_mode_qcow2(uuid->valuestring));
                                                              ^
 ./include/base.h:47:80: note: in definition of macro ‘DEBUG’
          do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
                                                                                 ^
-./src/client.c:1448:32: warning: unused variable ‘show_desktop_info’ [-Wunused-variable]
+./src/client.c:1581:32: warning: unused variable ‘show_desktop_info’ [-Wunused-variable]
                  *os_sys_type, *show_desktop_info, *diff_mode;
                                 ^
-./src/client.c:1448:18: warning: unused variable ‘os_sys_type’ [-Wunused-variable]
+./src/client.c:1581:18: warning: unused variable ‘os_sys_type’ [-Wunused-variable]
                  *os_sys_type, *show_desktop_info, *diff_mode;
                   ^
-./src/client.c:1447:85: warning: unused variable ‘desktop_name’ [-Wunused-variable]
+./src/client.c:1580:85: warning: unused variable ‘desktop_name’ [-Wunused-variable]
                  *desktop_group_uuid, *desktop_ip, *desktop_is_dhcp, *desktop_mask, *desktop_name, *disks,
                                                                                      ^
-./src/client.c:1447:70: warning: unused variable ‘desktop_mask’ [-Wunused-variable]
+./src/client.c:1580:70: warning: unused variable ‘desktop_mask’ [-Wunused-variable]
                  *desktop_group_uuid, *desktop_ip, *desktop_is_dhcp, *desktop_mask, *desktop_name, *disks,
                                                                       ^
-./src/client.c:1447:52: warning: unused variable ‘desktop_is_dhcp’ [-Wunused-variable]
+./src/client.c:1580:52: warning: unused variable ‘desktop_is_dhcp’ [-Wunused-variable]
                  *desktop_group_uuid, *desktop_ip, *desktop_is_dhcp, *desktop_mask, *desktop_name, *disks,
                                                     ^
-./src/client.c:1447:39: warning: unused variable ‘desktop_ip’ [-Wunused-variable]
+./src/client.c:1580:39: warning: unused variable ‘desktop_ip’ [-Wunused-variable]
                  *desktop_group_uuid, *desktop_ip, *desktop_is_dhcp, *desktop_mask, *desktop_name, *disks,
                                        ^
-./src/client.c:1446:84: warning: unused variable ‘desktop_group_status’ [-Wunused-variable]
+./src/client.c:1579:84: warning: unused variable ‘desktop_group_status’ [-Wunused-variable]
                  *desktop_group_desc, *desktop_group_name, *desktop_group_restore, *desktop_group_status,
                                                                                     ^
-./src/client.c:1446:60: warning: unused variable ‘desktop_group_restore’ [-Wunused-variable]
+./src/client.c:1579:60: warning: unused variable ‘desktop_group_restore’ [-Wunused-variable]
                  *desktop_group_desc, *desktop_group_name, *desktop_group_restore, *desktop_group_status,
                                                             ^
-./src/client.c:1446:18: warning: unused variable ‘desktop_group_desc’ [-Wunused-variable]
+./src/client.c:1579:18: warning: unused variable ‘desktop_group_desc’ [-Wunused-variable]
                  *desktop_group_desc, *desktop_group_name, *desktop_group_restore, *desktop_group_status,
                   ^
-./src/client.c:1445:96: warning: unused variable ‘desktop_gateway’ [-Wunused-variable]
+./src/client.c:1578:96: warning: unused variable ‘desktop_gateway’ [-Wunused-variable]
              cJSON *auto_update_desktop, *default_desktop_group, *desktop_dns1, *desktop_dns2, *desktop_gateway,
                                                                                                 ^
-./src/client.c:1445:81: warning: unused variable ‘desktop_dns2’ [-Wunused-variable]
+./src/client.c:1578:81: warning: unused variable ‘desktop_dns2’ [-Wunused-variable]
              cJSON *auto_update_desktop, *default_desktop_group, *desktop_dns1, *desktop_dns2, *desktop_gateway,
                                                                                  ^
-./src/client.c:1445:66: warning: unused variable ‘desktop_dns1’ [-Wunused-variable]
+./src/client.c:1578:66: warning: unused variable ‘desktop_dns1’ [-Wunused-variable]
              cJSON *auto_update_desktop, *default_desktop_group, *desktop_dns1, *desktop_dns2, *desktop_gateway,
                                                                   ^
-./src/client.c:1432:9: warning: unused variable ‘ret’ [-Wunused-variable]
+./src/client.c:1565:9: warning: unused variable ‘ret’ [-Wunused-variable]
      int ret, current = -1;
          ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_get_desktop_group_list’:
-./src/client.c:1654:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1787:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1623,7 +881,7 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1655:45: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1788:45: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(root, "ip", conf.netcard.ip);
                                              ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1632,10 +890,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1656:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:1789:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
          cli->send_buf = cJSON_Print(root);
                        ^
-./src/client.c:1657:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:1790:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->send_size = strlen(cli->send_buf);
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -1645,20 +903,20 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 ./src/client.c: In function ‘recv_upgrad’:
-./src/client.c:1674:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:1807:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
   char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
               ^
-./src/client.c:1691:19: warning: implicit declaration of function ‘upgrad_programe’ [-Wimplicit-function-declaration]
+./src/client.c:1824:19: warning: implicit declaration of function ‘upgrad_programe’ [-Wimplicit-function-declaration]
              ret = upgrad_programe(upgrade_package->valuestring, version->valuestring, 1);
                    ^
-./src/client.c:1679:16: warning: unused variable ‘batch_no’ [-Wunused-variable]
+./src/client.c:1812:16: warning: unused variable ‘batch_no’ [-Wunused-variable]
          cJSON *batch_no = cJSON_GetObjectItem(root, "batch_no");
                 ^
 ./src/client.c: In function ‘recv_get_config’:
-./src/client.c:1706:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:1839:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
   char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
               ^
-./src/client.c:1757:28: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+./src/client.c:1890:28: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
                      strcpy(conf.netcard.ip, ip->valuestring);
                             ^
 In file included from /usr/include/memory.h:29:0,
@@ -1667,7 +925,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:1759:28: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+./src/client.c:1892:28: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
                      strcpy(conf.netcard.dns1, dns1->valuestring);
                             ^
 In file included from /usr/include/memory.h:29:0,
@@ -1676,7 +934,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:1761:28: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+./src/client.c:1894:28: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
                      strcpy(conf.netcard.dns2, dns2->valuestring);
                             ^
 In file included from /usr/include/memory.h:29:0,
@@ -1685,7 +943,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:1763:28: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+./src/client.c:1896:28: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
                      strcpy(conf.netcard.gateway, gateway->valuestring);
                             ^
 In file included from /usr/include/memory.h:29:0,
@@ -1694,7 +952,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:1765:28: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+./src/client.c:1898:28: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
                      strcpy(conf.netcard.netmask, mask->valuestring);
                             ^
 In file included from /usr/include/memory.h:29:0,
@@ -1703,7 +961,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:1768:24: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+./src/client.c:1901:24: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
                  strcpy(conf.terminal.name, name->valuestring);
                         ^
 In file included from /usr/include/memory.h:29:0,
@@ -1712,7 +970,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:1770:24: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+./src/client.c:1903:24: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
                  strcpy(conf.terminal.platform, platform->valuestring);
                         ^
 In file included from /usr/include/memory.h:29:0,
@@ -1721,7 +979,7 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:1776:24: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
+./src/client.c:1909:24: warning: pointer targets in passing argument 1 of ‘strcpy’ differ in signedness [-Wpointer-sign]
                  strcpy(conf.server.ip, server_ip->valuestring);
                         ^
 In file included from /usr/include/memory.h:29:0,
@@ -1730,12 +988,12 @@ In file included from /usr/include/memory.h:29:0,
 /usr/include/string.h:125:14: note: expected ‘char * restrict’ but argument is of type ‘unsigned char *’
  extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
               ^
-./src/client.c:1724:20: warning: unused variable ‘mac’ [-Wunused-variable]
+./src/client.c:1857:20: warning: unused variable ‘mac’ [-Wunused-variable]
              cJSON *mac = cJSON_GetObjectItem(data, "mac");
                     ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_get_config’:
-./src/client.c:1808:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1941:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1744,10 +1002,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1809:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:1942:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
          cli->send_buf = cJSON_Print(root);
                        ^
-./src/client.c:1810:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:1943:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->send_size = strlen(cli->send_buf);
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -1757,12 +1015,12 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 ./src/client.c: In function ‘recv_set_update_config’:
-./src/client.c:1823:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:1956:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
   char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
               ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_set_update_config’:
-./src/client.c:1855:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1988:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1771,7 +1029,7 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1856:20: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:1989:20: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          if (strlen(conf.terminal.name) == 0)
                     ^
 In file included from /usr/include/memory.h:29:0,
@@ -1781,7 +1039,7 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 In file included from ./src/client.c:3:0:
-./src/client.c:1859:51: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1992:51: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
              cJSON_AddStringToObject(root, "name", conf.terminal.name);
                                                    ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1790,7 +1048,7 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1860:45: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1993:45: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(root, "ip", conf.netcard.ip);
                                              ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1799,7 +1057,7 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1862:47: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1995:47: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(root, "mask", conf.netcard.netmask);
                                                ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1808,7 +1066,7 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1863:50: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1996:50: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(root, "gateway", conf.netcard.gateway);
                                                   ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1817,7 +1075,7 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1864:47: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1997:47: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(root, "dns1", conf.netcard.dns1);
                                                ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1826,7 +1084,7 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1865:47: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:1998:47: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(root, "dns2", conf.netcard.dns2);
                                                ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1835,23 +1093,23 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1872:55: warning: implicit declaration of function ‘available_space’ [-Wimplicit-function-declaration]
+./src/client.c:2005:55: warning: implicit declaration of function ‘available_space’ [-Wimplicit-function-declaration]
          cJSON_AddNumberToObject(root, "disk_residue", available_space(dev_info.mini_disk->dev->disk_name));
                                                        ^
 ./include/cJSON.h:133:103: note: in definition of macro ‘cJSON_AddNumberToObject’
  #define cJSON_AddNumberToObject(object,name,n) cJSON_AddItemToObject(object, name, cJSON_CreateNumber(n))
                                                                                                        ^
-./src/client.c:1883:72: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:2016:72: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddItemToObject(program, "server_ip", cJSON_CreateString(conf.server.ip));
                                                                         ^
 In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1885:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:2018:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
          cli->send_buf = cJSON_Print(root);
                        ^
-./src/client.c:1886:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:2019:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->send_size = strlen(cli->send_buf);
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -1861,12 +1119,12 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 ./src/client.c: In function ‘recv_config_version’:
-./src/client.c:1916:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:2049:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
   char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
               ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_config_version’:
-./src/client.c:1953:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:2086:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1875,10 +1133,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:1963:17: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:2096:17: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
    cli->send_buf = cJSON_Print(root);
                  ^
-./src/client.c:1964:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:2097:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->send_size = strlen(cli->send_buf);
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -1888,15 +1146,15 @@ In file included from /usr/include/memory.h:29:0,
  extern size_t strlen (const char *__s)
                ^
 ./src/client.c: In function ‘recv_login’:
-./src/client.c:1978:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+./src/client.c:2111:14: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
   char *buf = &cli->recv_buf[read_packet_token(cli->recv_head)];
               ^
-./src/client.c:1987:4: warning: implicit declaration of function ‘set_packet_token’ [-Wimplicit-function-declaration]
+./src/client.c:2120:4: warning: implicit declaration of function ‘set_packet_token’ [-Wimplicit-function-declaration]
     set_packet_token(cli);
     ^
 In file included from ./src/client.c:3:0:
 ./src/client.c: In function ‘send_login’:
-./src/client.c:2005:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:2138:46: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(root, "mac", conf.netcard.mac);
                                               ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1905,7 +1163,7 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:2006:45: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
+./src/client.c:2139:45: warning: pointer targets in passing argument 1 of ‘cJSON_CreateString’ differ in signedness [-Wpointer-sign]
          cJSON_AddStringToObject(root, "ip", conf.netcard.ip);
                                              ^
 ./include/cJSON.h:134:103: note: in definition of macro ‘cJSON_AddStringToObject’
@@ -1914,10 +1172,10 @@ In file included from ./src/client.c:3:0:
 ./include/cJSON.h:90:15: note: expected ‘const char *’ but argument is of type ‘unsigned char *’
  extern cJSON *cJSON_CreateString(const char *string);
                ^
-./src/client.c:2008:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
+./src/client.c:2141:23: warning: pointer targets in assignment differ in signedness [-Wpointer-sign]
          cli->send_buf = cJSON_Print(root);
                        ^
-./src/client.c:2009:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+./src/client.c:2142:33: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
          cli->send_size = strlen(cli->send_buf);
                                  ^
 In file included from /usr/include/memory.h:29:0,
@@ -1928,39 +1186,39 @@ In file included from /usr/include/memory.h:29:0,
                ^
 In file included from ./src/client.c:1:0:
 ./src/client.c: In function ‘process_msg’:
-./src/client.c:2021:45: warning: implicit declaration of function ‘read_packet_order’ [-Wimplicit-function-declaration]
+./src/client.c:2154:45: warning: implicit declaration of function ‘read_packet_order’ [-Wimplicit-function-declaration]
   DEBUG("read_packet_order(cli->packet) %d", read_packet_order(cli->recv_head));
                                              ^
 ./include/base.h:47:80: note: in definition of macro ‘DEBUG’
          do { printf("File: "__FILE__", Line: %05d: " format"\r\n", __LINE__, ##__VA_ARGS__); \
                                                                                 ^
 ./src/client.c: In function ‘clean_client’:
-./src/client.c:2139:3: warning: implicit declaration of function ‘close_fd’ [-Wimplicit-function-declaration]
+./src/client.c:2272:3: warning: implicit declaration of function ‘close_fd’ [-Wimplicit-function-declaration]
    close_fd(current->fd);
    ^
 ./src/client.c: In function ‘tcp_loop’:
-./src/client.c:2225:26: warning: implicit declaration of function ‘read_packet_size’ [-Wimplicit-function-declaration]
+./src/client.c:2358:26: warning: implicit declaration of function ‘read_packet_size’ [-Wimplicit-function-declaration]
      current->recv_size = read_packet_size(current->recv_head) + read_packet_token(current->recv_head);
                           ^
-./src/client.c:2160:7: warning: unused variable ‘stop’ [-Wunused-variable]
+./src/client.c:2293:7: warning: unused variable ‘stop’ [-Wunused-variable]
   char stop = 'S';
        ^
-./src/client.c:2146:19: warning: unused variable ‘i’ [-Wunused-variable]
+./src/client.c:2279:19: warning: unused variable ‘i’ [-Wunused-variable]
   int ret, nready, i;
                    ^
 ./src/client.c: In function ‘init_client’:
-./src/client.c:2317:12: warning: implicit declaration of function ‘create_tcp’ [-Wimplicit-function-declaration]
+./src/client.c:2450:12: warning: implicit declaration of function ‘create_tcp’ [-Wimplicit-function-declaration]
   cli->fd = create_tcp();
             ^
-./src/client.c:2325:8: warning: implicit declaration of function ‘connect_server’ [-Wimplicit-function-declaration]
+./src/client.c:2458:8: warning: implicit declaration of function ‘connect_server’ [-Wimplicit-function-declaration]
   ret = connect_server(cli->fd, server->ip, 50007, TIME_OUT);
         ^
 ./src/client.c: In function ‘thread_client’:
-./src/client.c:2369:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+./src/client.c:2502:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
   return (void *)ret;
          ^
 ./src/client.c: At top level:
-./src/client.c:1137:12: warning: ‘recv_update_config’ defined but not used [-Wunused-function]
+./src/client.c:1209:12: warning: ‘recv_update_config’ defined but not used [-Wunused-function]
  static int recv_update_config(struct client *cli)
             ^
 ./src/client.c: In function ‘download_default_os’:

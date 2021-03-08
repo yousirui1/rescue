@@ -71,6 +71,9 @@ int del_torrent(uint32_t torrent_id)
 }
 
 
+//| lt::alert_category::dht
+//| lt::alert_category::dht_operation
+
 int bt_client() try
 {
 	time_t last_time;
@@ -85,9 +88,7 @@ int bt_client() try
                 | lt::alert_category::status
                 | lt::alert_category::ip_block
                 | lt::alert_category::performance_warning
-                | lt::alert_category::dht
                 | lt::alert_category::incoming_request
-                | lt::alert_category::dht_operation
                 | lt::alert_category::port_mapping_log
                 | lt::alert_category::file_progress
 
@@ -171,7 +172,7 @@ int start_torrent(char *torrent, char *pipe_buf, int diff_mode) try
 	DEBUG("torrent %s", torrent);
 	
 	run_flag = 1;
-	int timeout = 100;
+	int timeout = 60;
 	while(run_flag)
 	{
 		std::vector<lt::alert *>alerts;
@@ -237,7 +238,7 @@ int start_torrent(char *torrent, char *pipe_buf, int diff_mode) try
 						}
 						else
 						{
-							timeout = 100;
+							timeout = 60;
 						}
 				
 						if(timeout <= 0)

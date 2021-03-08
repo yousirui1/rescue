@@ -132,6 +132,7 @@ void Uploadwindow::showEvent(QShowEvent *e)
     ui->i_ip_label->setText(global->conf.netcard.ip);
     ui->i_mac_label->setText(global->conf.netcard.mac);
 }
+static int first_flag = 1;
 
 void Uploadwindow::keyPressEvent(QKeyEvent *event)
 {
@@ -150,6 +151,13 @@ void Uploadwindow::keyPressEvent(QKeyEvent *event)
         global->pipe->send_pipe(head, REBOOT_PIPE, 0);
     }
 
+    if (event->key() == Qt::Key_F9)
+    {
+        char head[HEAD_LEN] = {0};
+        Global *global = Global::getGlobal();
+        global->pipe->send_pipe(head, SHUTDOWN_PIPE, 0);
+    }
+
     if ((event->modifiers() == Qt::AltModifier) && event->key() == Qt::Key_F5)
     {
         char head[HEAD_LEN] = {0};
@@ -163,6 +171,18 @@ void Uploadwindow::keyPressEvent(QKeyEvent *event)
         Global *global = Global::getGlobal();
         global->pipe->send_pipe(head, EXIT_PROGRESS_PIPE, 0);
         qApp->exit();
+    }
+
+    if((event->modifiers() == Qt::AltModifier) &&  (event->key() == Qt::Key_F2))
+    {
+        if(first_flag)
+        {
+            char head[HEAD_LEN] = {0};
+            Global *global = Global::getGlobal();
+            DEBUG("RESET_PIPE ");
+            global->pipe->send_pipe(head, RESET_PIPE, 0);
+            first_flag = 0;
+        }
     }
 
 	if((event->modifiers() == Qt::AltModifier) &&  (event->key() == Qt::Key_F9))	

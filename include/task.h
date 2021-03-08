@@ -43,6 +43,8 @@ struct torrent_task {
 	int operate_id;
 
 	int disk_type;
+	
+	char download_url[128];
 };
 
 
@@ -83,7 +85,7 @@ typedef enum TASK_EVENT_TYPE
 struct event_task 
 {
 	int type;
-	char data[128];
+	char data[512];
 	int length;
 };
 

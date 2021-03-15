@@ -1777,7 +1777,7 @@ static int recv_get_desktop_group_list(struct client *cli)
     if (root)
         cJSON_Delete(root);
 
-	if(check_os_qcow2() != SUCCESS)
+	if(conf.install_flag && check_os_qcow2() != SUCCESS)
 	{
 		char head[HEAD_LEN] = {0};
 		DEBUG("no find default desktop download it");

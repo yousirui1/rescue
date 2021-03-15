@@ -42,51 +42,33 @@ static void usage()
 
 void parse_options(int argc, char *argv[])
 {
-	int ch;
-	while((ch = getopt(argc, argv, "t:s:n:p:h")) != -1)
+	int c;
+    while ((c = getopt(argc, argv, "s:t:h:")) != -1) 
 	{
-		switch(ch)
+        switch (c) 
 		{
-			case 't':
-				if(strlen(optarg) > 8)
-				{
-					DEBUG("tftp ip:%s", optarg);
-					strcpy(conf.tftp_ip, optarg);
-				}
-				break;
-			case 's':
-				if(strlen(optarg) > 8)
-				{
-					DEBUG("server ip:%s", optarg);
-					strcpy(conf.server.ip, optarg);
-				}
-				break;
-			case 'n':
-				if(strlen(optarg) > 8)
-				{
-					DEBUG("nfs ip:%s", optarg);
-					strcpy(conf.nfs_ip, optarg);
-				}
-				break;
-			case 'p':					//httpd
-				if(strlen(optarg) > 8)
-				{
-					DEBUG("http ip:%s", optarg);
-					strcpy(conf.http_ip, optarg);
-				}
-				break;
-			case 'h':
-				usage();	
-				break;
-			default:
-				break;
-		}
-	}
+        case 't':
+			DEBUG("tftp ip:%s", optarg);
+			strcpy(conf.tftp_ip, optarg);
+            break;
+        case 's':
+			DEBUG("server ip:%s", optarg);
+			strcpy(conf.server.ip, optarg);
+			break;
+         
+        case 'h':
+			DEBUG("http ip:%s", optarg);
+			strcpy(conf.http_ip, optarg);
+			break;
+        default:
+			usage();	
+			break;
+        }
+    }
 }
 
 int main(int argc, char *argv[])
 {
-
 	int ret;
 	srandom(time(NULL) + getpid());
 	(void)time(&current_time);
@@ -103,7 +85,7 @@ int main(int argc, char *argv[])
 
 	parse_options(argc, argv);
 
-	//strcpy(conf.server.ip, "10.96.1.241");
+	//strcpy(conf.server.ip, "192.168.253.250");
 	
 	init_pipe();
 	init_device();

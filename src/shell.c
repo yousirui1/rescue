@@ -3,7 +3,7 @@
 char http_install_sh[] = {"#!/bin/sh \n"
 					 	"mkdir -p /boot/linux \n"
 						"wget http://%s/boot/vmlinuz-5.2.8-lfs-9.0 -O /boot/linux/vmlinuz-5.2.8-lfs-9.0_new \n"
-						"wget -P /root/ http://%s/boot/voi.zip \n"
+						"wget http://%s/boot/voi.zip -O /root/voi.zip \n"
 					 	"outpu=`unzip -o /root/voi.zip -d /boot/ `\n"
 					 	"if [ $? -ne 0 ]; then \n"
     					"	echo \"failed\" \n"

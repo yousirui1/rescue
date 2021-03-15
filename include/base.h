@@ -87,7 +87,7 @@
 #define MAX_FILENAMELEN 256
 #define MAX_CONFIGLEN   1024
 
-#define TIME_OUT 10
+#define TIME_OUT 20
 
 #define COVERAGE_MODE 1
 #define INCRMENT_MODE 2

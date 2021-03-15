@@ -587,6 +587,28 @@ int install_programe()
 			return ERROR;
 		}	
 	}
+	else if(conf.tftp_ip && strlen(conf.tftp_ip) != 0)
+	{
+		mount_boot();
+		struct tftp_task task = {0};
+    	exec_cmd("mkdir -p /boot/linux", result);
+		strcpy(task.server_ip, conf.tftp_ip);
+
+		DEBUG("install tftp server ip: %s", task.server_ip);
+
+		strcpy(task.remote_file, "vmlinuz-5.2.8-lfs-9.0");
+		strcpy(task.local_file, "/boot/linux/vmlinuz-5.2.8-lfs-9.0_new");
+		sprintf(task.file_name, "V%d.0.0.%d", conf.major_ver, conf.minor_ver);	
+		task.type = 1;	
+
+		en_queue(&task_queue, (char *)&task, sizeof(struct tftp_task) , TASK_TFTP);
+
+		strcpy(task.server_ip, server->ip);
+		strcpy(task.remote_file, "voi.zip");
+		strcpy(task.local_file, "/root/voi.zip");
+		task.type = 2;	
+		en_queue(&task_queue, (char *)&task, sizeof(struct tftp_task) , TASK_TFTP);
+	}
 	else //usb
 	{
 		mount_boot();
@@ -627,30 +649,3 @@ int install_programe()
 		}	
 	}
 }
-
-
-
-#if 0
-	struct tftp_task task = {0};
-    exec_cmd("mkdir -p /boot/linux", result);
-
-	if(strlen(conf.tftp_ip) != 0)
-		strcpy(task.server_ip, conf.tftp_ip);
-	else
-		strcpy(task.server_ip, server->ip);
-
-	DEBUG("install tftp server ip: %s", task.server_ip);
-
-	strcpy(task.remote_file, "vmlinuz-5.2.8-lfs-9.0");
-	strcpy(task.local_file, "/boot/linux/vmlinuz-5.2.8-lfs-9.0_new");
-	sprintf(task.file_name, "V%d.0.0.%d", conf.major_ver, conf.minor_ver);	
-	task.type = 1;	
-
-	en_queue(&task_queue, (char *)&task, sizeof(struct tftp_task) , 0x3);
-
-	strcpy(task.server_ip, server->ip);
-	strcpy(task.remote_file, "voi.zip");
-	strcpy(task.local_file, "/root/voi.zip");
-	task.type = 2;	
-	en_queue(&task_queue, (char *)&task, sizeof(struct tftp_task) , 0x3);
-#endif

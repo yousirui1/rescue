@@ -82,6 +82,7 @@ static void process_ui_msg(char *buf, int length)
 				dhcp_request();
 			}
 			install_programe();
+			client_reconnect();
 			break;
 		}
 		case INIT_PIPE:
